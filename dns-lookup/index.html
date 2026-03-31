@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DNS Lookup Tool — Query A, MX, CNAME, TXT Records | IPWhitelist.dev</title>
+  <meta name="description" content="Free online DNS lookup tool. Query A, AAAA, MX, CNAME, TXT, NS, and SOA records for any domain using Google's DNS over HTTPS. Instant results, no signup." />
+  <link rel="canonical" href="https://ipwhitelist.dev/dns-lookup/" />
+  <meta property="og:title" content="DNS Lookup Tool — IPWhitelist.dev" />
+  <meta property="og:description" content="Free DNS lookup for A, AAAA, MX, CNAME, TXT, NS records. Instant, no signup." />
+  <meta property="og:type" content="website" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DNS Lookup Tool — IPWhitelist.dev","url":"https://ipwhitelist.dev/dns-lookup/","description":"Free tool to query DNS records (A, AAAA, MX, CNAME, TXT, NS) for any domain.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23080A0F'/><text y='72' x='14' font-size='68' font-family='monospace' fill='%234EFFC0'>⌁</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared.css" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFLEV7NLEG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QFLEV7NLEG');
+  </script>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<nav>
+  <a href="/" class="nav-logo"><div class="nav-logo-mark">⌁</div><span class="nav-logo-text">IP<span>Whitelist</span>.dev</span></a>
+  <div class="nav-center">
+    <a href="/" class="nav-link">My IP</a><a href="/port-checker/" class="nav-link">Port Checker</a>
+    <a href="/dns-lookup/" class="nav-link active">DNS Lookup</a>
+    <a href="/latency-test/" class="nav-link">Latency Test</a><a href="/user-agent/" class="nav-link">User Agent</a>
+  </div>
+  <div class="nav-right"><span class="badge-free">100% Free</span></div>
+</nav>
+<main>
+  <header class="hero">
+    <div class="hero-kicker"><div class="hero-kicker-dot"></div>DNS over HTTPS · Google Public DNS</div>
+    <h1><em>DNS Lookup</em> Tool</h1>
+    <p class="hero-sub">Query A, AAAA, MX, CNAME, TXT, NS, and SOA records for any domain. Powered by Google's DNS over HTTPS for accurate, real-time resolution that bypasses local caching.</p>
+  </header>
+  <div class="card-wrap">
+    <div class="tool-card">
+      <div class="tool-card-head">
+        <div class="tool-card-title">DNS Record Lookup</div>
+        <div class="tool-card-desc">Enter a domain and select the record type. Results come directly from Google's authoritative DNS.</div>
+      </div>
+      <div class="tool-card-body">
+        <div class="tool-input-row">
+          <input class="tool-input" id="dnsHost" placeholder="domain (e.g. github.com, google.com)" />
+          <select class="tool-input-select" id="dnsType">
+            <option value="A">A — IPv4 address</option>
+            <option value="AAAA">AAAA — IPv6 address</option>
+            <option value="MX">MX — Mail servers</option>
+            <option value="CNAME">CNAME — Canonical name</option>
+            <option value="TXT">TXT — Text records / SPF / DKIM</option>
+            <option value="NS">NS — Name servers</option>
+            <option value="SOA">SOA — Start of Authority</option>
+          </select>
+          <button class="btn-run" onclick="runDNS()" id="dnsBtn">Lookup</button>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
+          <button class="pill" onclick="dnsPreset('A')">A Record</button>
+          <button class="pill" onclick="dnsPreset('MX')">MX / Mail</button>
+          <button class="pill" onclick="dnsPreset('TXT')">TXT / SPF</button>
+          <button class="pill" onclick="dnsPreset('NS')">Name Servers</button>
+        </div>
+        <div class="result-area" id="dnsResults">
+          <div class="result-placeholder">Enter a domain and select record type →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
+
+  <section class="seo-content reveal">
+    <h2>What is a DNS lookup?</h2>
+    <p>A DNS (Domain Name System) lookup translates a human-readable domain name like <code>github.com</code> into machine-readable records — most commonly an IP address. Every time you visit a website, your browser performs a DNS lookup behind the scenes. This tool lets you query DNS records directly, bypassing local caches for real-time results.</p>
+    <h2>DNS record types explained</h2>
+    <ul>
+      <li><strong>A record</strong> — Maps a domain to an IPv4 address (e.g. 93.184.216.34)</li>
+      <li><strong>AAAA record</strong> — Maps a domain to an IPv6 address</li>
+      <li><strong>MX record</strong> — Specifies mail servers responsible for a domain</li>
+      <li><strong>CNAME record</strong> — Creates an alias from one domain to another</li>
+      <li><strong>TXT record</strong> — Stores text data; commonly used for SPF, DKIM, and domain verification</li>
+      <li><strong>NS record</strong> — Lists the authoritative name servers for a domain</li>
+      <li><strong>SOA record</strong> — Contains administrative information about a DNS zone</li>
+    </ul>
+    <h2>More free developer tools</h2>
+    <ul>
+      <li><a href="/">What Is My IP</a> — Detect your public IP + AWS, MongoDB, GCP whitelist configs</li>
+      <li><a href="/port-checker/">Port Checker</a> — Test if TCP ports are open on any host</li>
+      <li><a href="/latency-test/">Latency Test</a> — Measure ping to major cloud regions</li>
+      <li><a href="/user-agent/">User Agent Parser</a> — Full browser and OS fingerprint</li>
+    </ul>
+  </section>
+
+  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
+
+  <section class="faq-section reveal">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-heading">DNS lookup questions</h2>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Why use DNS over HTTPS instead of my local resolver?</span><div class="faq-chevron">▾</div></div><div class="faq-a">Your local resolver may have cached outdated records, or your ISP may intercept DNS queries. Google's DoH API queries authoritative nameservers directly, giving you the most current, accurate results — which matters when you've just updated a DNS record and want to verify propagation.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How long does DNS propagation take?</span><div class="faq-chevron">▾</div></div><div class="faq-a">DNS changes typically propagate globally within 15–60 minutes when TTL values are low. However, if your previous record had a high TTL (e.g. 86400 seconds = 24 hours), caches across the internet may hold the old value for up to that long. This tool bypasses caching and shows the current authoritative answer.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">What is TTL in DNS?</span><div class="faq-chevron">▾</div></div><div class="faq-a">TTL (Time To Live) is the number of seconds a DNS record can be cached by resolvers before they must re-query the authoritative nameserver. A lower TTL means faster propagation of changes but more DNS queries. Typical values range from 300 (5 minutes) to 86400 (24 hours).</div></div>
+  </section>
+</main>
+<footer>
+  <div class="footer-brand">IP<span>Whitelist</span>.dev</div>
+  <div class="footer-links"><a href="/">My IP</a><a href="/port-checker/">Port Checker</a><a href="/latency-test/">Latency Test</a><a href="/user-agent/">User Agent</a><a href="mailto:hello@ipwhitelist.dev">Contact</a></div>
+  <div class="footer-copy">© 2025 IPWhitelist.dev — Free developer network tools</div>
+</footer>
+<div class="toast" id="toast"><span id="toast-msg">Copied!</span></div>
+<script src="../shared.js"></script>
+<script>
+  function dnsPreset(type){document.getElementById('dnsType').value=type;}
+  document.getElementById('dnsHost').addEventListener('keydown',e=>{if(e.key==='Enter')runDNS();});
+</script>
+</body>
+</html>

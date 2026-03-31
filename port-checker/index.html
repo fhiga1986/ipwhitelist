@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Port Checker — Test If a Port Is Open Online | IPWhitelist.dev</title>
+  <meta name="description" content="Free online port checker. Test if TCP ports 22, 80, 443, 3306, 5432, 27017 or any custom port are open on any host or IP address. No download required." />
+  <link rel="canonical" href="https://ipwhitelist.dev/port-checker/" />
+  <meta property="og:title" content="Port Checker — Test If a Port Is Open | IPWhitelist.dev" />
+  <meta property="og:description" content="Free online tool to check if any TCP port is open on any host. Instant results, no signup." />
+  <meta property="og:type" content="website" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Online Port Checker — IPWhitelist.dev","url":"https://ipwhitelist.dev/port-checker/","description":"Free tool to check if TCP ports are open on any host or IP address.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23080A0F'/><text y='72' x='14' font-size='68' font-family='monospace' fill='%234EFFC0'>⌁</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared.css" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFLEV7NLEG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QFLEV7NLEG');
+  </script>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<nav>
+  <a href="/" class="nav-logo"><div class="nav-logo-mark">⌁</div><span class="nav-logo-text">IP<span>Whitelist</span>.dev</span></a>
+  <div class="nav-center">
+    <a href="/" class="nav-link">My IP</a>
+    <a href="/port-checker/" class="nav-link active">Port Checker</a>
+    <a href="/dns-lookup/" class="nav-link">DNS Lookup</a>
+    <a href="/latency-test/" class="nav-link">Latency Test</a>
+    <a href="/user-agent/" class="nav-link">User Agent</a>
+  </div>
+  <div class="nav-right"><span class="badge-free">100% Free</span></div>
+</nav>
+<main>
+  <header class="hero">
+    <div class="hero-kicker"><div class="hero-kicker-dot"></div>TCP Port Testing · No Download</div>
+    <h1>Is This <em>Port Open</em>?</h1>
+    <p class="hero-sub">Test if any TCP port is open and reachable on any host or IP address. Common ports like SSH (22), HTTP (80), HTTPS (443), MySQL (3306), PostgreSQL (5432), and MongoDB (27017) — or any custom port you need.</p>
+  </header>
+
+  <div class="card-wrap">
+    <div class="tool-card">
+      <div class="tool-card-head">
+        <div class="tool-card-title">Port Checker</div>
+        <div class="tool-card-desc">Enter a hostname or IP and the ports you want to test (comma-separated). Results appear in real time.</div>
+      </div>
+      <div class="tool-card-body">
+        <div class="tool-input-row">
+          <input class="tool-input" id="portHost" placeholder="hostname or IP (e.g. example.com or 203.0.113.1)" />
+          <input class="tool-input" id="portNums" placeholder="ports: 80, 443, 22, 3306" style="max-width:240px;" />
+          <button class="btn-run" onclick="runPortCheck()" id="portBtn">Check Ports</button>
+        </div>
+        <!-- Quick presets -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
+          <button class="pill" onclick="setPreset('80,443,8080,8443')">🌐 Web</button>
+          <button class="pill" onclick="setPreset('22,21,23')">🔒 SSH/FTP</button>
+          <button class="pill" onclick="setPreset('3306,5432,27017,6379')">🗄 Databases</button>
+          <button class="pill" onclick="setPreset('25,587,465,993,995')">📧 Mail</button>
+          <button class="pill" onclick="setPreset('80,443,22,3306,5432,27017,6379,8080')">⚡ All Common</button>
+        </div>
+        <div class="result-area" id="portResults">
+          <div class="result-placeholder">Enter a host and ports → click Check Ports</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
+
+  <section class="seo-content reveal">
+    <h2>What is a port checker?</h2>
+    <p>A port checker tests whether a specific TCP port on a remote host is accepting connections. When a port is "open", it means there is a service listening on that port and it is reachable from your current network. When a port is "closed" or "filtered", either no service is running on that port or a firewall is blocking the connection.</p>
+
+    <h2>Common ports and their services</h2>
+    <ul>
+      <li><strong>Port 22</strong> — SSH (Secure Shell). Used for secure remote server access.</li>
+      <li><strong>Port 80</strong> — HTTP. Standard unencrypted web traffic.</li>
+      <li><strong>Port 443</strong> — HTTPS. Encrypted web traffic (TLS/SSL).</li>
+      <li><strong>Port 3306</strong> — MySQL database. Check if your database is accessible.</li>
+      <li><strong>Port 5432</strong> — PostgreSQL database.</li>
+      <li><strong>Port 27017</strong> — MongoDB. Default port for MongoDB connections.</li>
+      <li><strong>Port 6379</strong> — Redis. In-memory data store.</li>
+      <li><strong>Port 8080</strong> — HTTP alternative, commonly used for development servers.</li>
+    </ul>
+
+    <h2>Why would a port appear closed?</h2>
+    <p>A port can appear closed for several reasons: no service is listening on that port, a firewall (like AWS Security Groups, UFW, or iptables) is blocking the connection, or the host is offline. If you expect a port to be open, use our <a href="/">IP Whitelist Config Generator</a> to add your IP to the relevant firewall rules.</p>
+  </section>
+
+  <section class="tools-grid-section reveal">
+    <div class="section-label">More Free Tools</div>
+    <div class="tools-grid">
+      <a href="/" class="tool-grid-card"><div class="tgc-icon">🌐</div><div class="tgc-title">My IP Address</div><div class="tgc-desc">Detect your public IP + generate cloud whitelist configs</div><div class="tgc-arrow">→</div></a>
+      <a href="/dns-lookup/" class="tool-grid-card"><div class="tgc-icon">🔍</div><div class="tgc-title">DNS Lookup</div><div class="tgc-desc">Query A, AAAA, MX, CNAME, TXT, NS records</div><div class="tgc-arrow">→</div></a>
+      <a href="/latency-test/" class="tool-grid-card"><div class="tgc-icon">⚡</div><div class="tgc-title">Latency Test</div><div class="tgc-desc">Measure ping to US, EU, and Asia-Pacific regions</div><div class="tgc-arrow">→</div></a>
+      <a href="/user-agent/" class="tool-grid-card"><div class="tgc-icon">🖥️</div><div class="tgc-title">User Agent</div><div class="tgc-desc">Full browser and OS fingerprint breakdown</div><div class="tgc-arrow">→</div></a>
+    </div>
+  </section>
+
+  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
+
+  <section class="faq-section reveal">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-heading">Port checker questions</h2>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How does this port checker work?</span><div class="faq-chevron">▾</div></div><div class="faq-a">This tool attempts TCP connections from your browser to the target host and port using WebSocket probing. A successful connection means the port is open. Results reflect what's reachable from your current network — results may differ if you're behind a corporate proxy or VPN.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">What's the difference between closed and filtered?</span><div class="faq-chevron">▾</div></div><div class="faq-a">A closed port actively refuses the connection (the server responds with a reset). A filtered port doesn't respond at all — typically because a firewall is silently dropping packets. Both appear as "Closed / Filtered" in this tool since the distinction requires raw socket access not available in browsers.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How do I open a port on my server?</span><div class="faq-chevron">▾</div></div><div class="faq-a">It depends on your setup. For AWS EC2, add an inbound rule to your Security Group. For Linux servers, use UFW (<code>sudo ufw allow 443</code>) or iptables. For GCP, create a Firewall Rule. Use our <a href="/">IP whitelist config generator</a> to get the exact commands for your environment.</div></div>
+  </section>
+</main>
+<footer>
+  <div class="footer-brand">IP<span>Whitelist</span>.dev</div>
+  <div class="footer-links"><a href="/">My IP</a><a href="/dns-lookup/">DNS Lookup</a><a href="/latency-test/">Latency Test</a><a href="/user-agent/">User Agent</a><a href="mailto:hello@ipwhitelist.dev">Contact</a></div>
+  <div class="footer-copy">© 2025 IPWhitelist.dev — Free developer network tools</div>
+</footer>
+<div class="toast" id="toast"><span id="toast-msg">Copied!</span></div>
+<script src="../shared.js"></script>
+<script>
+  function setPreset(ports){document.getElementById('portNums').value=ports;}
+  document.getElementById('portHost').addEventListener('keydown',e=>{if(e.key==='Enter')runPortCheck();});
+  document.getElementById('portNums').addEventListener('keydown',e=>{if(e.key==='Enter')runPortCheck();});
+</script>
+</body>
+</html>

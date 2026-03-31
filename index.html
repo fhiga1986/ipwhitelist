@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What Is My IP Address? — IPWhitelist.dev</title>
+  <meta name="description" content="Generate instant IP whitelist configs for AWS, MongoDB Atlas, GCP, and Linux. Detect your public IP and get the exact CLI command or Terraform config in seconds. See your IP, CIDR notation, location, ISP, and generate whitelist configs for AWS, MongoDB Atlas, GCP, and Linux. Free, no signup." />
+  <link rel="canonical" href="https://ipwhitelist.dev/" />
+  <meta property="og:title" content="What Is My IP Address? — IPWhitelist.dev" />
+  <meta property="og:description" content="Instant public IP detection with AWS, MongoDB, GCP whitelist config generator. Free developer tool." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ipwhitelist.dev/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="What Is My IP Address? — IPWhitelist.dev" />
+  <meta name="twitter:description" content="Free IP detection + instant cloud whitelist configs for AWS, MongoDB, GCP." />
+
+  <!-- Schema.org WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "IPWhitelist.dev — What Is My IP",
+    "url": "https://ipwhitelist.dev/",
+    "description": "Free tool to find your public IP address and generate instant whitelist configurations for AWS Security Groups, MongoDB Atlas, GCP Firewall, and Linux servers.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Public IP detection",
+      "CIDR notation",
+      "IP geolocation",
+      "AWS Security Group config",
+      "MongoDB Atlas whitelist",
+      "GCP Firewall config",
+      "IP Fingerprint check"
+    ]
+  }
+  </script>
+
+  <!-- AdSense — replace ca-pub-XXXXXXXXXXXXXXXX with your Publisher ID -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23080A0F'/><text y='72' x='14' font-size='68' font-family='monospace' fill='%234EFFC0'>⌁</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared.css" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFLEV7NLEG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QFLEV7NLEG');
+  </script>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-mark">⌁</div>
+    <span class="nav-logo-text">IP<span>Whitelist</span>.dev</span>
+  </a>
+  <div class="nav-center">
+    <a href="/" class="nav-link active">My IP</a>
+    <a href="/port-checker/" class="nav-link">Port Checker</a>
+    <a href="/dns-lookup/" class="nav-link">DNS Lookup</a>
+    <a href="/latency-test/" class="nav-link">Latency Test</a>
+    <a href="/user-agent/" class="nav-link">User Agent</a>
+  </div>
+  <div class="nav-right">
+    <span class="badge-free">100% Free</span>
+  </div>
+</nav>
+
+<main>
+  <header class="hero">
+    <div class="hero-kicker"><div class="hero-kicker-dot"></div>Live Detection · No Signup</div>
+    <h1>What Is My <em>IP Address</em>?</h1>
+    <p class="hero-sub">Your public IP address, CIDR notation, location, ISP — detected instantly. Plus ready-to-paste whitelist configs for AWS, MongoDB Atlas, GCP, and Linux.</p>
+  </header>
+
+  <!-- IP CARD -->
+  <div class="card-wrap">
+    <div class="ip-card">
+      <div class="card-topbar">
+        <div class="card-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div>
+        <div class="card-title-bar">ipwhitelist.dev — live detection</div>
+        <div class="card-status"><div class="status-dot"></div>Secure · No logs</div>
+      </div>
+      <div class="card-body">
+        <div class="ip-primary-label">Your Public IP Address</div>
+        <div class="ip-primary-row">
+          <div class="ip-primary-value loading" id="ipDisplay">Detecting…</div>
+          <div class="ip-actions" id="ipActions" style="display:none">
+            <button class="btn-icon primary" id="copyIpBtn" onclick="copyIP()">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy
+            </button>
+            <button class="btn-icon" onclick="openShareModal()">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>Share Card
+            </button>
+          </div>
+        </div>
+        <div class="ip-cidr-row">
+          <div class="ip-cidr-badge"><span>CIDR:</span><strong id="cidrDisplay">—</strong></div>
+        </div>
+        <div class="meta-grid">
+          <div class="meta-cell"><div class="meta-cell-label">📍 City</div><div class="meta-cell-value" id="metaCity">—</div></div>
+          <div class="meta-cell"><div class="meta-cell-label">🌍 Country</div><div class="meta-cell-value" id="metaCountry">—</div></div>
+          <div class="meta-cell"><div class="meta-cell-label">📡 ISP / AS</div><div class="meta-cell-value" id="metaISP">—</div></div>
+          <div class="meta-cell"><div class="meta-cell-label">⏱ Latency</div><div class="meta-cell-value highlight" id="metaLatency">—</div></div>
+        </div>
+        <div class="fingerprint-bar">
+          <div class="fp-header">
+            <div class="fp-title">IP Fingerprint</div>
+            <div class="fp-score-badge clean" id="fpBadge">Checking…</div>
+          </div>
+          <div class="fp-checks" id="fpChecks">
+            <div class="fp-check"><div class="fp-check-icon ok">✓</div>Not a known proxy</div>
+            <div class="fp-check"><div class="fp-check-icon ok">✓</div>No VPN detected</div>
+            <div class="fp-check"><div class="fp-check-icon ok">✓</div>Not on blocklists</div>
+            <div class="fp-check"><div class="fp-check-icon ok">✓</div>Residential IP</div>
+            <div class="fp-check"><div class="fp-check-icon ok">✓</div>IPv4 public range</div>
+            <div class="fp-check"><div class="fp-check-icon ok">✓</div>Low abuse score</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AD SLOT 1 -->
+  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
+
+  <!-- SHARE CARD -->
+  <div class="card-wrap reveal">
+    <div class="share-card">
+      <div class="share-icon">🪄</div>
+      <div class="share-text">
+        <div class="share-title">Share your IP with teammates</div>
+        <div class="share-desc">Generate a <strong>"Whitelist This IP"</strong> card — paste into Slack, Notion, or Linear.</div>
+      </div>
+      <button class="btn-icon primary" onclick="openShareModal()">Generate Card →</button>
+    </div>
+  </div>
+
+  <!-- CONFIG GENERATOR -->
+  <section class="config-section reveal">
+    <div class="section-label">Instant Config Generator</div>
+    <div class="provider-pills">
+      <button class="pill active" onclick="switchConfig('aws')" id="cpill-aws">☁️ AWS</button>
+      <button class="pill" onclick="switchConfig('mongo')" id="cpill-mongo">🍃 MongoDB</button>
+      <button class="pill" onclick="switchConfig('gcp')" id="cpill-gcp">🔥 GCP</button>
+      <button class="pill" onclick="switchConfig('vps')" id="cpill-vps">🖥️ VPS / Linux</button>
+      <button class="pill" onclick="switchConfig('generic')" id="cpill-generic">🔑 All Formats</button>
+    </div>
+    <div class="config-panel-inner active" id="cpanel-aws">
+      <div class="config-step">
+        <div class="step-head"><div class="step-num">1</div><div><div class="step-info-title">AWS CLI — Security Group Ingress</div><div class="step-info-sub">Add your IP to an EC2 Security Group inbound rule</div></div></div>
+        <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">AWS CLI</span><button class="btn-icon sm" onclick="copyCode('c-aws-cli')">Copy</button></div>
+        <pre id="c-aws-cli"><span class="t-cm"># Authorize your IP in a Security Group</span>
+<span class="t-kw">aws</span> ec2 authorize-security-group-ingress \
+  --group-id <span class="t-str">sg-xxxxxxxxxxxxxxxxx</span> \
+  --protocol <span class="t-str">tcp</span> \
+  --port <span class="t-num">443</span> \
+  --cidr <span class="t-ip" id="aws-cidr-1">Detecting…/32</span></pre></div></div>
+      </div>
+      <div class="config-step">
+        <div class="step-head"><div class="step-num">2</div><div><div class="step-info-title">Terraform Resource Block</div><div class="step-info-sub">Drop into your .tf file — IaC ready</div></div></div>
+        <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">Terraform HCL</span><button class="btn-icon sm" onclick="copyCode('c-aws-tf')">Copy</button></div>
+        <pre id="c-aws-tf"><span class="t-kw">resource</span> <span class="t-str">"aws_security_group_rule"</span> <span class="t-str">"dev_ip_access"</span> {
+  type              = <span class="t-str">"ingress"</span>
+  from_port         = <span class="t-num">443</span>
+  to_port           = <span class="t-num">443</span>
+  protocol          = <span class="t-str">"tcp"</span>
+  cidr_blocks       = [<span class="t-ip" id="aws-cidr-2">Detecting…/32</span>]
+  security_group_id = <span class="t-str">"sg-xxxxxxxxxxxxxxxxx"</span>
+  description       = <span class="t-str">"Dev IP — ipwhitelist.dev"</span>
+}</pre></div></div>
+      </div>
+      <div class="config-step">
+        <div class="step-head"><div class="step-num">3</div><div><div class="step-info-title">AWS Console Path</div></div></div>
+        <div class="step-body-pad" style="font-size:.82rem;color:var(--txt-2);line-height:1.9;">
+          EC2 → Security Groups → <strong style="color:var(--txt)">Your Group</strong> → Inbound Rules → Edit → Add Rule<br/>
+          Type: <strong style="color:var(--lime)">Custom TCP</strong> · Port: <strong style="color:var(--lime)">443</strong> · Source: <strong style="color:var(--lime)" id="aws-cidr-3">Detecting…/32</strong>
+        </div>
+      </div>
+    </div>
+    <div class="config-panel-inner" id="cpanel-mongo">
+      <div class="config-step">
+        <div class="step-head"><div class="step-num">1</div><div><div class="step-info-title">CIDR for Atlas UI</div><div class="step-info-sub">Network Access → Add IP Address</div></div></div>
+        <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">CIDR</span><button class="btn-icon sm" onclick="copyCode('c-mongo-cidr')">Copy</button></div>
+        <pre id="c-mongo-cidr"><span class="t-ip" id="mongo-cidr-1">Detecting…/32</span>   <span class="t-cm"># Paste in Atlas → Network Access → Add IP</span></pre></div></div>
+      </div>
+      <div class="config-step">
+        <div class="step-head"><div class="step-num">2</div><div><div class="step-info-title">Atlas CLI</div></div></div>
+        <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">Atlas CLI</span><button class="btn-icon sm" onclick="copyCode('c-mongo-cli')">Copy</button></div>
+        <pre id="c-mongo-cli"><span class="t-cm"># brew install mongodb-atlas</span>
+<span class="t-kw">atlas</span> accessLists create \
+  --projectId <span class="t-str">YOUR_PROJECT_ID</span> \
+  --cidr <span class="t-ip" id="mongo-cidr-2">Detecting…/32</span> \
+  --comment <span class="t-str">"Dev IP — ipwhitelist.dev"</span></pre></div></div>
+      </div>
+      <div class="config-step">
+        <div class="step-head"><div class="step-num">3</div><div><div class="step-info-title">JSON Payload</div></div></div>
+        <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">JSON</span><button class="btn-icon sm" onclick="copyCode('c-mongo-json')">Copy</button></div>
+        <pre id="c-mongo-json">{
+  <span class="t-kw">"ipAddress"</span>: <span class="t-ip" id="mongo-ip-1">Detecting…</span>,
+  <span class="t-kw">"comment"</span>:   <span class="t-str">"Dev IP — ipwhitelist.dev"</span>
+}</pre></div></div>
+      </div>
+    </div>
+    <div class="config-panel-inner" id="cpanel-gcp">
+      <div class="config-step">
+        <div class="step-head"><div class="step-num">1</div><div><div class="step-info-title">GCP Firewall Rule</div></div></div>
+        <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">gcloud</span><button class="btn-icon sm" onclick="copyCode('c-gcp-fw')">Copy</button></div>
+        <pre id="c-gcp-fw"><span class="t-kw">gcloud</span> compute firewall-rules create allow-dev-ip \
+  --allow=tcp:<span class="t-num">443</span> \
+  --source-ranges=<span class="t-ip" id="gcp-cidr-1">Detecting…/32</span> \
+  --description=<span class="t-str">"Dev IP — ipwhitelist.dev"</span> \
+  --project=<span class="t-str">YOUR_PROJECT_ID</span></pre></div></div>
+      </div>
+      <div class="config-step">
+        <div class="step-head"><div class="step-num">2</div><div><div class="step-info-title">Cloud SQL Authorized Network</div></div></div>
+        <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">gcloud</span><button class="btn-icon sm" onclick="copyCode('c-gcp-sql')">Copy</button></div>
+        <pre id="c-gcp-sql"><span class="t-kw">gcloud</span> sql instances patch YOUR_INSTANCE \
+  --authorized-networks=<span class="t-ip" id="gcp-cidr-2">Detecting…/32</span></pre></div></div>
+      </div>
+    </div>
+    <div class="config-panel-inner" id="cpanel-vps">
+      <div class="config-step">
+        <div class="step-head"><div class="step-num">1</div><div><div class="step-info-title">iptables</div></div></div>
+        <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">bash</span><button class="btn-icon sm" onclick="copyCode('c-ipt')">Copy</button></div>
+        <pre id="c-ipt"><span class="t-kw">sudo</span> iptables -I INPUT -s <span class="t-ip" id="vps-ip-1">Detecting…</span> -p tcp --dport <span class="t-num">443</span> -j ACCEPT
+<span class="t-kw">sudo</span> netfilter-persistent save</pre></div></div>
+      </div>
+      <div class="config-step">
+        <div class="step-head"><div class="step-num">2</div><div><div class="step-info-title">UFW</div></div></div>
+        <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">bash</span><button class="btn-icon sm" onclick="copyCode('c-ufw')">Copy</button></div>
+        <pre id="c-ufw"><span class="t-kw">sudo</span> ufw allow from <span class="t-ip" id="vps-ip-2">Detecting…</span> to any port <span class="t-num">443</span>
+<span class="t-kw">sudo</span> ufw reload</pre></div></div>
+      </div>
+      <div class="config-step">
+        <div class="step-head"><div class="step-num">3</div><div><div class="step-info-title">nginx allow directive</div></div></div>
+        <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">nginx.conf</span><button class="btn-icon sm" onclick="copyCode('c-nginx')">Copy</button></div>
+        <pre id="c-nginx">location /admin {
+    <span class="t-kw">allow</span>  <span class="t-ip" id="vps-ip-3">Detecting…</span>;
+    <span class="t-kw">deny</span>   all;
+}</pre></div></div>
+      </div>
+    </div>
+    <div class="config-panel-inner" id="cpanel-generic">
+      <div class="config-step">
+        <div class="step-head"><div class="step-num">1</div><div><div class="step-info-title">All Formats at Once</div></div></div>
+        <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">All formats</span><button class="btn-icon sm" onclick="copyCode('c-all')">Copy</button></div>
+        <pre id="c-all"><span class="t-cm"># Plain IP</span>
+<span class="t-ip" id="gen-ip">Detecting…</span>
+
+<span class="t-cm"># CIDR /32 (single host)</span>
+<span class="t-ip" id="gen-cidr">Detecting…/32</span>
+
+<span class="t-cm"># JSON</span>
+{ <span class="t-kw">"ip"</span>: <span class="t-ip" id="gen-ip-j">Detecting…</span>, <span class="t-kw">"mask"</span>: <span class="t-str">"255.255.255.255"</span> }
+
+<span class="t-cm"># curl test</span>
+<span class="t-kw">curl</span> -v https://api.example.com/ 2>&amp;1 | grep "Connected"</pre></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AD SLOT 2 -->
+  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
+
+  <!-- SEO CONTENT — visible text Google indexes -->
+  <section class="seo-content reveal">
+    <h2>How to find your public IP address</h2>
+    <p>Your public IP address is the unique identifier assigned by your Internet Service Provider (ISP) to your internet connection. Unlike your local or private IP address (typically in the 192.168.x.x or 10.x.x.x range), your public IP is visible to all servers and services you connect to on the internet.</p>
+    <p>IPWhitelist.dev detects your public IP instantly using two independent sources — <strong>ipify.org</strong> and <strong>ipapi.co</strong> — for maximum accuracy and reliability.</p>
+
+    <h2>What is CIDR notation and why does it matter?</h2>
+    <p>CIDR (Classless Inter-Domain Routing) notation expresses an IP address and its associated network mask. For a single IP address, the CIDR notation appends <code>/32</code>, meaning only that exact address is included. When whitelisting your IP in AWS Security Groups, MongoDB Atlas, or GCP Firewall rules, you must provide the CIDR format — for example, <code>203.0.113.42/32</code>.</p>
+
+    <h2>Free developer tools on IPWhitelist.dev</h2>
+    <ul>
+      <li><strong><a href="/port-checker/">Port Checker</a></strong> — Test if TCP ports are open on any host</li>
+      <li><strong><a href="/dns-lookup/">DNS Lookup</a></strong> — Query A, AAAA, MX, CNAME, TXT and NS records</li>
+      <li><strong><a href="/latency-test/">Latency Test</a></strong> — Measure your RTT to major cloud regions worldwide</li>
+      <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
+    </ul>
+  </section>
+
+  <!-- TOOLS GRID -->
+  <section class="tools-grid-section reveal">
+    <div class="section-label">More Free Tools</div>
+    <div class="tools-grid">
+      <a href="/port-checker/" class="tool-grid-card">
+        <div class="tgc-icon">🔌</div>
+        <div class="tgc-title">Port Checker</div>
+        <div class="tgc-desc">Test if ports 22, 80, 443, 3306 are open on any host</div>
+        <div class="tgc-arrow">→</div>
+      </a>
+      <a href="/dns-lookup/" class="tool-grid-card">
+        <div class="tgc-icon">🔍</div>
+        <div class="tgc-title">DNS Lookup</div>
+        <div class="tgc-desc">Query A, AAAA, MX, CNAME, TXT, NS records instantly</div>
+        <div class="tgc-arrow">→</div>
+      </a>
+      <a href="/latency-test/" class="tool-grid-card">
+        <div class="tgc-icon">⚡</div>
+        <div class="tgc-title">Latency Test</div>
+        <div class="tgc-desc">Measure your ping to US, EU, Asia-Pacific cloud regions</div>
+        <div class="tgc-arrow">→</div>
+      </a>
+      <a href="/user-agent/" class="tool-grid-card">
+        <div class="tgc-icon">🖥️</div>
+        <div class="tgc-title">User Agent</div>
+        <div class="tgc-desc">Full browser, OS, and connection fingerprint breakdown</div>
+        <div class="tgc-arrow">→</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- AD SLOT 3 -->
+  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
+
+  <!-- FAQ with Schema -->
+  <section class="faq-section reveal">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-heading">Common questions about IP addresses</h2>
+    <div itemscope itemtype="https://schema.org/FAQPage">
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text" itemprop="name">What is my public IP address?</span>
+          <div class="faq-chevron">▾</div>
+        </div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <div itemprop="text">Your public IP is the address your ISP assigns to your internet connection — the one all servers on the internet see. Unlike your local IP (192.168.x.x), your public IP is globally unique. IPWhitelist.dev detects it in milliseconds with no setup required.</div>
+        </div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text" itemprop="name">How do I whitelist my IP in AWS Security Groups?</span>
+          <div class="faq-chevron">▾</div>
+        </div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <div itemprop="text">Go to EC2 → Security Groups → select your group → Inbound Rules → Edit → Add Rule. Set Type to Custom TCP, enter your port, and paste your IP in CIDR format (e.g. 203.0.113.42/32) as the source. IPWhitelist.dev generates the exact AWS CLI command and Terraform config above — just copy and run.</div>
+        </div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text" itemprop="name">How do I whitelist my IP in MongoDB Atlas?</span>
+          <div class="faq-chevron">▾</div>
+        </div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <div itemprop="text">In MongoDB Atlas, go to Network Access → Add IP Address, then paste your CIDR notation from IPWhitelist.dev. Alternatively, use the Atlas CLI command generated above. Your IP must be whitelisted before any client can connect to your Atlas cluster.</div>
+        </div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text" itemprop="name">Do you store or log my IP address?</span>
+          <div class="faq-chevron">▾</div>
+        </div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <div itemprop="text">No. IP detection is done via client-side calls to public APIs (ipify.org and ipapi.co). We never proxy or log these requests. Your IP address never touches our servers.</div>
+        </div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text" itemprop="name">Why does my IP change?</span>
+          <div class="faq-chevron">▾</div>
+        </div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <div itemprop="text">Most home and office ISPs assign dynamic IP addresses, meaning your public IP can change when your router reconnects, after a power cycle, or periodically based on your ISP's lease policy. If you have a dynamic IP and rely on whitelisting for database or server access, you'll need to update your whitelist rules each time it changes.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-brand">IP<span>Whitelist</span>.dev</div>
+  <div class="footer-links">
+    <a href="/port-checker/">Port Checker</a>
+    <a href="/dns-lookup/">DNS Lookup</a>
+    <a href="/latency-test/">Latency Test</a>
+    <a href="/user-agent/">User Agent</a>
+    <a href="mailto:hello@ipwhitelist.dev">Contact</a>
+  </div>
+  <div class="footer-copy">© 2025 IPWhitelist.dev — Free developer network tools</div>
+</footer>
+
+<!-- SHARE MODAL -->
+<div class="modal-overlay" id="shareModal" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeShareModal()">✕</button>
+    <div class="modal-title">Your IP Card</div>
+    <p class="modal-sub">Share with teammates so they can whitelist your IP — no console access needed.</p>
+    <div class="share-ip-preview">
+      <div class="sip-logo">ipwhitelist.dev</div>
+      <div class="sip-label">Whitelist This IP Address</div>
+      <div class="sip-ip" id="sip-ip">—</div>
+      <div class="sip-cidr" id="sip-cidr">—/32</div>
+      <div class="sip-meta">
+        <div class="sip-meta-item"><span>Location</span><strong id="sip-loc">—</strong></div>
+        <div class="sip-meta-item"><span>ISP</span><strong id="sip-isp">—</strong></div>
+        <div class="sip-meta-item"><span>Type</span><strong>IPv4 Public</strong></div>
+        <div class="sip-meta-item"><span>CIDR</span><strong id="sip-cidr2">—/32</strong></div>
+      </div>
+      <div class="sip-footer">Generated · ipwhitelist.dev · <span id="sip-date">—</span></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-modal btn-modal-copy" onclick="copyShareCard()">📋 Copy as Text</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"><span id="toast-msg">Copied!</span></div>
+
+<script src="../shared.js"></script>
+<script>
+  detectIP();
+  initConfigTabs();
+</script>
+</body>
+</html>
