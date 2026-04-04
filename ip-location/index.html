@@ -231,12 +231,23 @@ async function runIPLookup(){
   btn.innerHTML = '<span class="spinner"></span>';
 
   try {
-    const url = input
-      ? `https://ipapi.co/${encodeURIComponent(input)}/json/`
-      : 'https://ipapi.co/json/';
-    const r = await fetch(url);
-    const d = await r.json();
-    if(d.error) throw new Error(d.reason || 'Invalid IP');
+    let d = null;
+    if(!input){
+      // Get IP from ipify first, then geolocate
+      try {
+        const ipRes = await fetch('https://api.ipify.org?format=json');
+        const ipData = await ipRes.json();
+        const geoRes = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
+        d = await geoRes.json();
+      } catch(e) {
+        const r = await fetch('https://ipapi.co/json/');
+        d = await r.json();
+      }
+    } else {
+      const r = await fetch(`https://ipapi.co/${encodeURIComponent(input)}/json/`);
+      d = await r.json();
+    }
+    if(!d || d.error) throw new Error(d?.reason || 'Could not locate IP — try again in a moment');
 
     document.getElementById('locIP').textContent = d.ip || '—';
     document.getElementById('locCity').textContent = d.city || '—';
