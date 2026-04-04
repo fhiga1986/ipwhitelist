@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IP Location Map — Find IP Address Location | IPWhitelist.dev</title>
+  <meta name="description" content="Free IP geolocation map. Find the location of any IP address on an interactive map. See city, country, ISP, timezone, and coordinates. Free, no signup." />
+  <link rel="canonical" href="https://ipwhitelist.dev/ip-location/" />
+  <meta property="og:title" content="IP Location Map — Find Any IP Address Location | IPWhitelist.dev" />
+  <meta property="og:description" content="Free IP geolocation tool with interactive map. Find city, country, ISP and coordinates for any IP." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ipwhitelist.dev/ip-location/" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "IP Location Map — IPWhitelist.dev",
+    "url": "https://ipwhitelist.dev/ip-location/",
+    "description": "Free IP geolocation tool with interactive map. Find the location of any IP address including city, country, ISP, and coordinates.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5526031626146935" crossorigin="anonymous"></script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFLEV7NLEG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QFLEV7NLEG');
+  </script>
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23080A0F'/><text y='72' x='14' font-size='68' font-family='monospace' fill='%234EFFC0'>⌁</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared.css" />
+  <style>
+    #map {
+      width: 100%; height: 400px;
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border-hi);
+      z-index: 1;
+      filter: brightness(0.85) saturate(0.9);
+    }
+    .map-wrap {
+      position: relative; z-index: 2;
+      max-width: 740px; margin: 0 auto;
+      padding: 0 20px;
+    }
+    .leaflet-popup-content-wrapper {
+      background: var(--ink-2);
+      border: 1px solid var(--border-act);
+      border-radius: var(--r-md);
+      color: var(--txt);
+      font-family: var(--mono);
+      font-size: .75rem;
+    }
+    .leaflet-popup-tip { background: var(--ink-2); }
+    .ip-lookup-row {
+      display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .result-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: .72rem;
+      padding: 5px 12px; border-radius: 6px;
+      background: var(--lime-dim); border: 1px solid var(--border-act);
+      color: var(--lime); margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<nav>
+  <a href="/" class="nav-logo"><div class="nav-logo-mark">⌁</div><span class="nav-logo-text">IP<span>Whitelist</span>.dev</span></a>
+  <div class="nav-center">
+    <a href="/" class="nav-link">My IP</a>
+    <a href="/port-checker/" class="nav-link">Port Checker</a>
+    <a href="/dns-lookup/" class="nav-link">DNS Lookup</a>
+    <a href="/whois-lookup/" class="nav-link">WHOIS</a>
+    <a href="/ssl-checker/" class="nav-link">SSL</a>
+    <a href="/ip-location/" class="nav-link active">IP Map</a>
+    <a href="/headers/" class="nav-link">Headers</a>
+    <a href="/ipv6/" class="nav-link">IPv6</a>
+  </div>
+  <div class="nav-right"><span class="badge-free">100% Free</span></div>
+</nav>
+<main>
+  <header class="hero">
+    <div class="hero-kicker"><div class="hero-kicker-dot"></div>IP Geolocation · Interactive Map</div>
+    <h1><em>IP Location</em> Map</h1>
+    <p class="hero-sub">Find the geographic location of any IP address on an interactive map. See city, country, ISP, coordinates, and timezone — for your IP or any IP you want to look up.</p>
+  </header>
+
+  <div class="card-wrap" style="margin-bottom:16px;">
+    <div class="tool-card">
+      <div class="tool-card-head">
+        <div class="tool-card-title">IP Geolocation Lookup</div>
+        <div class="tool-card-desc">Leave blank to locate your own IP, or enter any IP address to find its location.</div>
+      </div>
+      <div class="tool-card-body">
+        <div class="ip-lookup-row">
+          <input class="tool-input" id="ipLookupInput" placeholder="IP address (leave blank for your IP)" />
+          <button class="btn-run" onclick="runIPLookup()" id="ipLookupBtn">Locate IP</button>
+        </div>
+        <div id="ipLocationMeta" style="display:none;">
+          <div class="meta-grid">
+            <div class="meta-cell"><div class="meta-cell-label">🌐 IP</div><div class="meta-cell-value highlight" id="locIP">—</div></div>
+            <div class="meta-cell"><div class="meta-cell-label">📍 City</div><div class="meta-cell-value" id="locCity">—</div></div>
+            <div class="meta-cell"><div class="meta-cell-label">🌍 Country</div><div class="meta-cell-value" id="locCountry">—</div></div>
+            <div class="meta-cell"><div class="meta-cell-label">📡 ISP</div><div class="meta-cell-value" id="locISP">—</div></div>
+            <div class="meta-cell"><div class="meta-cell-label">🗺 Region</div><div class="meta-cell-value" id="locRegion">—</div></div>
+            <div class="meta-cell"><div class="meta-cell-label">⏱ Timezone</div><div class="meta-cell-value" id="locTZ">—</div></div>
+            <div class="meta-cell"><div class="meta-cell-label">📐 Latitude</div><div class="meta-cell-value" id="locLat">—</div></div>
+            <div class="meta-cell"><div class="meta-cell-label">📐 Longitude</div><div class="meta-cell-value" id="locLon">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAP -->
+  <div class="map-wrap reveal">
+    <div id="map"></div>
+  </div>
+
+  <!-- AD SLOT 1 -->
+  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
+
+  <section class="seo-content reveal">
+    <h2>What is IP geolocation?</h2>
+    <p>IP geolocation is the process of determining the real-world geographic location of an IP address. Every public IP address is assigned to a specific organization (ISP, company, or cloud provider) in a specific region. By cross-referencing IP allocation databases, geolocation services can pinpoint an IP address to a city, region, and country with reasonable accuracy.</p>
+
+    <h2>How accurate is IP geolocation?</h2>
+    <p>IP geolocation is typically accurate to the country level (99%+ accuracy) and city level (50-80% accuracy). It is not precise enough to identify a street address. The location shown is usually the location of your ISP's nearest point of presence, not your exact physical location. If you use a VPN, the location shown will be the VPN server's location, not yours.</p>
+
+    <h2>What can developers use IP geolocation for?</h2>
+    <ul>
+      <li><strong>Security</strong> — Detecting logins from unusual locations or blocking traffic from specific regions</li>
+      <li><strong>Content localization</strong> — Serving region-appropriate content, currency, or language</li>
+      <li><strong>Fraud detection</strong> — Flagging transactions from high-risk regions</li>
+      <li><strong>Analytics</strong> — Understanding where your users are located</li>
+      <li><strong>Compliance</strong> — Restricting access based on geographic regulations (GDPR, export controls)</li>
+    </ul>
+
+    <h2>More free developer tools</h2>
+    <ul>
+      <li><a href="/">IP Whitelist Config Generator</a> — Generate AWS, MongoDB, GCP whitelist configs</li>
+      <li><a href="/whois-lookup/">WHOIS Lookup</a> — Find domain owner and registration info</li>
+      <li><a href="/ssl-checker/">SSL Checker</a> — Verify SSL certificate validity</li>
+      <li><a href="/dns-lookup/">DNS Lookup</a> — Query DNS records for any domain</li>
+    </ul>
+  </section>
+
+  <section class="tools-grid-section reveal">
+    <div class="section-label">More Free Tools</div>
+    <div class="tools-grid">
+      <a href="/" class="tool-grid-card"><div class="tgc-icon">🌐</div><div class="tgc-title">My IP Address</div><div class="tgc-desc">Detect your IP + generate cloud whitelist configs</div><div class="tgc-arrow">→</div></a>
+      <a href="/whois-lookup/" class="tool-grid-card"><div class="tgc-icon">📋</div><div class="tgc-title">WHOIS Lookup</div><div class="tgc-desc">Find domain owner and registration info</div><div class="tgc-arrow">→</div></a>
+      <a href="/ssl-checker/" class="tool-grid-card"><div class="tgc-icon">🔒</div><div class="tgc-title">SSL Checker</div><div class="tgc-desc">Verify SSL certificate validity and expiry</div><div class="tgc-arrow">→</div></a>
+      <a href="/headers/" class="tool-grid-card"><div class="tgc-icon">📡</div><div class="tgc-title">HTTP Headers</div><div class="tgc-desc">Inspect your browser's HTTP request headers</div><div class="tgc-arrow">→</div></a>
+    </div>
+  </section>
+
+  <!-- AD SLOT 2 -->
+  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
+
+  <section class="faq-section reveal">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-heading">IP location questions</h2>
+    <div itemscope itemtype="https://schema.org/FAQPage">
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why does my IP location show the wrong city?</span><div class="faq-chevron">▾</div></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">IP geolocation shows the location of your ISP's infrastructure, not your physical location. Your ISP may route traffic through a hub in a different city. Additionally, if you use a VPN, the location shown is the VPN server's location. City-level accuracy varies between 50-80% depending on the geolocation database used.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Can I look up any IP address location?</span><div class="faq-chevron">▾</div></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Yes — enter any public IPv4 address in the lookup field above. Private IP addresses (192.168.x.x, 10.x.x.x, 172.16.x.x) cannot be geolocated as they are local network addresses not routable on the public internet.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Is this IP lookup tool free?</span><div class="faq-chevron">▾</div></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Yes, completely free with no signup required. All lookups are done via client-side calls to public APIs. We don't store or log any IP addresses you look up.</div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-brand">IP<span>Whitelist</span>.dev</div>
+  <div class="footer-links">
+    <a href="/">My IP</a><a href="/port-checker/">Port Checker</a>
+    <a href="/dns-lookup/">DNS Lookup</a><a href="/whois-lookup/">WHOIS</a>
+    <a href="/ssl-checker/">SSL</a><a href="/ipv6/">IPv6</a>
+    <a href="/headers/">Headers</a><a href="mailto:hello@ipwhitelist.dev">Contact</a>
+  </div>
+  <div class="footer-copy">© 2025 IPWhitelist.dev — Free developer network tools</div>
+</footer>
+<div class="toast" id="toast"><span id="toast-msg">Copied!</span></div>
+
+<!-- Leaflet JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="../shared.js"></script>
+<script>
+let map = null;
+let marker = null;
+
+function initMap(lat, lon){
+  if(map){
+    map.setView([lat, lon], 10);
+    if(marker) map.removeLayer(marker);
+  } else {
+    map = L.map('map').setView([lat, lon], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18
+    }).addTo(map);
+  }
+  const icon = L.divIcon({
+    html: `<div style="width:14px;height:14px;background:#4EFFC0;border-radius:50%;border:3px solid #fff;box-shadow:0 0 12px rgba(78,255,192,.6);"></div>`,
+    iconSize: [14,14], iconAnchor: [7,7]
+  });
+  marker = L.marker([lat, lon], {icon}).addTo(map);
+}
+
+async function runIPLookup(){
+  const input = document.getElementById('ipLookupInput').value.trim();
+  const btn = document.getElementById('ipLookupBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+
+  try {
+    const url = input
+      ? `https://ipapi.co/${encodeURIComponent(input)}/json/`
+      : 'https://ipapi.co/json/';
+    const r = await fetch(url);
+    const d = await r.json();
+    if(d.error) throw new Error(d.reason || 'Invalid IP');
+
+    document.getElementById('locIP').textContent = d.ip || '—';
+    document.getElementById('locCity').textContent = d.city || '—';
+    document.getElementById('locCountry').textContent = d.country_name || '—';
+    document.getElementById('locISP').textContent = d.org ? d.org.replace(/^AS\d+\s+/,'').slice(0,24) : '—';
+    document.getElementById('locRegion').textContent = d.region || '—';
+    document.getElementById('locTZ').textContent = d.timezone || '—';
+    document.getElementById('locLat').textContent = d.latitude ? d.latitude.toFixed(4) : '—';
+    document.getElementById('locLon').textContent = d.longitude ? d.longitude.toFixed(4) : '—';
+    document.getElementById('ipLocationMeta').style.display = 'block';
+
+    if(d.latitude && d.longitude){
+      initMap(d.latitude, d.longitude);
+      const city = [d.city, d.region, d.country_name].filter(Boolean).join(', ');
+      marker.bindPopup(`<strong>${d.ip}</strong><br/>${city}<br/>${d.org||''}`).openPopup();
+    }
+  } catch(e) {
+    showToast('⚠ Could not locate that IP — check the address and try again');
+  }
+  btn.disabled = false;
+  btn.textContent = 'Locate IP';
+}
+
+document.getElementById('ipLookupInput').addEventListener('keydown', e=>{if(e.key==='Enter') runIPLookup();});
+
+// Auto-run on load with user's own IP
+window.addEventListener('load', ()=>{ runIPLookup(); });
+</script>
+</body>
+</html>
