@@ -1,8 +1,4 @@
 User-agent: *
 Allow: /
-Allow: /port-checker/
-Allow: /dns-lookup/
-Allow: /latency-test/
-Allow: /user-agent/
 
 Sitemap: https://ipwhitelist.dev/sitemap.xml
