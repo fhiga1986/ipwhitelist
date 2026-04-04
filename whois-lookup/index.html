@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WHOIS Lookup — Domain Owner & Registration Info | IPWhitelist.dev</title>
+  <meta name="description" content="Free WHOIS lookup tool. Find domain owner, registration date, expiry date, nameservers, and registrar for any domain name. Instant results, no signup required." />
+  <link rel="canonical" href="https://ipwhitelist.dev/whois-lookup/" />
+  <meta property="og:title" content="WHOIS Lookup — Domain Owner Info | IPWhitelist.dev" />
+  <meta property="og:description" content="Free WHOIS lookup. Find domain owner, registrar, expiry date and nameservers instantly." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ipwhitelist.dev/whois-lookup/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "WHOIS Lookup — IPWhitelist.dev",
+    "url": "https://ipwhitelist.dev/whois-lookup/",
+    "description": "Free WHOIS lookup tool to find domain owner, registration date, expiry, nameservers and registrar information.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5526031626146935"
+     crossorigin="anonymous"></script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFLEV7NLEG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QFLEV7NLEG');
+  </script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23080A0F'/><text y='72' x='14' font-size='68' font-family='monospace' fill='%234EFFC0'>⌁</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared.css" />
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<nav>
+  <a href="/" class="nav-logo"><div class="nav-logo-mark">⌁</div><span class="nav-logo-text">IP<span>Whitelist</span>.dev</span></a>
+  <div class="nav-center">
+    <a href="/" class="nav-link">My IP</a>
+    <a href="/port-checker/" class="nav-link">Port Checker</a>
+    <a href="/dns-lookup/" class="nav-link">DNS Lookup</a>
+    <a href="/whois-lookup/" class="nav-link active">WHOIS</a>
+    <a href="/ssl-checker/" class="nav-link">SSL Checker</a>
+    <a href="/ipv6/" class="nav-link">IPv6</a>
+  </div>
+  <div class="nav-right"><span class="badge-free">100% Free</span></div>
+</nav>
+<main>
+  <header class="hero">
+    <div class="hero-kicker"><div class="hero-kicker-dot"></div>Domain Registration · Owner Info</div>
+    <h1><em>WHOIS Lookup</em> Tool</h1>
+    <p class="hero-sub">Find domain owner, registrar, registration date, expiry date, and nameservers for any domain name. Uses live WHOIS data — no cached results.</p>
+  </header>
+
+  <div class="card-wrap">
+    <div class="tool-card">
+      <div class="tool-card-head">
+        <div class="tool-card-title">WHOIS Domain Lookup</div>
+        <div class="tool-card-desc">Enter any domain name to see its full registration record. Works for .com, .net, .org, .dev, .io and most other TLDs.</div>
+      </div>
+      <div class="tool-card-body">
+        <div class="tool-input-row">
+          <input class="tool-input" id="whoisInput" placeholder="domain (e.g. github.com, google.com)" />
+          <button class="btn-run" onclick="runWhois()" id="whoisBtn">Lookup</button>
+        </div>
+        <!-- Quick examples -->
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
+          <button class="pill" onclick="setWhoisExample('github.com')">github.com</button>
+          <button class="pill" onclick="setWhoisExample('cloudflare.com')">cloudflare.com</button>
+          <button class="pill" onclick="setWhoisExample('vercel.com')">vercel.com</button>
+        </div>
+        <div class="result-area" id="whoisResults">
+          <div class="result-placeholder">Enter a domain name → click Lookup</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AD SLOT 1 -->
+  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
+
+  <section class="seo-content reveal">
+    <h2>What is WHOIS?</h2>
+    <p>WHOIS is a public database that stores registration information for every domain name on the internet. When someone registers a domain, their contact information, registration date, expiry date, and nameservers are recorded in the WHOIS database. This information is publicly accessible to anyone who wants to look it up.</p>
+
+    <h2>What information does a WHOIS lookup show?</h2>
+    <ul>
+      <li><strong>Registrant</strong> — The person or organization that owns the domain</li>
+      <li><strong>Registrar</strong> — The company where the domain was purchased (e.g. GoDaddy, Namecheap, Hostinger)</li>
+      <li><strong>Registration date</strong> — When the domain was first registered</li>
+      <li><strong>Expiry date</strong> — When the domain registration expires</li>
+      <li><strong>Nameservers</strong> — The DNS servers that control where the domain points</li>
+      <li><strong>WHOIS Privacy</strong> — Many registrars offer privacy protection that hides personal contact details</li>
+    </ul>
+
+    <h2>Why would a developer use WHOIS?</h2>
+    <p>Developers use WHOIS to verify domain ownership before whitelisting, check if a domain is about to expire, investigate suspicious traffic sources, or confirm nameserver configuration during DNS migrations. Combined with our <a href="/dns-lookup/">DNS Lookup tool</a>, WHOIS gives you a complete picture of any domain's configuration.</p>
+
+    <h2>More free developer tools</h2>
+    <ul>
+      <li><a href="/">IP Whitelist Config Generator</a> — Detect your IP and generate AWS, MongoDB, GCP configs</li>
+      <li><a href="/dns-lookup/">DNS Lookup</a> — Query A, AAAA, MX, CNAME, TXT, NS records</li>
+      <li><a href="/ssl-checker/">SSL Certificate Checker</a> — Verify SSL validity and expiry</li>
+      <li><a href="/port-checker/">Port Checker</a> — Test if TCP ports are open on any host</li>
+      <li><a href="/ipv6/">IPv6 Detector</a> — Check your IPv6 address and connectivity</li>
+    </ul>
+  </section>
+
+  <section class="tools-grid-section reveal">
+    <div class="section-label">More Free Tools</div>
+    <div class="tools-grid">
+      <a href="/" class="tool-grid-card"><div class="tgc-icon">🌐</div><div class="tgc-title">My IP Address</div><div class="tgc-desc">Detect your public IP + cloud whitelist configs</div><div class="tgc-arrow">→</div></a>
+      <a href="/ssl-checker/" class="tool-grid-card"><div class="tgc-icon">🔒</div><div class="tgc-title">SSL Checker</div><div class="tgc-desc">Verify SSL certificate validity and expiry date</div><div class="tgc-arrow">→</div></a>
+      <a href="/dns-lookup/" class="tool-grid-card"><div class="tgc-icon">🔍</div><div class="tgc-title">DNS Lookup</div><div class="tgc-desc">Query A, AAAA, MX, CNAME, TXT, NS records</div><div class="tgc-arrow">→</div></a>
+      <a href="/ipv6/" class="tool-grid-card"><div class="tgc-icon">🔢</div><div class="tgc-title">IPv6 Detector</div><div class="tgc-desc">Check your IPv6 address and connectivity</div><div class="tgc-arrow">→</div></a>
+    </div>
+  </section>
+
+  <!-- AD SLOT 2 -->
+  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
+
+  <section class="faq-section reveal">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-heading">WHOIS lookup questions</h2>
+    <div itemscope itemtype="https://schema.org/FAQPage">
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why does WHOIS show privacy protection instead of owner details?</span><div class="faq-chevron">▾</div></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Many domain registrars offer WHOIS privacy protection (also called domain privacy or WHOIS guard). When enabled, the registrar's contact details replace the owner's personal information in the public WHOIS database. This is common practice to protect domain owners from spam and unwanted contact.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How do I find out who owns a domain?</span><div class="faq-chevron">▾</div></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Enter the domain in the WHOIS lookup tool above. If the owner hasn't enabled privacy protection, you'll see their name, email, and organization. If privacy is enabled, you'll see the registrar's proxy information instead. You can try contacting the registrar directly for ownership disputes.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How accurate is WHOIS data?</span><div class="faq-chevron">▾</div></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">WHOIS data is provided directly by domain registrars and is generally accurate for technical details like nameservers, registration dates, and expiry dates. Contact information may be outdated if the domain owner didn't update it, or hidden behind privacy protection services.</div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-brand">IP<span>Whitelist</span>.dev</div>
+  <div class="footer-links">
+    <a href="/">My IP</a><a href="/port-checker/">Port Checker</a>
+    <a href="/dns-lookup/">DNS Lookup</a><a href="/ssl-checker/">SSL Checker</a>
+    <a href="/ipv6/">IPv6</a><a href="mailto:hello@ipwhitelist.dev">Contact</a>
+  </div>
+  <div class="footer-copy">© 2025 IPWhitelist.dev — Free developer network tools</div>
+</footer>
+<div class="toast" id="toast"><span id="toast-msg">Copied!</span></div>
+<script src="../shared.js"></script>
+<script>
+async function runWhois(){
+  const raw = document.getElementById('whoisInput').value.trim();
+  const domain = raw.replace(/^https?:\/\//,'').split('/')[0].toLowerCase();
+  if(!domain){showToast('⚠ Enter a domain name');return;}
+  const btn = document.getElementById('whoisBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+  const res = document.getElementById('whoisResults');
+  res.innerHTML = '<div class="result-placeholder">Looking up WHOIS data…</div>';
+  try {
+    // Use RDAP — the modern, JSON-based replacement for WHOIS (no CORS issues)
+    const tld = domain.split('.').pop();
+    const rdapUrl = `https://rdap.org/domain/${encodeURIComponent(domain)}`;
+    const r = await fetch(rdapUrl);
+    if(!r.ok) throw new Error('Not found');
+    const d = await r.json();
+
+    // Parse RDAP response
+    const getName = (entities, roles) => {
+      if(!entities) return '—';
+      for(const e of entities){
+        if(e.roles && roles.some(r => e.roles.includes(r))){
+          if(e.vcardArray && e.vcardArray[1]){
+            const fn = e.vcardArray[1].find(v=>v[0]==='fn');
+            if(fn) return fn[3];
+          }
+          if(e.handle) return e.handle;
+        }
+      }
+      return '—';
+    };
+
+    const getDate = (events, type) => {
+      if(!events) return '—';
+      const ev = events.find(e=>e.eventAction===type);
+      if(!ev) return '—';
+      return new Date(ev.eventDate).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+    };
+
+    const ns = d.nameservers ? d.nameservers.map(n=>n.ldhName||n.unicodeName).join('<br/>') : '—';
+    const registrar = getName(d.entities, ['registrar']);
+    const registrant = getName(d.entities, ['registrant']);
+    const registered = getDate(d.events, 'registration');
+    const expiry = getDate(d.events, 'expiration');
+    const updated = getDate(d.events, 'last changed');
+    const status = d.status ? d.status.join(', ') : '—';
+
+    // Check expiry warning
+    let expiryWarning = '';
+    if(d.events){
+      const expEv = d.events.find(e=>e.eventAction==='expiration');
+      if(expEv){
+        const daysLeft = Math.ceil((new Date(expEv.eventDate)-new Date())/(1000*60*60*24));
+        if(daysLeft < 30) expiryWarning = `<div style="background:rgba(255,92,122,.1);border:1px solid rgba(255,92,122,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.72rem;color:var(--rose);">⚠ Expires in ${daysLeft} days</div>`;
+        else if(daysLeft < 90) expiryWarning = `<div style="background:rgba(255,181,71,.08);border:1px solid rgba(255,181,71,.25);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.72rem;color:var(--amber);">⚠ Expires in ${daysLeft} days</div>`;
+      }
+    }
+
+    res.innerHTML = `
+      <div class="result-top">
+        <span class="result-lang">WHOIS · ${domain}</span>
+        <button class="btn-icon sm" onclick="copyWhois()">Copy</button>
+      </div>
+      <div style="padding:18px;" id="whoisData">
+        ${expiryWarning}
+        <div class="ua-grid" style="margin-bottom:0;">
+          <div class="ua-cell"><div class="ua-label">Domain</div><div class="ua-value accent">${domain}</div></div>
+          <div class="ua-cell"><div class="ua-label">Registrar</div><div class="ua-value">${registrar}</div></div>
+          <div class="ua-cell"><div class="ua-label">Registrant</div><div class="ua-value">${registrant}</div></div>
+          <div class="ua-cell"><div class="ua-label">Status</div><div class="ua-value" style="font-size:.65rem;">${status}</div></div>
+          <div class="ua-cell"><div class="ua-label">Registered</div><div class="ua-value">${registered}</div></div>
+          <div class="ua-cell"><div class="ua-label">Expires</div><div class="ua-value">${expiry}</div></div>
+          <div class="ua-cell"><div class="ua-label">Last Updated</div><div class="ua-value">${updated}</div></div>
+          <div class="ua-cell"><div class="ua-label">Nameservers</div><div class="ua-value" style="font-size:.68rem;line-height:1.6;">${ns}</div></div>
+        </div>
+      </div>`;
+    window._whoisText = `WHOIS: ${domain}\nRegistrar: ${registrar}\nRegistrant: ${registrant}\nRegistered: ${registered}\nExpires: ${expiry}\nNameservers: ${d.nameservers?d.nameservers.map(n=>n.ldhName).join(', '):'—'}`;
+  } catch(e) {
+    res.innerHTML = `<div class="result-pre" style="color:var(--rose)">Could not retrieve WHOIS data for "${domain}".<br/><br/>This may be because:<br/>• The domain does not exist<br/>• The TLD uses a non-standard WHOIS format<br/>• The registry has rate-limited the request<br/><br/>Try again in a few seconds.</div>`;
+  }
+  btn.disabled = false;
+  btn.textContent = 'Lookup';
+}
+
+function setWhoisExample(domain){
+  document.getElementById('whoisInput').value = domain;
+  runWhois();
+}
+function copyWhois(){
+  if(window._whoisText) navigator.clipboard.writeText(window._whoisText);
+  showToast('✓ WHOIS data copied');
+}
+document.getElementById('whoisInput').addEventListener('keydown', e=>{if(e.key==='Enter') runWhois();});
+</script>
+</body>
+</html>

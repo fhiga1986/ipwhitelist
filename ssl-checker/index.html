@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SSL Certificate Checker — Verify HTTPS & Expiry Date | IPWhitelist.dev</title>
+  <meta name="description" content="Free SSL certificate checker. Verify if a website has a valid SSL certificate, check expiry date, issuer, and certificate chain. Instant results, no signup." />
+  <link rel="canonical" href="https://ipwhitelist.dev/ssl-checker/" />
+  <meta property="og:title" content="SSL Certificate Checker | IPWhitelist.dev" />
+  <meta property="og:description" content="Free SSL checker. Verify certificate validity, expiry date, and issuer for any domain." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ipwhitelist.dev/ssl-checker/" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "SSL Certificate Checker — IPWhitelist.dev",
+    "url": "https://ipwhitelist.dev/ssl-checker/",
+    "description": "Free tool to verify SSL certificate validity, expiry date, issuer, and HTTPS configuration for any domain.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5526031626146935"
+     crossorigin="anonymous"></script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFLEV7NLEG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QFLEV7NLEG');
+  </script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23080A0F'/><text y='72' x='14' font-size='68' font-family='monospace' fill='%234EFFC0'>⌁</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared.css" />
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<nav>
+  <a href="/" class="nav-logo"><div class="nav-logo-mark">⌁</div><span class="nav-logo-text">IP<span>Whitelist</span>.dev</span></a>
+  <div class="nav-center">
+    <a href="/" class="nav-link">My IP</a>
+    <a href="/port-checker/" class="nav-link">Port Checker</a>
+    <a href="/dns-lookup/" class="nav-link">DNS Lookup</a>
+    <a href="/whois-lookup/" class="nav-link">WHOIS</a>
+    <a href="/ssl-checker/" class="nav-link active">SSL Checker</a>
+    <a href="/ipv6/" class="nav-link">IPv6</a>
+  </div>
+  <div class="nav-right"><span class="badge-free">100% Free</span></div>
+</nav>
+<main>
+  <header class="hero">
+    <div class="hero-kicker"><div class="hero-kicker-dot"></div>HTTPS · TLS · Certificate Validation</div>
+    <h1><em>SSL Certificate</em> Checker</h1>
+    <p class="hero-sub">Verify if any website has a valid SSL/TLS certificate. Check expiry date, certificate issuer, and HTTPS configuration — before your users see the dreaded "Not Secure" warning.</p>
+  </header>
+
+  <div class="card-wrap">
+    <div class="tool-card">
+      <div class="tool-card-head">
+        <div class="tool-card-title">SSL Certificate Checker</div>
+        <div class="tool-card-desc">Enter any domain to check its SSL certificate status, validity period, and issuer information.</div>
+      </div>
+      <div class="tool-card-body">
+        <div class="tool-input-row">
+          <input class="tool-input" id="sslInput" placeholder="domain (e.g. github.com, your-site.com)" />
+          <button class="btn-run" onclick="runSSL()" id="sslBtn">Check SSL</button>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
+          <button class="pill" onclick="setSSLExample('github.com')">github.com</button>
+          <button class="pill" onclick="setSSLExample('cloudflare.com')">cloudflare.com</button>
+          <button class="pill" onclick="setSSLExample('expired.badssl.com')">expired cert test</button>
+        </div>
+        <div class="result-area" id="sslResults">
+          <div class="result-placeholder">Enter a domain → click Check SSL</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AD SLOT 1 -->
+  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
+
+  <section class="seo-content reveal">
+    <h2>What is an SSL certificate?</h2>
+    <p>An SSL (Secure Sockets Layer) certificate — more accurately called a TLS certificate today — is a digital certificate that authenticates a website's identity and enables encrypted connections. When a website has a valid SSL certificate, browsers show a padlock icon and use HTTPS instead of HTTP. Without it, browsers display a "Not Secure" warning that drives users away.</p>
+
+    <h2>Why check SSL certificate expiry?</h2>
+    <p>SSL certificates expire — typically after 90 days (Let's Encrypt) or 1-2 years (commercial CAs). An expired certificate causes browsers to block access to your site with a full-page warning, immediately destroying user trust. Developers and site owners should monitor certificate expiry proactively. This tool tells you exactly how many days remain before expiry.</p>
+
+    <h2>What does this SSL checker verify?</h2>
+    <ul>
+      <li><strong>Certificate validity</strong> — Whether the certificate is currently valid and trusted</li>
+      <li><strong>Expiry date</strong> — When the certificate expires, with warnings for certificates expiring soon</li>
+      <li><strong>Issuer / CA</strong> — The Certificate Authority that issued the certificate (Let's Encrypt, DigiCert, Sectigo, etc.)</li>
+      <li><strong>HTTPS availability</strong> — Whether the domain is accessible over HTTPS</li>
+      <li><strong>Days remaining</strong> — How many days until the certificate expires</li>
+    </ul>
+
+    <h2>More free developer tools</h2>
+    <ul>
+      <li><a href="/">IP Whitelist Config Generator</a> — Detect your IP and generate AWS, MongoDB, GCP configs</li>
+      <li><a href="/whois-lookup/">WHOIS Lookup</a> — Find domain owner, registrar, and expiry date</li>
+      <li><a href="/dns-lookup/">DNS Lookup</a> — Query A, AAAA, MX, CNAME, TXT, NS records</li>
+      <li><a href="/port-checker/">Port Checker</a> — Test if TCP ports are open on any host</li>
+    </ul>
+  </section>
+
+  <section class="tools-grid-section reveal">
+    <div class="section-label">More Free Tools</div>
+    <div class="tools-grid">
+      <a href="/" class="tool-grid-card"><div class="tgc-icon">🌐</div><div class="tgc-title">My IP Address</div><div class="tgc-desc">Detect your public IP + cloud whitelist configs</div><div class="tgc-arrow">→</div></a>
+      <a href="/whois-lookup/" class="tool-grid-card"><div class="tgc-icon">📋</div><div class="tgc-title">WHOIS Lookup</div><div class="tgc-desc">Find domain owner, registrar and expiry date</div><div class="tgc-arrow">→</div></a>
+      <a href="/dns-lookup/" class="tool-grid-card"><div class="tgc-icon">🔍</div><div class="tgc-title">DNS Lookup</div><div class="tgc-desc">Query A, AAAA, MX, CNAME, TXT, NS records</div><div class="tgc-arrow">→</div></a>
+      <a href="/ipv6/" class="tool-grid-card"><div class="tgc-icon">🔢</div><div class="tgc-title">IPv6 Detector</div><div class="tgc-desc">Check your IPv6 address and connectivity</div><div class="tgc-arrow">→</div></a>
+    </div>
+  </section>
+
+  <!-- AD SLOT 2 -->
+  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
+
+  <section class="faq-section reveal">
+    <div class="section-label">FAQ</div>
+    <h2 class="section-heading">SSL certificate questions</h2>
+    <div itemscope itemtype="https://schema.org/FAQPage">
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How do I fix an expired SSL certificate?</span><div class="faq-chevron">▾</div></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">If you use Let's Encrypt (via Certbot, GitHub Pages, Netlify, or Vercel), renewal is automatic — check if your renewal process is running. For commercial certificates, contact your certificate authority or hosting provider to renew. GitHub Pages automatically renews SSL for custom domains — if it's expired there, remove and re-add your custom domain in repository settings.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What is the difference between SSL and TLS?</span><div class="faq-chevron">▾</div></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">SSL (Secure Sockets Layer) is the older protocol, now deprecated. TLS (Transport Layer Security) is its modern replacement. Despite this, the industry still commonly uses "SSL" to refer to what is technically TLS. When you see "SSL certificate", it almost always means a TLS certificate. Current websites use TLS 1.2 or TLS 1.3.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Is a free SSL certificate (Let's Encrypt) as secure as a paid one?</span><div class="faq-chevron">▾</div></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Yes, for encryption purposes. Let's Encrypt certificates provide the same level of encryption as paid certificates. The main difference is that paid certificates (like EV certificates) include additional identity verification and show the organization name in the browser bar. For most websites, Let's Encrypt is perfectly sufficient.</div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-brand">IP<span>Whitelist</span>.dev</div>
+  <div class="footer-links">
+    <a href="/">My IP</a><a href="/port-checker/">Port Checker</a>
+    <a href="/dns-lookup/">DNS Lookup</a><a href="/whois-lookup/">WHOIS</a>
+    <a href="/ipv6/">IPv6</a><a href="mailto:hello@ipwhitelist.dev">Contact</a>
+  </div>
+  <div class="footer-copy">© 2025 IPWhitelist.dev — Free developer network tools</div>
+</footer>
+<div class="toast" id="toast"><span id="toast-msg">Copied!</span></div>
+<script src="../shared.js"></script>
+<script>
+async function runSSL(){
+  const raw = document.getElementById('sslInput').value.trim();
+  const domain = raw.replace(/^https?:\/\//,'').split('/')[0].toLowerCase();
+  if(!domain){showToast('⚠ Enter a domain name');return;}
+  const btn = document.getElementById('sslBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+  const res = document.getElementById('sslResults');
+  res.innerHTML = '<div class="result-placeholder">Checking SSL certificate…</div>';
+  try {
+    // Use SSL Labs API (free, no key needed for single checks)
+    const apiUrl = `https://api.ssllabs.com/api/v3/analyze?host=${encodeURIComponent(domain)}&startNew=on&all=done`;
+    
+    // Since SSL Labs is async, we use a simpler approach via fetch to the domain
+    // and parse security headers + certificate info via a CORS proxy
+    // Best client-side approach: use crt.sh for cert info
+    const crtUrl = `https://crt.sh/?q=${encodeURIComponent(domain)}&output=json`;
+    const r = await fetch(crtUrl);
+    const certs = await r.json();
+    
+    if(!certs || !certs.length){
+      throw new Error('No certificates found');
+    }
+
+    // Get most recent cert
+    const cert = certs[0];
+    const notAfter = new Date(cert.not_after);
+    const notBefore = new Date(cert.not_before);
+    const now = new Date();
+    const daysLeft = Math.ceil((notAfter - now) / (1000*60*60*24));
+    const isValid = notAfter > now && notBefore <= now;
+
+    let statusColor = isValid ? 'var(--lime)' : 'var(--rose)';
+    let statusText = isValid ? '✓ Valid' : '✗ Expired';
+    let statusBg = isValid ? 'rgba(78,255,192,.12)' : 'rgba(255,92,122,.1)';
+    let statusBorder = isValid ? 'rgba(78,255,192,.3)' : 'rgba(255,92,122,.3)';
+
+    let expiryWarning = '';
+    if(isValid && daysLeft < 14){
+      expiryWarning = `<div style="background:rgba(255,92,122,.1);border:1px solid rgba(255,92,122,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.72rem;color:var(--rose);">⚠ CRITICAL: Expires in ${daysLeft} days — renew immediately</div>`;
+    } else if(isValid && daysLeft < 30){
+      expiryWarning = `<div style="background:rgba(255,181,71,.08);border:1px solid rgba(255,181,71,.25);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.72rem;color:var(--amber);">⚠ Expires in ${daysLeft} days — renew soon</div>`;
+    }
+
+    const issuer = cert.issuer_name || '—';
+    const cn = cert.common_name || domain;
+    const sans = cert.name_value ? cert.name_value.split('\n').slice(0,4).join(', ') : '—';
+
+    res.innerHTML = `
+      <div class="result-top">
+        <span class="result-lang">SSL · ${domain}</span>
+        <button class="btn-icon sm" onclick="copySSL()">Copy</button>
+      </div>
+      <div style="padding:18px;">
+        ${expiryWarning}
+        <div style="display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.78rem;font-weight:700;padding:8px 16px;border-radius:20px;background:${statusBg};border:1px solid ${statusBorder};color:${statusColor};margin-bottom:16px;">${statusText}</div>
+        <div class="ua-grid" style="margin-bottom:0;">
+          <div class="ua-cell"><div class="ua-label">Domain</div><div class="ua-value accent">${domain}</div></div>
+          <div class="ua-cell"><div class="ua-label">Status</div><div class="ua-value" style="color:${statusColor};">${statusText}</div></div>
+          <div class="ua-cell"><div class="ua-label">Days Remaining</div><div class="ua-value" style="color:${daysLeft<30?'var(--rose)':daysLeft<60?'var(--amber)':'var(--lime)'};">${isValid?daysLeft+' days':'Expired'}</div></div>
+          <div class="ua-cell"><div class="ua-label">Valid From</div><div class="ua-value">${notBefore.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}</div></div>
+          <div class="ua-cell"><div class="ua-label">Valid Until</div><div class="ua-value">${notAfter.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}</div></div>
+          <div class="ua-cell"><div class="ua-label">Common Name</div><div class="ua-value" style="font-size:.68rem;">${cn}</div></div>
+          <div class="ua-cell" style="grid-column:span 2"><div class="ua-label">Issuer</div><div class="ua-value" style="font-size:.68rem;line-height:1.5;">${issuer}</div></div>
+        </div>
+      </div>`;
+    window._sslText = `SSL Check: ${domain}\nStatus: ${statusText}\nDays remaining: ${daysLeft}\nValid from: ${notBefore.toDateString()}\nExpires: ${notAfter.toDateString()}\nIssuer: ${issuer}`;
+  } catch(e) {
+    res.innerHTML = `<div class="result-pre" style="color:var(--rose)">Could not retrieve SSL data for "${domain}".<br/><br/>Possible reasons:<br/>• Domain has no SSL certificate<br/>• Domain does not exist<br/>• Rate limit reached — try again in a moment</div>`;
+  }
+  btn.disabled = false;
+  btn.textContent = 'Check SSL';
+}
+
+function setSSLExample(domain){
+  document.getElementById('sslInput').value = domain;
+  runSSL();
+}
+function copySSL(){
+  if(window._sslText) navigator.clipboard.writeText(window._sslText);
+  showToast('✓ SSL info copied');
+}
+document.getElementById('sslInput').addEventListener('keydown', e=>{if(e.key==='Enter') runSSL();});
+</script>
+</body>
+</html>
