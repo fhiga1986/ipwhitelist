@@ -321,3 +321,71 @@ function detectEngine(ua){
 
 /* ─── HELPERS ─── */
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* ─── HAMBURGER MENU ─── */
+(function(){
+  // Inject hamburger button and mobile menu into nav
+  const nav = document.querySelector('nav');
+  if(!nav) return;
+
+  // Create hamburger button
+  const btn = document.createElement('button');
+  btn.className = 'hamburger';
+  btn.setAttribute('aria-label', 'Toggle menu');
+  btn.innerHTML = '<span></span><span></span><span></span>';
+  nav.appendChild(btn);
+
+  // Build mobile menu with all tools
+  const tools = [
+    { href: '/',              icon: '🌐', label: 'My IP Address' },
+    { href: '/port-checker/', icon: '🔌', label: 'Port Checker' },
+    { href: '/dns-lookup/',   icon: '🔍', label: 'DNS Lookup' },
+    { href: '/whois-lookup/', icon: '📋', label: 'WHOIS Lookup' },
+    { href: '/ssl-checker/',  icon: '🔒', label: 'SSL Checker' },
+    { href: '/ip-location/',  icon: '🗺️', label: 'IP Location Map' },
+    { href: '/headers/',      icon: '📡', label: 'HTTP Headers' },
+    { href: '/latency-test/', icon: '⚡', label: 'Latency Test' },
+    { href: '/user-agent/',   icon: '🖥️', label: 'User Agent' },
+    { href: '/ipv6/',         icon: '🔢', label: 'IPv6 Detector' },
+  ];
+
+  const currentPath = window.location.pathname.replace(/\/+$/, '') + '/';
+
+  const menu = document.createElement('div');
+  menu.className = 'mobile-menu';
+  menu.innerHTML = tools.map((t, i) => {
+    const isActive = t.href === '/'
+      ? window.location.pathname === '/'
+      : window.location.pathname.startsWith(t.href);
+    return `<a href="${t.href}" class="${isActive ? 'active' : ''}"><span class="mobile-menu-icon">${t.icon}</span>${t.label}</a>`;
+  }).join('');
+
+  document.body.insertBefore(menu, document.body.firstChild);
+
+  // Toggle
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    btn.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+
+  // Close on outside click
+  document.addEventListener('click', () => {
+    btn.classList.remove('open');
+    menu.classList.remove('open');
+  });
+
+  // Close on link click
+  menu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      btn.classList.remove('open');
+      menu.classList.remove('open');
+    });
+  });
+
+  // Close on scroll
+  window.addEventListener('scroll', () => {
+    btn.classList.remove('open');
+    menu.classList.remove('open');
+  }, { passive: true });
+})();
