@@ -289,47 +289,46 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:32
 .hamburger {
   display: none;
   flex-direction: column;
+  justify-content: center;
   gap: 5px;
   cursor: pointer;
-  padding: 6px;
+  padding: 8px;
   border-radius: var(--r-sm);
-  border: 1px solid var(--border);
-  background: transparent;
+  border: 1px solid var(--border-hi);
+  background: var(--ink-3);
   transition: all .15s;
+  flex-shrink: 0;
 }
-.hamburger:hover { background: var(--ink-3); border-color: var(--border-hi); }
+.hamburger:hover { background: var(--ink-4); }
 .hamburger span {
   display: block;
   width: 20px; height: 2px;
   background: var(--txt-2);
   border-radius: 2px;
   transition: all .25s cubic-bezier(.4,0,.2,1);
+  pointer-events: none;
 }
 .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--lime); }
-.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
 .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--lime); }
 
 .mobile-menu {
+  display: none;
   position: fixed;
   top: 60px; left: 0; right: 0;
   background: rgba(5,7,9,.97);
   border-bottom: 1px solid var(--border-act);
-  backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px);
   z-index: 99;
-  padding: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height .3s cubic-bezier(.4,0,.2,1), padding .3s ease;
+  padding: 8px 0 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.5);
 }
-.mobile-menu.open {
-  max-height: 500px;
-  padding: 12px 0 20px;
-}
-.mobile-menu a {
+.mobile-menu.open { display: block; }
+.mmenu-link {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 13px 24px;
+  padding: 12px 20px;
   font-family: var(--mono);
   font-size: .82rem;
   color: var(--txt-2);
@@ -337,15 +336,10 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:32
   transition: all .15s;
   border-left: 2px solid transparent;
 }
-.mobile-menu a:hover { color: var(--txt); background: rgba(255,255,255,.03); }
-.mobile-menu a.active {
+.mmenu-link:hover { color: var(--txt); background: rgba(255,255,255,.03); }
+.mmenu-link.active {
   color: var(--lime);
   border-left-color: var(--lime);
   background: var(--lime-dim);
 }
-.mobile-menu-icon { font-size: 1rem; width: 20px; text-align: center; }
-.mobile-menu-divider {
-  height: 1px;
-  background: var(--border);
-  margin: 8px 24px;
-}
+.mmenu-icon { font-size: 1rem; width: 22px; text-align: center; flex-shrink: 0; }
