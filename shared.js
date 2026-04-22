@@ -231,6 +231,7 @@ const REGIONS=[
   {name:'EU Central',label:'Frankfurt',url:'https://dynamodb.eu-central-1.amazonaws.com/'},
   {name:'AP',label:'Tokyo',url:'https://dynamodb.ap-northeast-1.amazonaws.com/'},
   {name:'AP',label:'Singapore',url:'https://dynamodb.ap-southeast-1.amazonaws.com/'},
+  {name:'AP',label:'Sydney',url:'https://dynamodb.ap-southeast-2.amazonaws.com/'},
 ];
 
 function initLatencyGrid(){
