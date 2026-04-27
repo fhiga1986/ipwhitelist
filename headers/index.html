@@ -191,6 +191,14 @@
       <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
       <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
     </ul>
+  
+    <h2>HTTP security headers checklist</h2>
+    <p>Every production web application should implement these security headers: <strong>Content-Security-Policy (CSP)</strong> — prevents XSS by specifying allowed content sources. <strong>Strict-Transport-Security (HSTS)</strong> — forces HTTPS connections. <strong>X-Frame-Options</strong> — prevents clickjacking. <strong>X-Content-Type-Options: nosniff</strong> — prevents MIME sniffing attacks. <strong>Referrer-Policy</strong> — controls referrer information sent with requests.</p>
+    <p>Missing or misconfigured security headers are consistently among the top web vulnerabilities. Use this HTTP headers checker to verify your security header configuration and identify gaps before attackers do.</p>
+
+    <h2>What is CORS and how do CORS headers work?</h2>
+    <p>CORS (Cross-Origin Resource Sharing) headers control which external domains can make requests to your API or web service from a browser. The key headers are: <strong>Access-Control-Allow-Origin</strong> (which domains can access the resource), <strong>Access-Control-Allow-Methods</strong> (which HTTP methods are allowed), and <strong>Access-Control-Allow-Headers</strong> (which request headers are permitted).</p>
+    <p>CORS errors are one of the most common issues when building frontend applications that connect to APIs. This tool shows the exact CORS headers returned by any URL, helping you diagnose cross-origin issues without needing to write test code.</p>
   </section>
 
 

@@ -175,6 +175,14 @@
       <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
       <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
     </ul>
+  
+    <h2>How to enable IPv6 on your network or server</h2>
+    <p>Most modern ISPs support IPv6, but it may need to be enabled on your router. Check your router's WAN settings for an IPv6 option — common modes are DHCPv6, SLAAC, or 6to4 tunneling. Once enabled at the router level, connected devices should receive IPv6 addresses automatically.</p>
+    <p>On Linux servers, enable IPv6 by ensuring <code>net.ipv6.conf.all.disable_ipv6 = 0</code> in <code>/etc/sysctl.conf</code>. For cloud servers (AWS, GCP, Azure), IPv6 must be enabled at the VPC/subnet level before your instance can receive an IPv6 address. Use this tool to verify your IPv6 connectivity after configuration.</p>
+
+    <h2>IPv4 vs IPv6 — key differences explained</h2>
+    <p>IPv4 uses 32-bit addresses (e.g., 192.168.1.1) providing ~4.3 billion unique addresses — a number that has been exhausted globally. IPv6 uses 128-bit addresses (e.g., 2001:db8::1) providing 340 undecillion addresses, effectively eliminating address scarcity.</p>
+    <p>IPv6 also introduces improvements over IPv4: no NAT required (every device gets a globally routable address), built-in IPSec support, more efficient routing, and stateless address autoconfiguration (SLAAC). Most cloud providers now offer native IPv6 support for new deployments.</p>
   </section>
 
 

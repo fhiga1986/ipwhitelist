@@ -128,6 +128,14 @@
       <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
       <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
     </ul>
+  
+    <h2>What happens when an SSL certificate expires?</h2>
+    <p>When an SSL certificate expires, browsers display a security warning — "Your connection is not private" (Chrome) or "Warning: Potential Security Risk Ahead" (Firefox) — and users must manually override to proceed. This dramatically reduces trust and traffic. Search engines may also demote sites with expired certificates.</p>
+    <p>Set a calendar reminder at least 30 days before your certificate expires. Most certificate authorities send expiry reminder emails, but these are easily missed. Let's Encrypt certificates expire every 90 days and should be configured to auto-renew using Certbot or your hosting provider's built-in renewal tools.</p>
+
+    <h2>What is the difference between DV, OV, and EV SSL certificates?</h2>
+    <p><strong>DV (Domain Validated)</strong> certificates verify only that you control the domain. They are issued in minutes, free via Let's Encrypt, and sufficient for most websites. <strong>OV (Organization Validated)</strong> certificates verify the organization behind the domain, requiring manual vetting — used by businesses that want to show legitimacy. <strong>EV (Extended Validation)</strong> certificates require the most rigorous vetting and previously showed a green address bar, though modern browsers have removed this visual distinction.</p>
+    <p>For most developer tools, personal projects, and small businesses, a free Let's Encrypt DV certificate is the correct choice. EV certificates cost hundreds of dollars annually and provide minimal visible benefit to end users today.</p>
   </section>
 
 

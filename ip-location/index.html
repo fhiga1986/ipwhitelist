@@ -171,6 +171,14 @@
       <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
       <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
     </ul>
+  
+    <h2>What is an ASN and how does it relate to IP location?</h2>
+    <p>An ASN (Autonomous System Number) identifies a network or group of networks under a single organization's control, typically an ISP, university, or large company. When you look up an IP location, the ASN tells you which organization owns that IP block — for example, AS15169 is Google, AS16509 is Amazon AWS, and AS13335 is Cloudflare.</p>
+    <p>ASN information is useful for identifying cloud provider IP ranges, detecting data center vs residential IPs, and understanding the routing path of network traffic. Developers use ASN data to block or allow entire cloud provider IP ranges in firewall rules.</p>
+
+    <h2>How to detect a visitor's country from their IP address</h2>
+    <p>IP geolocation databases map IP address ranges to geographic locations based on registration data from regional internet registries (ARIN, RIPE, APNIC) and network routing data. Accuracy is highest at the country level (95%+) and decreases at city level (50-70% depending on the database).</p>
+    <p>For developers building geo-restriction or content localization features, IP geolocation provides a best-effort approximation. Always provide a fallback for users whose location cannot be accurately determined, and never rely solely on IP geolocation for security-critical decisions.</p>
   </section>
 
 

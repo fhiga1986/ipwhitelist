@@ -307,6 +307,28 @@
       <a href="/user-agent/" class="tool-grid-card"><div class="tgc-icon">🖥️</div><div class="tgc-title">User Agent</div><div class="tgc-desc">Full browser and OS fingerprint breakdown</div><div class="tgc-arrow">→</div></a>
       <a href="/ipv6/" class="tool-grid-card"><div class="tgc-icon">🔢</div><div class="tgc-title">IPv6 Detector</div><div class="tgc-desc">Check your IPv6 address and connectivity</div><div class="tgc-arrow">→</div></a>
     </div>
+  
+  <div class="faq-item">
+    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+      <span class="faq-q-text">What is a public IP address?</span>
+      <span class="faq-chevron">▾</span>
+    </div>
+    <div class="faq-a">A public IP address is the unique address assigned to your network by your Internet Service Provider (ISP). It identifies your device on the internet and is what cloud services like AWS, MongoDB Atlas, and GCP use when you configure firewall rules or IP whitelists.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+      <span class="faq-q-text">Why does my IP address keep changing?</span>
+      <span class="faq-chevron">▾</span>
+    </div>
+    <div class="faq-a">Most ISPs assign dynamic IP addresses that can change when you restart your router or after a set period. This is why developers frequently need to update AWS Security Groups, MongoDB Atlas access lists, and firewall rules. This tool always shows your current IP so you can update your whitelist immediately.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+      <span class="faq-q-text">Does my IP address reveal my exact location?</span>
+      <span class="faq-chevron">▾</span>
+    </div>
+    <div class="faq-a">No. Your IP address reveals your approximate location — typically your city and ISP — but not your exact street address. The geolocation data shown here is based on where your ISP's infrastructure is located, which may differ from your physical location.</div>
+  </div>
   </section>
 
   <!-- AD SLOT 2 -->
@@ -334,6 +356,17 @@
       <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
       <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
     </ul>
+      <h2>What is the difference between a public and private IP address?</h2>
+    <p>Your <strong>public IP address</strong> is the address assigned by your ISP that identifies your network on the internet. It is what websites, servers, and cloud services like AWS Security Groups and MongoDB Atlas see when you connect. Your private IP address, by contrast, is used only within your local network (e.g. 192.168.1.x) and is not visible externally.</p>
+    <p>When you add your IP to a cloud firewall or security group, you always need to use your <strong>public IP address</strong> — not your private one. This tool detects your public IP automatically so you can whitelist it in one click without any confusion.</p>
+
+    <h2>What is the difference between a dynamic and static IP address?</h2>
+    <p>Most home internet connections use a <strong>dynamic IP address</strong> — meaning your ISP can change it periodically, typically when you restart your router. This is the most common reason developers need to update their AWS Security Groups or MongoDB Atlas access lists frequently.</p>
+    <p>A <strong>static IP address</strong> stays the same indefinitely and is typically used by servers and businesses. If you find yourself whitelisting your IP repeatedly, your ISP may offer a static IP upgrade, or you can use a VPN with a dedicated IP as a more permanent solution.</p>
+
+    <h2>How to hide or change your public IP address</h2>
+    <p>There are several ways to mask your public IP: a <strong>VPN (Virtual Private Network)</strong> routes your traffic through a server in another location, giving you that server's IP. A <strong>proxy server</strong> works similarly but typically without encryption. <strong>Tor</strong> routes traffic through multiple relays for maximum anonymity.</p>
+    <p>For developers who need a stable IP for cloud whitelisting, a VPN with a dedicated static IP (such as those offered by Mullvad or ProtonVPN) is the most practical solution — you whitelist that IP once and never need to update it again.</p>
   </section>
 
   <!-- TOOLS GRID -->

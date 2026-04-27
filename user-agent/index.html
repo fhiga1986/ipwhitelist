@@ -28,6 +28,39 @@
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5526031626146935"
      crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a user agent?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A user agent is a string sent by your browser to web servers identifying your browser type, version, operating system, and rendering engine. Web servers use this information to serve appropriate content, track analytics, and apply browser-specific fixes." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I check my user agent string?",
+        "acceptedAnswer": { "@type": "Answer", "text": "You can check your user agent string using this tool, which displays it instantly. Alternatively, open your browser developer tools (F12), go to the Console tab, and type navigator.userAgent to see the raw string." }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I change my user agent?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. In Chrome and Firefox developer tools, you can override your user agent to test how a website behaves for different browsers or devices. Browser extensions like User-Agent Switcher also allow permanent overrides. This is useful for web development and testing." }
+      },
+      {
+        "@type": "Question",
+        "name": "What information does a user agent string contain?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A user agent string typically contains: browser name and version, operating system and version, rendering engine (Gecko, WebKit, Blink), device type (desktop/mobile), and sometimes additional tokens for compatibility. For example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" }
+      },
+      {
+        "@type": "Question",
+        "name": "Why would a developer need to check their user agent?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Developers check user agents to debug browser-specific issues, verify how a web scraper or API client identifies itself, test responsive design across different device types, troubleshoot authentication issues with APIs that check user agent strings, and verify CDN or WAF rules that filter by user agent." }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
@@ -106,6 +139,14 @@
       <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
       <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
     </ul>
+  
+    <h2>Common user agent strings by browser</h2>
+    <p>Every major browser sends a distinct user agent string. <strong>Chrome on Windows</strong> typically includes "Chrome/VERSION" and "Safari/537.36" for compatibility. <strong>Firefox</strong> uses "Gecko/20100101 Firefox/VERSION". <strong>Safari on macOS</strong> uses "Safari/VERSION" without a Chrome token. <strong>Mobile browsers</strong> include "Mobile" in the string.</p>
+    <p>Web servers and APIs often use user agent parsing to serve different content to mobile vs desktop users, block bots, and apply browser-specific workarounds. If you are building a web scraper or API client, set a descriptive user agent string to identify your application.</p>
+
+    <h2>How to change your user agent for testing</h2>
+    <p>In Chrome: open DevTools (F12) → three-dot menu → More tools → Network conditions → uncheck "Use browser default" under User agent → select or type a custom string. This lets you test how your website renders for different browsers and devices without changing your actual browser.</p>
+    <p>In Firefox: type <code>about:config</code> in the address bar → search for <code>general.useragent.override</code> → create a new string value with your desired user agent.</p>
   </section>
 
   <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
@@ -132,6 +173,21 @@
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Can I change or spoof my user agent?</span><div class="faq-chevron">▾</div></div><div class="faq-a">Yes. In Chrome DevTools, go to the Network conditions panel and you can set a custom user agent string. This is useful for testing how websites behave on mobile devices or different browsers without physically switching devices. Many browser extensions also offer user agent switching.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Why does my user agent say "Mozilla" even on Chrome?</span><div class="faq-chevron">▾</div></div><div class="faq-a">This is a historical quirk of the web. In the early browser wars, servers would only serve advanced content to "Mozilla" browsers. To ensure compatibility, all browsers began including "Mozilla" in their user agent — and the tradition continues to this day even though it's now meaningless for identification purposes.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Is my user agent data stored?</span><div class="faq-chevron">▾</div></div><div class="faq-a">No. All detection is done entirely in your browser using the <code>navigator</code> JavaScript API. No data is sent to our servers. Your user agent string never leaves your device.</div></div>
+  
+  <div class="faq-item">
+    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+      <span class="faq-q-text">Can I change my user agent string?</span>
+      <span class="faq-chevron">▾</span>
+    </div>
+    <div class="faq-a">Yes. In Chrome DevTools (F12) → More tools → Network conditions, you can override your user agent to test how websites behave for different browsers or devices. Browser extensions like User-Agent Switcher also allow permanent overrides.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+      <span class="faq-q-text">What information does a user agent string contain?</span>
+      <span class="faq-chevron">▾</span>
+    </div>
+    <div class="faq-a">A user agent string contains your browser name and version, operating system, rendering engine (Gecko, WebKit, Blink), and device type. Example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36</div>
+  </div>
   </section>
 </main>
 <footer>

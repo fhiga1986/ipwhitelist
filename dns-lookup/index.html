@@ -28,6 +28,39 @@
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5526031626146935"
      crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a DNS lookup?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A DNS lookup queries the Domain Name System to translate a human-readable domain name (like example.com) into the IP addresses and other records associated with it. It retrieves records like A (IPv4), AAAA (IPv6), MX (mail), CNAME (alias), TXT (verification), and NS (nameservers)." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is DNS propagation?",
+        "acceptedAnswer": { "@type": "Answer", "text": "DNS propagation is the time it takes for changes to DNS records to spread across all DNS servers worldwide. Propagation can take anywhere from a few minutes to 48 hours, depending on the TTL (Time To Live) value of the record being changed." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between an A record and a CNAME record?",
+        "acceptedAnswer": { "@type": "Answer", "text": "An A record maps a domain directly to an IPv4 address (e.g., example.com → 93.184.216.34). A CNAME record creates an alias pointing one domain to another (e.g., www.example.com → example.com). CNAMEs cannot be used on the root domain (@) — only on subdomains." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is TTL in DNS?",
+        "acceptedAnswer": { "@type": "Answer", "text": "TTL (Time To Live) is the number of seconds that DNS resolvers cache a record before checking for updates. A lower TTL (e.g., 300 seconds) means changes propagate faster. A higher TTL (e.g., 86400 seconds = 24 hours) reduces DNS query load but slows propagation." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a TXT record used for?",
+        "acceptedAnswer": { "@type": "Answer", "text": "TXT records store text data associated with a domain, commonly used for domain verification (Google Search Console, AdSense), SPF records (email spam prevention), DKIM (email authentication), and DMARC policies." }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
@@ -119,6 +152,14 @@
       <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
       <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
     </ul>
+  
+    <h2>What is DNS propagation and how long does it take?</h2>
+    <p>DNS propagation is the time it takes for changes to DNS records to spread across all DNS servers worldwide. When you update a DNS record — such as changing your A record to a new server IP — DNS resolvers around the world continue serving the old record until their cache expires based on the record's TTL (Time To Live) value.</p>
+    <p>Propagation typically takes between 1 and 48 hours. If you need faster propagation, lower your TTL to 300 seconds (5 minutes) at least 24 hours before making the change, then revert to a higher TTL after the change is confirmed live.</p>
+
+    <h2>Common DNS record types explained</h2>
+    <p>Understanding DNS record types is essential for managing domains and troubleshooting email delivery issues. The most common records are: <strong>A</strong> (maps domain to IPv4), <strong>AAAA</strong> (maps domain to IPv6), <strong>CNAME</strong> (creates a domain alias), <strong>MX</strong> (mail server routing), <strong>TXT</strong> (domain verification and email authentication), <strong>NS</strong> (nameserver delegation), and <strong>SOA</strong> (zone authority information).</p>
+    <p>For email deliverability, always verify your <strong>MX</strong>, <strong>SPF</strong> (TXT record), <strong>DKIM</strong> (TXT record), and <strong>DMARC</strong> (TXT record) are correctly configured. Missing or misconfigured email DNS records are the most common cause of email going to spam.</p>
   </section>
 
   <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
@@ -145,6 +186,21 @@
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Why use DNS over HTTPS instead of my local resolver?</span><div class="faq-chevron">▾</div></div><div class="faq-a">Your local resolver may have cached outdated records, or your ISP may intercept DNS queries. Google's DoH API queries authoritative nameservers directly, giving you the most current, accurate results — which matters when you've just updated a DNS record and want to verify propagation.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How long does DNS propagation take?</span><div class="faq-chevron">▾</div></div><div class="faq-a">DNS changes typically propagate globally within 15–60 minutes when TTL values are low. However, if your previous record had a high TTL (e.g. 86400 seconds = 24 hours), caches across the internet may hold the old value for up to that long. This tool bypasses caching and shows the current authoritative answer.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">What is TTL in DNS?</span><div class="faq-chevron">▾</div></div><div class="faq-a">TTL (Time To Live) is the number of seconds a DNS record can be cached by resolvers before they must re-query the authoritative nameserver. A lower TTL means faster propagation of changes but more DNS queries. Typical values range from 300 (5 minutes) to 86400 (24 hours).</div></div>
+  
+  <div class="faq-item">
+    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+      <span class="faq-q-text">What is DNS propagation?</span>
+      <span class="faq-chevron">▾</span>
+    </div>
+    <div class="faq-a">DNS propagation is the time for DNS record changes to spread worldwide — typically 1 to 48 hours depending on the TTL value. Lower your TTL to 300 seconds before making changes to speed up propagation.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
+      <span class="faq-q-text">What is the difference between an A record and a CNAME record?</span>
+      <span class="faq-chevron">▾</span>
+    </div>
+    <div class="faq-a">An A record maps a domain directly to an IPv4 address. A CNAME creates an alias pointing one domain to another. CNAMEs cannot be used on the root domain (@) — only on subdomains like www.</div>
+  </div>
   </section>
 </main>
 <footer>
