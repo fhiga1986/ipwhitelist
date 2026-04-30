@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — IPWhitelist.dev — Free Developer Network Tools</title>
+  <meta name="description" content="About IPWhitelist.dev — a free suite of 10 developer network tools for IP detection, cloud whitelist config generation, port checking, DNS lookup, and more." />
+  <link rel="canonical" href="https://ipwhitelist.dev/about/" />
+  <link rel="icon" type="image/x-icon" href="../favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../favicon-180.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;700&family=Geist:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../shared.css" />
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5526031626146935" crossorigin="anonymous"></script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFLEV7NLEG"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QFLEV7NLEG');</script>
+  <style>
+    .about-wrap { max-width: 740px; margin: 0 auto; padding: 60px 20px 80px; position: relative; z-index: 1; }
+    .about-hero { margin-bottom: 56px; }
+    .about-title { font-family: var(--serif); font-size: clamp(2rem,5vw,3.4rem); font-weight: 400; line-height: 1.1; margin-bottom: 16px; }
+    .about-title em { font-style: italic; color: var(--lime); }
+    .about-subtitle { font-size: .97rem; color: var(--txt-2); line-height: 1.8; max-width: 580px; }
+    .about-section { margin-bottom: 48px; }
+    .about-section h2 { font-size: 1.1rem; font-weight: 600; color: var(--txt); margin-bottom: 12px; padding-left: 12px; border-left: 3px solid var(--lime); }
+    .about-section p { font-size: .88rem; color: var(--txt-2); line-height: 1.8; margin-bottom: 12px; }
+    .about-section a { color: var(--lime); text-decoration: none; }
+    .about-section a:hover { text-decoration: underline; }
+    .tools-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+    .tool-item { background: var(--ink-2); border: 1px solid var(--border); border-radius: var(--r-md); padding: 14px 16px; text-decoration: none; transition: border-color .15s; }
+    .tool-item:hover { border-color: var(--border-act); }
+    .tool-item-icon { font-size: 1.1rem; margin-bottom: 6px; }
+    .tool-item-name { font-size: .85rem; font-weight: 600; color: var(--txt); margin-bottom: 3px; }
+    .tool-item-desc { font-size: .76rem; color: var(--txt-3); }
+    .stack-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 16px; }
+    .stack-item { background: var(--ink-2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 12px 14px; }
+    .stack-label { font-family: var(--mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--txt-3); margin-bottom: 4px; }
+    .stack-value { font-size: .82rem; color: var(--txt); font-weight: 500; }
+    .principles { list-style: none; padding: 0; margin-top: 12px; }
+    .principles li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: .87rem; color: var(--txt-2); line-height: 1.6; }
+    .principles li:last-child { border-bottom: none; }
+    .principles li span:first-child { color: var(--lime); font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+    @media(max-width:700px) { .tools-list { grid-template-columns: 1fr; } .stack-grid { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-mark">⌁</div>
+    <span class="nav-logo-text">IP<span>Whitelist</span>.dev</span>
+  </a>
+  <div class="nav-center">
+    <a href="/" class="nav-link">My IP</a>
+    <a href="/port-checker/" class="nav-link">Port Checker</a>
+    <a href="/dns-lookup/" class="nav-link">DNS Lookup</a>
+    <a href="/whois-lookup/" class="nav-link">WHOIS</a>
+    <a href="/ssl-checker/" class="nav-link">SSL</a>
+    <a href="/ip-location/" class="nav-link">IP Map</a>
+    <a href="/headers/" class="nav-link">Headers</a>
+    <a href="/ipv6/" class="nav-link">IPv6</a>
+  </div>
+  <div class="nav-right">
+    <span class="badge-free">100% Free</span>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/" class="mmenu-link"><span class="mmenu-icon">🌐</span>My IP Address</a>
+  <a href="/port-checker/" class="mmenu-link"><span class="mmenu-icon">🔌</span>Port Checker</a>
+  <a href="/dns-lookup/" class="mmenu-link"><span class="mmenu-icon">🔍</span>DNS Lookup</a>
+  <a href="/whois-lookup/" class="mmenu-link"><span class="mmenu-icon">📋</span>WHOIS Lookup</a>
+  <a href="/ssl-checker/" class="mmenu-link"><span class="mmenu-icon">🔒</span>SSL Checker</a>
+  <a href="/ip-location/" class="mmenu-link"><span class="mmenu-icon">🗺️</span>IP Location Map</a>
+  <a href="/headers/" class="mmenu-link"><span class="mmenu-icon">📡</span>HTTP Headers</a>
+  <a href="/latency-test/" class="mmenu-link"><span class="mmenu-icon">⚡</span>Latency Test</a>
+  <a href="/user-agent/" class="mmenu-link"><span class="mmenu-icon">🖥️</span>User Agent</a>
+  <a href="/ipv6/" class="mmenu-link"><span class="mmenu-icon">🔢</span>IPv6 Detector</a>
+</div>
+
+<div class="about-wrap">
+
+  <div class="about-hero">
+    <h1 class="about-title">About <em>IPWhitelist.dev</em></h1>
+    <p class="about-subtitle">A free suite of 10 developer network tools built to eliminate the repetitive friction of IP whitelisting, network diagnostics, and cloud configuration — available to every developer, everywhere, with no signup required.</p>
+  </div>
+
+  <div class="about-section">
+    <h2>Why We Built This</h2>
+    <p>Every developer who works with cloud infrastructure knows the pain: your IP changes, and now you have to look it up, format it as a CIDR, navigate to the AWS console or MongoDB Atlas, and paste it in the correct field — repeating the process for every service you use.</p>
+    <p>IPWhitelist.dev was built to solve that specific problem. Open the site, your IP is already detected, and the exact CLI command for AWS, MongoDB, GCP, iptables, or UFW is ready to copy. One page, one click.</p>
+    <p>From that core tool, we expanded to 10 tools that cover the most common network tasks a developer needs — without needing to install anything, create an account, or pay for anything.</p>
+  </div>
+
+  <div class="about-section">
+    <h2>The 10 Free Tools</h2>
+    <div class="tools-list">
+      <a href="/" class="tool-item">
+        <div class="tool-item-icon">🌐</div>
+        <div class="tool-item-name">IP Whitelist Config Generator</div>
+        <div class="tool-item-desc">Detect your IP + generate AWS, MongoDB, GCP, Linux configs</div>
+      </a>
+      <a href="/port-checker/" class="tool-item">
+        <div class="tool-item-icon">🔌</div>
+        <div class="tool-item-name">Port Checker</div>
+        <div class="tool-item-desc">Test if TCP ports are open on any host</div>
+      </a>
+      <a href="/dns-lookup/" class="tool-item">
+        <div class="tool-item-icon">🔍</div>
+        <div class="tool-item-name">DNS Lookup</div>
+        <div class="tool-item-desc">Query A, AAAA, MX, CNAME, TXT, NS records</div>
+      </a>
+      <a href="/whois-lookup/" class="tool-item">
+        <div class="tool-item-icon">📋</div>
+        <div class="tool-item-name">WHOIS Lookup</div>
+        <div class="tool-item-desc">Find domain owner, registrar and expiry date</div>
+      </a>
+      <a href="/ssl-checker/" class="tool-item">
+        <div class="tool-item-icon">🔒</div>
+        <div class="tool-item-name">SSL Checker</div>
+        <div class="tool-item-desc">Verify SSL certificate validity and expiry</div>
+      </a>
+      <a href="/ip-location/" class="tool-item">
+        <div class="tool-item-icon">🗺️</div>
+        <div class="tool-item-name">IP Location Map</div>
+        <div class="tool-item-desc">Find any IP address location on an interactive map</div>
+      </a>
+      <a href="/headers/" class="tool-item">
+        <div class="tool-item-icon">📡</div>
+        <div class="tool-item-name">HTTP Headers Checker</div>
+        <div class="tool-item-desc">Inspect request headers and analyze security headers</div>
+      </a>
+      <a href="/latency-test/" class="tool-item">
+        <div class="tool-item-icon">⚡</div>
+        <div class="tool-item-name">Global Latency Test</div>
+        <div class="tool-item-desc">Measure ping to US, EU, and Asia Pacific cloud regions</div>
+      </a>
+      <a href="/user-agent/" class="tool-item">
+        <div class="tool-item-icon">🖥️</div>
+        <div class="tool-item-name">User Agent Checker</div>
+        <div class="tool-item-desc">Full browser and OS fingerprint breakdown</div>
+      </a>
+      <a href="/ipv6/" class="tool-item">
+        <div class="tool-item-icon">🔢</div>
+        <div class="tool-item-name">IPv6 Detector</div>
+        <div class="tool-item-desc">Check your IPv6 address and connectivity</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="about-section">
+    <h2>Our Principles</h2>
+    <ul class="principles">
+      <li><span>🔒</span><span><strong>Privacy first:</strong> All tools run entirely in your browser. Your IP address and query data are never sent to our servers. We have no backend infrastructure — there is nothing to store your data on.</span></li>
+      <li><span>⚡</span><span><strong>Zero friction:</strong> No registration, no email, no credit card. Open a tool and use it immediately. We believe developer tools should get out of your way.</span></li>
+      <li><span>🆓</span><span><strong>Free forever:</strong> All 10 tools are permanently free. The site is funded by Google AdSense advertising, which means you pay with a small amount of attention rather than money.</span></li>
+      <li><span>🔧</span><span><strong>Genuinely useful:</strong> Every tool solves a real problem that real developers face regularly. We don't add tools for the sake of adding them — each one earns its place.</span></li>
+      <li><span>📱</span><span><strong>Works everywhere:</strong> Desktop, tablet, mobile — the site is fully responsive. The mobile hamburger menu gives you access to all 10 tools on any screen size.</span></li>
+    </ul>
+  </div>
+
+  <div class="about-section">
+    <h2>Technical Stack</h2>
+    <p>IPWhitelist.dev is built with a deliberately minimal stack — no frameworks, no build tools, no dependencies to maintain. Just vanilla HTML, CSS, and JavaScript that works everywhere and loads fast.</p>
+    <div class="stack-grid">
+      <div class="stack-item"><div class="stack-label">Frontend</div><div class="stack-value">Vanilla HTML5 / CSS3 / JS</div></div>
+      <div class="stack-item"><div class="stack-label">Hosting</div><div class="stack-value">GitHub Pages</div></div>
+      <div class="stack-item"><div class="stack-label">Domain</div><div class="stack-value">Hostinger (.dev TLD)</div></div>
+      <div class="stack-item"><div class="stack-label">SSL</div><div class="stack-value">Let's Encrypt (auto)</div></div>
+      <div class="stack-item"><div class="stack-label">Maps</div><div class="stack-value">Leaflet.js + OpenStreetMap</div></div>
+      <div class="stack-item"><div class="stack-label">Analytics</div><div class="stack-value">Google Analytics 4</div></div>
+    </div>
+  </div>
+
+  <div class="about-section">
+    <h2>Contact</h2>
+    <p>Have feedback, found a bug, or want to suggest a tool? We'd love to hear from you.</p>
+    <p>Email: <a href="mailto:hello@ipwhitelist.dev">hello@ipwhitelist.dev</a></p>
+    <p>Source code: <a href="https://github.com/fhiga1986/ipwhitelist" target="_blank" rel="noopener">github.com/fhiga1986/ipwhitelist</a></p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-brand">IP<span>Whitelist</span>.dev</div>
+  <div class="footer-links">
+    <a href="/port-checker/">Port Checker</a>
+    <a href="/dns-lookup/">DNS Lookup</a>
+    <a href="/latency-test/">Latency Test</a>
+    <a href="/user-agent/">User Agent</a>
+    <a href="/about/">About</a>
+    <a href="/privacy/">Privacy Policy</a>
+    <a href="/terms/">Terms of Service</a>
+    <a href="mailto:hello@ipwhitelist.dev">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 IPWhitelist.dev — Free developer network tools</div>
+</footer>
+
+<script src="../shared.js" defer></script>
+</body>
+</html>
