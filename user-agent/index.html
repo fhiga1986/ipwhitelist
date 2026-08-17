@@ -2,12 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>User Agent Checker — What Is My User Agent? | IPWhitelist.dev</title>
-  <meta name="description" content="Free user agent checker. Find your user agent string, browser version, OS, screen resolution and timezone instantly. Check user agent exactly as web servers see you. No signup." />
+  <title>User Agent Checker — What Is My User Agent?</title>
+  <meta name="description" content="Free user agent checker. See your user agent string, browser, OS, screen resolution and timezone exactly as web servers see you. No signup." />
   <link rel="canonical" href="https://ipwhitelist.dev/user-agent/" />
-  <meta property="og:title" content="User Agent Checker — What Is My User Agent? | IPWhitelist.dev" />
-  <meta property="og:description" content="Free user agent detector. See your browser, OS, screen, and connection info as servers see you." />
+  <meta property="og:title" content="User Agent Checker — What Is My User Agent?" />
+  <meta property="og:description" content="Free user agent checker. See your user agent string, browser, OS, screen resolution and timezone exactly as web servers see you. No signup." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ipwhitelist.dev/user-agent/" />
+  <meta property="og:image" content="https://ipwhitelist.dev/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="IPWhitelist.dev — free developer network tools" />
+  <meta property="og:site_name" content="IPWhitelist.dev" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="User Agent Checker — What Is My User Agent?" />
+  <meta name="twitter:description" content="Free user agent checker. See your user agent string, browser, OS, screen resolution and timezone exactly as web servers see you. No signup." />
+  <meta name="twitter:image" content="https://ipwhitelist.dev/og-image.png" />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"User Agent Detector — IPWhitelist.dev","url":"https://ipwhitelist.dev/user-agent/","description":"Free tool to detect and parse your browser user agent string, OS, screen resolution, and connection details.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
 
   <link rel="icon" type="image/x-icon" href="../favicon.ico" />
@@ -35,28 +46,63 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "What is a user agent?",
-        "acceptedAnswer": { "@type": "Answer", "text": "A user agent is a string sent by your browser to web servers identifying your browser type, version, operating system, and rendering engine. Web servers use this information to serve appropriate content, track analytics, and apply browser-specific fixes." }
+        "name": "Can I change or spoof my user agent?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. In Chrome DevTools, go to the Network conditions panel and you can set a custom user agent string. This is useful for testing how websites behave on mobile devices or different browsers without physically switching devices. Many browser extensions also offer user agent switching."
+        }
       },
       {
         "@type": "Question",
-        "name": "How do I check my user agent string?",
-        "acceptedAnswer": { "@type": "Answer", "text": "You can check your user agent string using this tool, which displays it instantly. Alternatively, open your browser developer tools (F12), go to the Console tab, and type navigator.userAgent to see the raw string." }
+        "name": "Why does my user agent say \"Mozilla\" even on Chrome?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This is a historical quirk of the web. In the early browser wars, servers would only serve advanced content to \"Mozilla\" browsers. To ensure compatibility, all browsers began including \"Mozilla\" in their user agent — and the tradition continues to this day even though it's now meaningless for identification purposes."
+        }
       },
       {
         "@type": "Question",
-        "name": "Can I change my user agent?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Yes. In Chrome and Firefox developer tools, you can override your user agent to test how a website behaves for different browsers or devices. Browser extensions like User-Agent Switcher also allow permanent overrides. This is useful for web development and testing." }
+        "name": "Is my user agent data stored?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. All detection is done entirely in your browser using the navigator JavaScript API. No data is sent to our servers. Your user agent string never leaves your device."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I change my user agent string?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. In Chrome DevTools (F12) → More tools → Network conditions, you can override your user agent to test how websites behave for different browsers or devices. Browser extensions like User-Agent Switcher also allow permanent overrides."
+        }
       },
       {
         "@type": "Question",
         "name": "What information does a user agent string contain?",
-        "acceptedAnswer": { "@type": "Answer", "text": "A user agent string typically contains: browser name and version, operating system and version, rendering engine (Gecko, WebKit, Blink), device type (desktop/mobile), and sometimes additional tokens for compatibility. For example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" }
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A user agent string contains your browser name and version, operating system, rendering engine (Gecko, WebKit, Blink), and device type. Example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36"
+        }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://ipwhitelist.dev/"
       },
       {
-        "@type": "Question",
-        "name": "Why would a developer need to check their user agent?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Developers check user agents to debug browser-specific issues, verify how a web scraper or API client identifies itself, test responsive design across different device types, troubleshoot authentication issues with APIs that check user agent strings, and verify CDN or WAF rules that filter by user agent." }
+        "@type": "ListItem",
+        "position": 2,
+        "name": "User Agent Checker",
+        "item": "https://ipwhitelist.dev/user-agent/"
       }
     ]
   }

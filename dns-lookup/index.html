@@ -2,12 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DNS Lookup Tool — Query A, MX, CNAME, TXT Records | IPWhitelist.dev</title>
-  <meta name="description" content="Free online DNS lookup tool. Query A, AAAA, MX, CNAME, TXT, NS, and SOA records for any domain using Google's DNS over HTTPS. Instant results, no signup." />
+  <title>DNS Lookup — Query A, MX, CNAME, TXT Records</title>
+  <meta name="description" content="Free DNS lookup tool. Query A, AAAA, MX, CNAME, TXT, NS and SOA records for any domain over DNS-over-HTTPS. Instant results, no signup." />
   <link rel="canonical" href="https://ipwhitelist.dev/dns-lookup/" />
-  <meta property="og:title" content="DNS Lookup Tool — IPWhitelist.dev" />
-  <meta property="og:description" content="Free DNS lookup for A, AAAA, MX, CNAME, TXT, NS records. Instant, no signup." />
+  <meta property="og:title" content="DNS Lookup — Query A, MX, CNAME, TXT Records" />
+  <meta property="og:description" content="Free DNS lookup tool. Query A, AAAA, MX, CNAME, TXT, NS and SOA records for any domain over DNS-over-HTTPS. Instant results, no signup." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ipwhitelist.dev/dns-lookup/" />
+  <meta property="og:image" content="https://ipwhitelist.dev/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="IPWhitelist.dev — free developer network tools" />
+  <meta property="og:site_name" content="IPWhitelist.dev" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="DNS Lookup — Query A, MX, CNAME, TXT Records" />
+  <meta name="twitter:description" content="Free DNS lookup tool. Query A, AAAA, MX, CNAME, TXT, NS and SOA records for any domain over DNS-over-HTTPS. Instant results, no signup." />
+  <meta name="twitter:image" content="https://ipwhitelist.dev/og-image.png" />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"DNS Lookup Tool — IPWhitelist.dev","url":"https://ipwhitelist.dev/dns-lookup/","description":"Free tool to query DNS records (A, AAAA, MX, CNAME, TXT, NS) for any domain.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
 
   <link rel="icon" type="image/x-icon" href="../favicon.ico" />
@@ -35,28 +46,63 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "What is a DNS lookup?",
-        "acceptedAnswer": { "@type": "Answer", "text": "A DNS lookup queries the Domain Name System to translate a human-readable domain name (like example.com) into the IP addresses and other records associated with it. It retrieves records like A (IPv4), AAAA (IPv6), MX (mail), CNAME (alias), TXT (verification), and NS (nameservers)." }
+        "name": "Why use DNS over HTTPS instead of my local resolver?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Your local resolver may have cached outdated records, or your ISP may intercept DNS queries. Google's DoH API queries authoritative nameservers directly, giving you the most current, accurate results — which matters when you've just updated a DNS record and want to verify propagation."
+        }
       },
       {
         "@type": "Question",
-        "name": "What is DNS propagation?",
-        "acceptedAnswer": { "@type": "Answer", "text": "DNS propagation is the time it takes for changes to DNS records to spread across all DNS servers worldwide. Propagation can take anywhere from a few minutes to 48 hours, depending on the TTL (Time To Live) value of the record being changed." }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the difference between an A record and a CNAME record?",
-        "acceptedAnswer": { "@type": "Answer", "text": "An A record maps a domain directly to an IPv4 address (e.g., example.com → 93.184.216.34). A CNAME record creates an alias pointing one domain to another (e.g., www.example.com → example.com). CNAMEs cannot be used on the root domain (@) — only on subdomains." }
+        "name": "How long does DNS propagation take?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "DNS changes typically propagate globally within 15–60 minutes when TTL values are low. However, if your previous record had a high TTL (e.g. 86400 seconds = 24 hours), caches across the internet may hold the old value for up to that long. This tool bypasses caching and shows the current authoritative answer."
+        }
       },
       {
         "@type": "Question",
         "name": "What is TTL in DNS?",
-        "acceptedAnswer": { "@type": "Answer", "text": "TTL (Time To Live) is the number of seconds that DNS resolvers cache a record before checking for updates. A lower TTL (e.g., 300 seconds) means changes propagate faster. A higher TTL (e.g., 86400 seconds = 24 hours) reduces DNS query load but slows propagation." }
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "TTL (Time To Live) is the number of seconds a DNS record can be cached by resolvers before they must re-query the authoritative nameserver. A lower TTL means faster propagation of changes but more DNS queries. Typical values range from 300 (5 minutes) to 86400 (24 hours)."
+        }
       },
       {
         "@type": "Question",
-        "name": "What is a TXT record used for?",
-        "acceptedAnswer": { "@type": "Answer", "text": "TXT records store text data associated with a domain, commonly used for domain verification (Google Search Console, AdSense), SPF records (email spam prevention), DKIM (email authentication), and DMARC policies." }
+        "name": "What is DNS propagation?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "DNS propagation is the time for DNS record changes to spread worldwide — typically 1 to 48 hours depending on the TTL value. Lower your TTL to 300 seconds before making changes to speed up propagation."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between an A record and a CNAME record?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "An A record maps a domain directly to an IPv4 address. A CNAME creates an alias pointing one domain to another. CNAMEs cannot be used on the root domain (@) — only on subdomains like www."
+        }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://ipwhitelist.dev/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "DNS Lookup",
+        "item": "https://ipwhitelist.dev/dns-lookup/"
       }
     ]
   }

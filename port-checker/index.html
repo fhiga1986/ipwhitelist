@@ -2,12 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Port Checker — Free Online Port Checker & Open Port Test | IPWhitelist.dev</title>
-  <meta name="description" content="Free online port checker. Test if any TCP port is open on any host or IP address — port 22, 80, 443, 3306, 5432, 27017 or custom ports. Instant results, no download." />
+  <title>Port Checker — Free Online Open Port Test</title>
+  <meta name="description" content="Free online port checker. Test if any TCP port is open on any host or IP — SSH 22, HTTP 80, HTTPS 443, MySQL 3306 or custom ports. No download." />
   <link rel="canonical" href="https://ipwhitelist.dev/port-checker/" />
-  <meta property="og:title" content="Port Checker — Test If a Port Is Open | IPWhitelist.dev" />
-  <meta property="og:description" content="Free online tool to check if any TCP port is open on any host. Instant results, no signup." />
+  <meta property="og:title" content="Port Checker — Free Online Open Port Test" />
+  <meta property="og:description" content="Free online port checker. Test if any TCP port is open on any host or IP — SSH 22, HTTP 80, HTTPS 443, MySQL 3306 or custom ports. No download." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ipwhitelist.dev/port-checker/" />
+  <meta property="og:image" content="https://ipwhitelist.dev/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="IPWhitelist.dev — free developer network tools" />
+  <meta property="og:site_name" content="IPWhitelist.dev" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Port Checker — Free Online Open Port Test" />
+  <meta name="twitter:description" content="Free online port checker. Test if any TCP port is open on any host or IP — SSH 22, HTTP 80, HTTPS 443, MySQL 3306 or custom ports. No download." />
+  <meta name="twitter:image" content="https://ipwhitelist.dev/og-image.png" />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Online Port Checker — IPWhitelist.dev","url":"https://ipwhitelist.dev/port-checker/","description":"Free tool to check if TCP ports are open on any host or IP address.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
 
   <link rel="icon" type="image/x-icon" href="../favicon.ico" />
@@ -35,28 +46,63 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "What is a port checker?",
-        "acceptedAnswer": { "@type": "Answer", "text": "A port checker tests whether a specific TCP port is open and reachable on a remote host or IP address. It helps diagnose connectivity issues with servers, databases, and web services without installing any software." }
+        "name": "How does this port checker work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "This tool attempts TCP connections from your browser to the target host and port using WebSocket probing. A successful connection means the port is open. Results reflect what's reachable from your current network — results may differ if you're behind a corporate proxy or VPN."
+        }
       },
       {
         "@type": "Question",
-        "name": "What is the difference between TCP and UDP ports?",
-        "acceptedAnswer": { "@type": "Answer", "text": "TCP (Transmission Control Protocol) ports establish a reliable connection before sending data, making them suitable for HTTP, SSH, and database connections. UDP (User Datagram Protocol) ports send data without establishing a connection first, making them faster but less reliable — used for DNS, video streaming, and gaming." }
-      },
-      {
-        "@type": "Question",
-        "name": "Why does a port appear closed even though my service is running?",
-        "acceptedAnswer": { "@type": "Answer", "text": "A port can appear closed if a firewall (iptables, UFW, AWS Security Group, GCP Firewall) is blocking the connection, if the service is bound to localhost instead of 0.0.0.0, or if the service is not actually running. Check your firewall rules and ensure the service is listening on the correct interface." }
-      },
-      {
-        "@type": "Question",
-        "name": "What ports does SSH use?",
-        "acceptedAnswer": { "@type": "Answer", "text": "SSH uses TCP port 22 by default. Many administrators change this to a non-standard port (e.g., 2222, 2200) to reduce automated attacks, though this is security through obscurity and not a substitute for proper key-based authentication." }
+        "name": "What's the difference between closed and filtered?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A closed port actively refuses the connection (the server responds with a reset). A filtered port doesn't respond at all — typically because a firewall is silently dropping packets. Both appear as \"Closed / Filtered\" in this tool since the distinction requires raw socket access not available in browsers."
+        }
       },
       {
         "@type": "Question",
         "name": "How do I open a port on my server?",
-        "acceptedAnswer": { "@type": "Answer", "text": "To open a port on Linux, use: sudo ufw allow PORT/tcp (UFW) or sudo iptables -I INPUT -p tcp --dport PORT -j ACCEPT (iptables). On AWS, add an inbound rule to your Security Group. On GCP, create a firewall rule. Always restrict access to specific IP addresses rather than opening ports to the world." }
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It depends on your setup. For AWS EC2, add an inbound rule to your Security Group. For Linux servers, use UFW (sudo ufw allow 443) or iptables. For GCP, create a Firewall Rule. Use our IP whitelist config generator to get the exact commands for your environment."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between TCP and UDP ports?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "TCP ports establish a reliable connection before sending data, used by HTTP (80), HTTPS (443), SSH (22), MySQL (3306), PostgreSQL (5432), and MongoDB (27017). UDP ports send data without a handshake, used by DNS (53) and streaming protocols. This tool tests TCP ports."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I open a port on my Linux server?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use UFW: sudo ufw allow PORT/tcp or iptables: sudo iptables -I INPUT -p tcp --dport PORT -j ACCEPT. On AWS, add an inbound rule to your Security Group. Always restrict access to your specific IP address instead of opening ports to 0.0.0.0/0."
+        }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://ipwhitelist.dev/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Port Checker",
+        "item": "https://ipwhitelist.dev/port-checker/"
       }
     ]
   }

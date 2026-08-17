@@ -1,13 +1,23 @@
 User-agent: *
 Allow: /
+
+# Explicit tool paths
 Allow: /port-checker/
 Allow: /dns-lookup/
-Allow: /latency-test/
-Allow: /user-agent/
 Allow: /whois-lookup/
 Allow: /ssl-checker/
-Allow: /ipv6/
 Allow: /ip-location/
 Allow: /headers/
+Allow: /latency-test/
+Allow: /user-agent/
+Allow: /ipv6/
+Allow: /about/
+Allow: /privacy/
+Allow: /terms/
+
+# Assets needed for correct rendering
+Allow: /shared.css
+Allow: /shared.js
+Allow: /og-image.png
 
 Sitemap: https://ipwhitelist.dev/sitemap.xml

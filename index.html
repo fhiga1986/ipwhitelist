@@ -4,15 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>What Is My IP Address? — IPWhitelist.dev</title>
-  <meta name="description" content="Generate instant IP whitelist configs for AWS, MongoDB Atlas, GCP, and Linux. Detect your public IP and get the exact CLI command or Terraform config in seconds. See your IP, CIDR notation, location, ISP, and generate whitelist configs for AWS, MongoDB Atlas, GCP, and Linux. Free, no signup." />
+  <meta name="description" content="Detect your public IP address instantly and generate ready-to-paste whitelist configs for AWS, MongoDB Atlas, GCP, iptables, UFW and nginx. Free." />
   <link rel="canonical" href="https://ipwhitelist.dev/" />
   <meta property="og:title" content="What Is My IP Address? — IPWhitelist.dev" />
-  <meta property="og:description" content="Whitelist your IP in seconds. Free tool to detect your public IP and generate AWS, MongoDB, GCP, and Linux firewall configs instantly." />
+  <meta property="og:description" content="Detect your public IP address instantly and generate ready-to-paste whitelist configs for AWS, MongoDB Atlas, GCP, iptables, UFW and nginx. Free." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://ipwhitelist.dev/" />
+  <meta property="og:image" content="https://ipwhitelist.dev/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="IPWhitelist.dev — free developer network tools" />
+  <meta property="og:site_name" content="IPWhitelist.dev" />
+  <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="What Is My IP Address? — IPWhitelist.dev" />
-  <meta name="twitter:description" content="Free IP detection + instant cloud whitelist configs for AWS, MongoDB, GCP." />
+  <meta name="twitter:description" content="Detect your public IP address instantly and generate ready-to-paste whitelist configs for AWS, MongoDB Atlas, GCP, iptables, UFW and nginx. Free." />
+  <meta name="twitter:image" content="https://ipwhitelist.dev/og-image.png" />
 
   <!-- Schema.org WebApplication -->
   <script type="application/ld+json">
@@ -58,6 +65,40 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-QFLEV7NLEG');
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://ipwhitelist.dev/#website",
+    "name": "IPWhitelist.dev",
+    "alternateName": "IPWhitelist.dev — Free Developer Network Tools",
+    "url": "https://ipwhitelist.dev/",
+    "description": "Free developer network tools: IP detection, cloud whitelist config generation, port checker, DNS lookup, WHOIS, SSL checker and more.",
+    "inLanguage": "en",
+    "publisher": {
+      "@id": "https://ipwhitelist.dev/#org"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://ipwhitelist.dev/#org",
+    "name": "IPWhitelist.dev",
+    "url": "https://ipwhitelist.dev/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ipwhitelist.dev/favicon-512.png",
+      "width": 512,
+      "height": 512
+    },
+    "email": "hello@ipwhitelist.dev",
+    "sameAs": [
+      "https://github.com/fhiga1986/ipwhitelist"
+    ]
+  }
   </script>
 </head>
 <body>
@@ -308,27 +349,6 @@
       <a href="/ipv6/" class="tool-grid-card"><div class="tgc-icon">🔢</div><div class="tgc-title">IPv6 Detector</div><div class="tgc-desc">Check your IPv6 address and connectivity</div><div class="tgc-arrow">→</div></a>
     </div>
   
-  <div class="faq-item">
-    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      <span class="faq-q-text">What is a public IP address?</span>
-      <span class="faq-chevron">▾</span>
-    </div>
-    <div class="faq-a">A public IP address is the unique address assigned to your network by your Internet Service Provider (ISP). It identifies your device on the internet and is what cloud services like AWS, MongoDB Atlas, and GCP use when you configure firewall rules or IP whitelists.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      <span class="faq-q-text">Why does my IP address keep changing?</span>
-      <span class="faq-chevron">▾</span>
-    </div>
-    <div class="faq-a">Most ISPs assign dynamic IP addresses that can change when you restart your router or after a set period. This is why developers frequently need to update AWS Security Groups, MongoDB Atlas access lists, and firewall rules. This tool always shows your current IP so you can update your whitelist immediately.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      <span class="faq-q-text">Does my IP address reveal my exact location?</span>
-      <span class="faq-chevron">▾</span>
-    </div>
-    <div class="faq-a">No. Your IP address reveals your approximate location — typically your city and ISP — but not your exact street address. The geolocation data shown here is based on where your ISP's infrastructure is located, which may differ from your physical location.</div>
-  </div>
   </section>
 
   <!-- AD SLOT 2 -->
@@ -423,6 +443,19 @@
         <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
           <div itemprop="text">Most home and office ISPs assign dynamic IP addresses, meaning your public IP can change when your router reconnects, after a power cycle, or periodically based on your ISP's lease policy. If you have a dynamic IP and rely on whitelisting for database or server access, you'll need to update your whitelist rules each time it changes.</div>
         </div>
+      </div>
+    
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What is a public IP address?</span><div class="faq-chevron">▾</div></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">A public IP address is the unique address assigned to your network by your Internet Service Provider (ISP). It identifies your device on the internet and is what cloud services like AWS, MongoDB Atlas, and GCP use when you configure firewall rules or IP whitelists.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why does my IP address keep changing?</span><div class="faq-chevron">▾</div></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Most ISPs assign dynamic IP addresses that can change when you restart your router or after a set period. This is why developers frequently need to update AWS Security Groups, MongoDB Atlas access lists, and firewall rules. This tool always shows your current IP so you can update your whitelist immediately.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Does my IP address reveal my exact location?</span><div class="faq-chevron">▾</div></div>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">No. Your IP address reveals your approximate location — typically your city and ISP — but not your exact street address. The geolocation data shown here is based on where your ISP's infrastructure is located, which may differ from your physical location.</div></div>
       </div>
     </div>
   </section>
