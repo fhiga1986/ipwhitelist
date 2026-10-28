@@ -62,12 +62,12 @@
     .header-row:last-child { border-bottom: none; }
     .header-row:hover { background: rgba(255,255,255,.02); }
     .header-name {
-      font-family: var(--mono); font-size: .7rem; font-weight: 600;
+      font-family: var(--mono); font-size: .8125rem; font-weight: 600;
       color: var(--blue); padding: 10px 14px; min-width: 220px;
       flex-shrink: 0; word-break: break-word;
     }
     .header-value {
-      font-family: var(--mono); font-size: .7rem; color: var(--txt-2);
+      font-family: var(--mono); font-size: .8125rem; color: var(--txt-2);
       padding: 10px 14px; word-break: break-all; flex: 1;
     }
     .header-value.security-good { color: var(--lime); }
@@ -75,7 +75,7 @@
     .header-value.security-bad  { color: var(--rose); }
     .tab-buttons { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
     .tab-btn {
-      font-family: var(--mono); font-size: .7rem; font-weight: 500;
+      font-family: var(--mono); font-size: .8125rem; font-weight: 500;
       padding: 8px 16px; border-radius: 100px;
       border: 1px solid var(--border); background: transparent;
       color: var(--txt-2); cursor: pointer; transition: all .15s;
@@ -84,13 +84,18 @@
     .tab-btn.active { background: var(--lime-dim); border-color: var(--border-act); color: var(--lime); }
     .security-badge {
       display: inline-flex; align-items: center; gap: 6px;
-      font-family: var(--mono); font-size: .65rem; font-weight: 600;
+      font-family: var(--mono); font-size: .75rem; font-weight: 600;
       padding: 3px 10px; border-radius: 20px; margin-left: 8px;
     }
     .security-badge.good { background: rgba(78,255,192,.12); border: 1px solid rgba(78,255,192,.25); color: var(--lime); }
     .security-badge.warn { background: rgba(255,181,71,.1); border: 1px solid rgba(255,181,71,.3); color: var(--amber); }
     .security-badge.bad  { background: rgba(255,92,122,.08); border: 1px solid rgba(255,92,122,.2); color: var(--rose); }
-    .section-divider { font-family: var(--mono); font-size: .55rem; letter-spacing: .14em; text-transform: uppercase; color: var(--txt-3); padding: 8px 14px; background: rgba(0,0,0,.2); border-bottom: 1px solid var(--border); }
+    .section-divider { font-family: var(--mono); font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; color: var(--txt-3); padding: 8px 14px; background: rgba(0,0,0,.2); border-bottom: 1px solid var(--border); }
+    @media(max-width:700px) {
+      .header-row { flex-direction: column; }
+      .header-name { min-width: 0; padding-bottom: 0; }
+      .header-value { padding-top: 4px; }
+    }
   </style>
   <script type="application/ld+json">
   {
@@ -360,7 +365,7 @@ async function renderRequestHeaders(){
         <div class="header-name">${escHtml(k)}</div>
         <div class="header-value">${escHtml(v)}</div>
       </div>`).join('')}
-    <div class="section-divider" style="border-bottom:none;text-transform:none;letter-spacing:0;font-size:.62rem;line-height:1.6;">${note}</div>`;
+    <div class="section-divider" style="border-bottom:none;text-transform:none;letter-spacing:0;font-size:.75rem;line-height:1.6;">${note}</div>`;
   window._requestHeadersText = rows.map(([k,v])=>`${k}: ${v}`).join('\n');
 }
 

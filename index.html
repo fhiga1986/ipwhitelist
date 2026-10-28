@@ -231,7 +231,7 @@
       <div class="config-step">
         <div class="step-head"><div class="step-num">1</div><div><div class="step-info-title">AWS CLI — Security Group Ingress</div><div class="step-info-sub">Add your IP to an EC2 Security Group inbound rule</div></div></div>
         <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">AWS CLI</span><button class="btn-icon sm" onclick="copyCode('c-aws-cli')">Copy</button></div>
-        <pre id="c-aws-cli"><span class="t-cm"># Authorize your IP in a Security Group</span>
+        <pre tabindex="0" id="c-aws-cli"><span class="t-cm"># Authorize your IP in a Security Group</span>
 <span class="t-kw">aws</span> ec2 authorize-security-group-ingress \
   --group-id <span class="t-str">sg-xxxxxxxxxxxxxxxxx</span> \
   --protocol <span class="t-str">tcp</span> \
@@ -241,7 +241,7 @@
       <div class="config-step">
         <div class="step-head"><div class="step-num">2</div><div><div class="step-info-title">Terraform Resource Block</div><div class="step-info-sub">Drop into your .tf file — IaC ready</div></div></div>
         <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">Terraform HCL</span><button class="btn-icon sm" onclick="copyCode('c-aws-tf')">Copy</button></div>
-        <pre id="c-aws-tf"><span class="t-kw">resource</span> <span class="t-str">"aws_security_group_rule"</span> <span class="t-str">"dev_ip_access"</span> {
+        <pre tabindex="0" id="c-aws-tf"><span class="t-kw">resource</span> <span class="t-str">"aws_security_group_rule"</span> <span class="t-str">"dev_ip_access"</span> {
   type              = <span class="t-str">"ingress"</span>
   from_port         = <span class="t-num">443</span>
   to_port           = <span class="t-num">443</span>
@@ -263,12 +263,12 @@
       <div class="config-step">
         <div class="step-head"><div class="step-num">1</div><div><div class="step-info-title">CIDR for Atlas UI</div><div class="step-info-sub">Network Access → Add IP Address</div></div></div>
         <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">CIDR</span><button class="btn-icon sm" onclick="copyCode('c-mongo-cidr')">Copy</button></div>
-        <pre id="c-mongo-cidr"><span class="t-ip" id="mongo-cidr-1">Detecting…/32</span>   <span class="t-cm"># Paste in Atlas → Network Access → Add IP</span></pre></div></div>
+        <pre tabindex="0" id="c-mongo-cidr"><span class="t-ip" id="mongo-cidr-1">Detecting…/32</span>   <span class="t-cm"># Paste in Atlas → Network Access → Add IP</span></pre></div></div>
       </div>
       <div class="config-step">
         <div class="step-head"><div class="step-num">2</div><div><div class="step-info-title">Atlas CLI</div></div></div>
         <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">Atlas CLI</span><button class="btn-icon sm" onclick="copyCode('c-mongo-cli')">Copy</button></div>
-        <pre id="c-mongo-cli"><span class="t-cm"># brew install mongodb-atlas</span>
+        <pre tabindex="0" id="c-mongo-cli"><span class="t-cm"># brew install mongodb-atlas</span>
 <span class="t-kw">atlas</span> accessLists create \
   --projectId <span class="t-str">YOUR_PROJECT_ID</span> \
   --cidr <span class="t-ip" id="mongo-cidr-2">Detecting…/32</span> \
@@ -277,7 +277,7 @@
       <div class="config-step">
         <div class="step-head"><div class="step-num">3</div><div><div class="step-info-title">JSON Payload</div></div></div>
         <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">JSON</span><button class="btn-icon sm" onclick="copyCode('c-mongo-json')">Copy</button></div>
-        <pre id="c-mongo-json">{
+        <pre tabindex="0" id="c-mongo-json">{
   <span class="t-kw">"ipAddress"</span>: <span class="t-ip" id="mongo-ip-1">Detecting…</span>,
   <span class="t-kw">"comment"</span>:   <span class="t-str">"Dev IP — ipwhitelist.dev"</span>
 }</pre></div></div>
@@ -287,7 +287,7 @@
       <div class="config-step">
         <div class="step-head"><div class="step-num">1</div><div><div class="step-info-title">GCP Firewall Rule</div></div></div>
         <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">gcloud</span><button class="btn-icon sm" onclick="copyCode('c-gcp-fw')">Copy</button></div>
-        <pre id="c-gcp-fw"><span class="t-kw">gcloud</span> compute firewall-rules create allow-dev-ip \
+        <pre tabindex="0" id="c-gcp-fw"><span class="t-kw">gcloud</span> compute firewall-rules create allow-dev-ip \
   --allow=tcp:<span class="t-num">443</span> \
   --source-ranges=<span class="t-ip" id="gcp-cidr-1">Detecting…/32</span> \
   --description=<span class="t-str">"Dev IP — ipwhitelist.dev"</span> \
@@ -296,7 +296,7 @@
       <div class="config-step">
         <div class="step-head"><div class="step-num">2</div><div><div class="step-info-title">Cloud SQL Authorized Network</div></div></div>
         <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">gcloud</span><button class="btn-icon sm" onclick="copyCode('c-gcp-sql')">Copy</button></div>
-        <pre id="c-gcp-sql"><span class="t-kw">gcloud</span> sql instances patch YOUR_INSTANCE \
+        <pre tabindex="0" id="c-gcp-sql"><span class="t-kw">gcloud</span> sql instances patch YOUR_INSTANCE \
   --authorized-networks=<span class="t-ip" id="gcp-cidr-2">Detecting…/32</span></pre></div></div>
       </div>
     </div>
@@ -304,19 +304,19 @@
       <div class="config-step">
         <div class="step-head"><div class="step-num">1</div><div><div class="step-info-title">iptables</div></div></div>
         <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">bash</span><button class="btn-icon sm" onclick="copyCode('c-ipt')">Copy</button></div>
-        <pre id="c-ipt"><span class="t-kw">sudo</span> iptables -I INPUT -s <span class="t-ip" id="vps-ip-1">Detecting…</span> -p tcp --dport <span class="t-num">443</span> -j ACCEPT
+        <pre tabindex="0" id="c-ipt"><span class="t-kw">sudo</span> iptables -I INPUT -s <span class="t-ip" id="vps-ip-1">Detecting…</span> -p tcp --dport <span class="t-num">443</span> -j ACCEPT
 <span class="t-kw">sudo</span> netfilter-persistent save</pre></div></div>
       </div>
       <div class="config-step">
         <div class="step-head"><div class="step-num">2</div><div><div class="step-info-title">UFW</div></div></div>
         <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">bash</span><button class="btn-icon sm" onclick="copyCode('c-ufw')">Copy</button></div>
-        <pre id="c-ufw"><span class="t-kw">sudo</span> ufw allow from <span class="t-ip" id="vps-ip-2">Detecting…</span> to any port <span class="t-num">443</span>
+        <pre tabindex="0" id="c-ufw"><span class="t-kw">sudo</span> ufw allow from <span class="t-ip" id="vps-ip-2">Detecting…</span> to any port <span class="t-num">443</span>
 <span class="t-kw">sudo</span> ufw reload</pre></div></div>
       </div>
       <div class="config-step">
         <div class="step-head"><div class="step-num">3</div><div><div class="step-info-title">nginx allow directive</div></div></div>
         <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">nginx.conf</span><button class="btn-icon sm" onclick="copyCode('c-nginx')">Copy</button></div>
-        <pre id="c-nginx">location /admin {
+        <pre tabindex="0" id="c-nginx">location /admin {
     <span class="t-kw">allow</span>  <span class="t-ip" id="vps-ip-3">Detecting…</span>;
     <span class="t-kw">deny</span>   all;
 }</pre></div></div>
@@ -326,7 +326,7 @@
       <div class="config-step">
         <div class="step-head"><div class="step-num">1</div><div><div class="step-info-title">All Formats at Once</div></div></div>
         <div class="step-body-pad"><div class="code-wrap"><div class="code-top"><span class="code-lang-tag">All formats</span><button class="btn-icon sm" onclick="copyCode('c-all')">Copy</button></div>
-        <pre id="c-all"><span class="t-cm"># Plain IP</span>
+        <pre tabindex="0" id="c-all"><span class="t-cm"># Plain IP</span>
 <span class="t-ip" id="gen-ip">Detecting…</span>
 
 <span class="t-cm"># CIDR /32 (single host)</span>
@@ -467,7 +467,7 @@
 <!-- SHARE MODAL -->
 <div class="modal-overlay" id="shareModal" onclick="closeModal(event)">
   <div class="modal">
-    <button class="modal-close" onclick="closeShareModal()">✕</button>
+    <button class="modal-close" onclick="closeShareModal()" aria-label="Close">✕</button>
     <div class="modal-title">Your IP Card</div>
     <p class="modal-sub">Share with teammates so they can whitelist your IP — no console access needed.</p>
     <div class="share-ip-preview">

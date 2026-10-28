@@ -303,8 +303,8 @@ async function runWhois(){
       const expEv = d.events.find(e=>e.eventAction==='expiration');
       if(expEv){
         const daysLeft = Math.ceil((new Date(expEv.eventDate)-new Date())/(1000*60*60*24));
-        if(daysLeft < 30) expiryWarning = `<div style="background:rgba(255,92,122,.1);border:1px solid rgba(255,92,122,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.72rem;color:var(--rose);">⚠ Expires in ${daysLeft} days</div>`;
-        else if(daysLeft < 90) expiryWarning = `<div style="background:rgba(255,181,71,.08);border:1px solid rgba(255,181,71,.25);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.72rem;color:var(--amber);">⚠ Expires in ${daysLeft} days</div>`;
+        if(daysLeft < 30) expiryWarning = `<div style="background:rgba(255,92,122,.1);border:1px solid rgba(255,92,122,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.8125rem;color:var(--rose);">⚠ Expires in ${daysLeft} days</div>`;
+        else if(daysLeft < 90) expiryWarning = `<div style="background:rgba(255,181,71,.08);border:1px solid rgba(255,181,71,.25);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.8125rem;color:var(--amber);">⚠ Expires in ${daysLeft} days</div>`;
       }
     }
 
@@ -319,11 +319,11 @@ async function runWhois(){
           <div class="ua-cell"><div class="ua-label">Domain</div><div class="ua-value accent">${escHtml(domain)}</div></div>
           <div class="ua-cell"><div class="ua-label">Registrar</div><div class="ua-value">${registrar}</div></div>
           <div class="ua-cell"><div class="ua-label">Registrant</div><div class="ua-value">${registrant}</div></div>
-          <div class="ua-cell"><div class="ua-label">Status</div><div class="ua-value" style="font-size:.65rem;">${status}</div></div>
+          <div class="ua-cell"><div class="ua-label">Status</div><div class="ua-value" style="font-size:.75rem;">${status}</div></div>
           <div class="ua-cell"><div class="ua-label">Registered</div><div class="ua-value">${registered}</div></div>
           <div class="ua-cell"><div class="ua-label">Expires</div><div class="ua-value">${expiry}</div></div>
           <div class="ua-cell"><div class="ua-label">Last Updated</div><div class="ua-value">${updated}</div></div>
-          <div class="ua-cell"><div class="ua-label">Nameservers</div><div class="ua-value" style="font-size:.68rem;line-height:1.6;">${ns}</div></div>
+          <div class="ua-cell"><div class="ua-label">Nameservers</div><div class="ua-value" style="font-size:.75rem;line-height:1.6;">${ns}</div></div>
           <div class="ua-cell"><div class="ua-label">DNSSEC</div><div class="ua-value">${dnssec}</div></div>
         </div>
       </div>`;

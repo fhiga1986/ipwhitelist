@@ -282,11 +282,11 @@ async function runSSL(){
 
     let expiryWarning = '';
     if(isValid && daysLeft < 14){
-      expiryWarning = `<div style="background:rgba(255,92,122,.1);border:1px solid rgba(255,92,122,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.72rem;color:var(--rose);">⚠ CRITICAL: Expires in ${daysLeft} days — renew immediately</div>`;
+      expiryWarning = `<div style="background:rgba(255,92,122,.1);border:1px solid rgba(255,92,122,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.8125rem;color:var(--rose);">⚠ CRITICAL: Expires in ${daysLeft} days — renew immediately</div>`;
     } else if(isValid && daysLeft < 30){
-      expiryWarning = `<div style="background:rgba(255,181,71,.08);border:1px solid rgba(255,181,71,.25);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.72rem;color:var(--amber);">⚠ Expires in ${daysLeft} days — renew soon</div>`;
+      expiryWarning = `<div style="background:rgba(255,181,71,.08);border:1px solid rgba(255,181,71,.25);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.8125rem;color:var(--amber);">⚠ Expires in ${daysLeft} days — renew soon</div>`;
     } else if(!isValid){
-      expiryWarning = `<div style="background:rgba(255,92,122,.1);border:1px solid rgba(255,92,122,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.72rem;color:var(--rose);">The newest certificate logged for this name has expired — if the site still loads with a padlock, it is serving a certificate for a different name (e.g. a wildcard).</div>`;
+      expiryWarning = `<div style="background:rgba(255,92,122,.1);border:1px solid rgba(255,92,122,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.8125rem;color:var(--rose);">The newest certificate logged for this name has expired — if the site still loads with a padlock, it is serving a certificate for a different name (e.g. a wildcard).</div>`;
     }
 
     const issuer = cert.issuer_name || '—';
@@ -308,11 +308,11 @@ async function runSSL(){
           <div class="ua-cell"><div class="ua-label">Days Remaining</div><div class="ua-value" style="color:${daysLeft<30?'var(--rose)':daysLeft<60?'var(--amber)':'var(--lime)'};">${isValid?daysLeft+' days':'Expired'}</div></div>
           <div class="ua-cell"><div class="ua-label">Valid From</div><div class="ua-value">${fmt(notBefore)}</div></div>
           <div class="ua-cell"><div class="ua-label">Valid Until</div><div class="ua-value">${fmt(notAfter)}</div></div>
-          <div class="ua-cell"><div class="ua-label">Common Name</div><div class="ua-value" style="font-size:.68rem;">${escHtml(cn)}</div></div>
-          <div class="ua-cell" style="grid-column:span 2"><div class="ua-label">Issuer</div><div class="ua-value" style="font-size:.68rem;line-height:1.5;">${escHtml(issuer)}</div></div>
-          <div class="ua-cell" style="grid-column:span 2"><div class="ua-label">Covered names (SANs) · ${sans.length}</div><div class="ua-value" style="font-size:.68rem;line-height:1.6;">${escHtml(sans.slice(0,8).join(', '))}${sans.length>8?` … +${sans.length-8} more`:''}</div></div>
+          <div class="ua-cell"><div class="ua-label">Common Name</div><div class="ua-value" style="font-size:.75rem;">${escHtml(cn)}</div></div>
+          <div class="ua-cell" style="grid-column:span 2"><div class="ua-label">Issuer</div><div class="ua-value" style="font-size:.75rem;line-height:1.5;">${escHtml(issuer)}</div></div>
+          <div class="ua-cell" style="grid-column:span 2"><div class="ua-label">Covered names (SANs) · ${sans.length}</div><div class="ua-value" style="font-size:.75rem;line-height:1.6;">${escHtml(sans.slice(0,8).join(', '))}${sans.length>8?` … +${sans.length-8} more`:''}</div></div>
         </div>
-        <div style="margin-top:14px;font-family:var(--mono);font-size:.6rem;line-height:1.6;color:var(--txt-3);">Source: Certificate Transparency logs via crt.sh. This is the newest certificate <em>issued</em> for the name, not a live handshake with the server — <a href="#what-it-checks" style="color:var(--txt-2);">what that means</a>.</div>
+        <div style="margin-top:14px;font-family:var(--mono);font-size:.75rem;line-height:1.6;color:var(--txt-3);">Source: Certificate Transparency logs via crt.sh. This is the newest certificate <em>issued</em> for the name, not a live handshake with the server — <a href="#what-it-checks" style="color:var(--txt-2);">what that means</a>.</div>
       </div>`;
     window._sslText = `SSL Check: ${domain}\nStatus: ${statusText}\nDays remaining: ${daysLeft}\nValid from: ${notBefore.toDateString()}\nExpires: ${notAfter.toDateString()}\nIssuer: ${issuer}\nSANs: ${sans.join(', ')}`;
   } catch(e) {
