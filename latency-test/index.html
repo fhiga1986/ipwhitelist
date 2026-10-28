@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <script>document.documentElement.classList.add('js')</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Global Network Latency Test — Ping AWS Regions</title>
-  <meta name="description" content="Free global network latency test. Measure your ping to AWS US, EU, and Asia Pacific regions — Tokyo, Singapore, Sydney. Find your fastest region." />
+  <meta name="description" content="Free global network latency test. Measure your ping to 8 AWS regions in the US, South America, Europe and Asia Pacific from your browser. Find the fastest." />
+  <meta name="author" content="Fernando Higa" />
   <link rel="canonical" href="https://ipwhitelist.dev/latency-test/" />
   <meta property="og:title" content="Global Network Latency Test — Ping AWS Regions" />
-  <meta property="og:description" content="Free global network latency test. Measure your ping to AWS US, EU, and Asia Pacific regions — Tokyo, Singapore, Sydney. Find your fastest region." />
+  <meta property="og:description" content="Free global network latency test. Measure your ping to 8 AWS regions in the US, South America, Europe and Asia Pacific from your browser. Find the fastest." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://ipwhitelist.dev/latency-test/" />
   <meta property="og:image" content="https://ipwhitelist.dev/og-image.png" />
@@ -17,7 +20,7 @@
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Global Network Latency Test — Ping AWS Regions" />
-  <meta name="twitter:description" content="Free global network latency test. Measure your ping to AWS US, EU, and Asia Pacific regions — Tokyo, Singapore, Sydney. Find your fastest region." />
+  <meta name="twitter:description" content="Free global network latency test. Measure your ping to 8 AWS regions in the US, South America, Europe and Asia Pacific from your browser. Find the fastest." />
   <meta name="twitter:image" content="https://ipwhitelist.dev/og-image.png" />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Global Latency Test — IPWhitelist.dev","url":"https://ipwhitelist.dev/latency-test/","description":"Free tool to measure network latency to major AWS cloud regions worldwide.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
 
@@ -26,67 +29,22 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../favicon-180.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="../favicon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../shared.css" />
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFLEV7NLEG"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    // Consent Mode v2: no ad/analytics cookies in the EEA/UK/CH until the consent banner (Google CMP) records a choice
+    gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']});
     gtag('js', new Date());
     gtag('config', 'G-QFLEV7NLEG');
   </script>
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5526031626146935"
      crossorigin="anonymous"></script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "What is a good ping for cloud services?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Under 50ms is excellent, 50–100ms is good, 100–200ms is acceptable for most workloads, and over 200ms may cause noticeable delays for real-time applications. For database connections, aim for under 20ms to minimize query latency."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I choose the best AWS region?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Choose the region closest to the majority of your users. Run this test from your development machine and from key user locations. US-East-1 is fastest for US East Coast, EU-West-1 for Western Europe, and AP-Southeast-1 (Singapore) for Southeast Asia."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What causes high latency to cloud regions?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "High latency is caused by physical distance (speed of light in fiber), network congestion, routing inefficiencies, and ISP peering agreements. Choosing the closest region and using a CDN can significantly minimize latency impact."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the difference between latency and bandwidth?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Latency is the round-trip time (RTT) for a packet to travel to a server and back, measured in milliseconds. Bandwidth is the total data that can be transferred per second (Mbps/Gbps). High bandwidth with high latency still results in slow real-time interactions."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Which AWS region is fastest for Asia Pacific users?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "AP-Northeast-1 (Tokyo) is best for Japan and Korea, AP-Southeast-1 (Singapore) for Southeast Asia, and AP-Southeast-2 (Sydney) for Australia and New Zealand. Run this latency test from your location to get accurate real-world measurements."
-        }
-      }
-    ]
-  }
-  </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -123,7 +81,7 @@
     <a href="/ipv6/" class="nav-link">IPv6</a>
   </div>
   <div class="nav-right"><span class="badge-free">100% Free</span></div>
-  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu">
+  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
@@ -144,13 +102,13 @@
   <header class="hero">
     <div class="hero-kicker"><div class="hero-kicker-dot"></div>Asia Pacific · EU · US · RTT Measurement</div>
     <h1>Global Network <em>Latency Test</em></h1>
-    <p class="hero-sub">Free global network latency test. Measure your ping to 7 AWS regions — US-East, US-West, EU Ireland, EU Frankfurt, Asia Pacific Tokyo, Singapore, and Sydney. Find the fastest cloud region for your deployment.</p>
+    <p class="hero-sub">Free global network latency test. Measure your round-trip time to 8 AWS regions — US-East, US-West, São Paulo, EU Ireland, EU Frankfurt, Tokyo, Singapore and Sydney — straight from your browser, and find the fastest cloud region for your deployment.</p>
   </header>
   <div class="card-wrap">
     <div class="tool-card">
       <div class="tool-card-head">
         <div class="tool-card-title">Cloud Region Latency</div>
-        <div class="tool-card-desc">Each region is tested 3 times and averaged. Green = excellent (&lt;80ms) · Amber = acceptable (&lt;200ms) · Red = high latency.</div>
+        <div class="tool-card-desc">One warm-up request, then 3 timed requests per region, averaged. Green = excellent (&lt;80ms) · Amber = acceptable (&lt;200ms) · Red = high latency. Measured from your current network.</div>
       </div>
       <div class="tool-card-body">
         <div class="tool-input-row">
@@ -161,34 +119,56 @@
     </div>
   </div>
 
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
 
   <section class="seo-content reveal">
+    <div class="byline"><span>Written by <a href="/about/">Fernando Higa</a></span><span>Updated October 2026</span><span>6 min read</span></div>
+
     <h2>What is a global network latency test?</h2>
     <p>Latency (or ping) is the time it takes for a network request to travel from your device to a server and back — measured in milliseconds (ms). Lower latency means faster response times for your users. When choosing a cloud region for your application, database, or API, picking the region with the lowest latency to your primary user base can dramatically improve performance.</p>
-    <h2>How to choose the right AWS region</h2>
-    <p>Run this latency test from your development machine and from the locations where your users are. If you're serving users in Western Europe, <strong>EU Ireland (eu-west-1)</strong> or <strong>EU Frankfurt (eu-central-1)</strong> will typically give the best results. For users in Southeast Asia, <strong>Singapore (ap-southeast-1)</strong> is usually optimal. For users in Australia and New Zealand, <strong>Sydney (ap-southeast-2)</strong> is the best choice.</p>
-    <h2>What is a good ping for cloud services?</h2>
-      <ul>
-      <li><strong><a href="/">IP Whitelist Config Generator</a></strong> — Detect your IP and generate AWS, MongoDB, GCP configs</li>
-      <li><strong><a href="/port-checker/">Port Checker</a></strong> — Test if TCP ports are open on any host</li>
-      <li><strong><a href="/dns-lookup/">DNS Lookup</a></strong> — Query A, AAAA, MX, CNAME, TXT and NS records</li>
-      <li><strong><a href="/whois-lookup/">WHOIS Lookup</a></strong> — Find domain owner, registrar, and expiry date</li>
-      <li><strong><a href="/ssl-checker/">SSL Checker</a></strong> — Verify SSL certificate validity and expiry</li>
-      <li><strong><a href="/ip-location/">IP Location Map</a></strong> — Find any IP location on an interactive map</li>
-      <li><strong><a href="/headers/">HTTP Headers Checker</a></strong> — Inspect request and security headers</li>
-      <li><strong><a href="/latency-test/">Latency Test</a></strong> — Measure your RTT to major cloud regions</li>
-      <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
-      <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
+
+    <h2>How this test works</h2>
+    <p>Browsers cannot send ICMP pings, so this tool measures <strong>HTTP round-trip time</strong> instead: it sends a tiny <code>HEAD</code> request to the public DynamoDB endpoint of each AWS region and times the response. One warm-up request per region pays for DNS resolution and the TCP/TLS handshake; the three timed requests that follow reuse that connection, so the figure you see is close to the network round trip plus a sub-millisecond server response.</p>
+    <ul class="bullets">
+      <li>Results are measured <strong>from your browser</strong>, so they depend on your location, ISP and whether you are on a VPN — run it from the office, from home and from a phone on mobile data and you will get three different answers.</li>
+      <li>Values are typically 5–20 ms higher than an ICMP ping to the same region because of HTTP processing and browser scheduling. The ranking between regions is what matters.</li>
+      <li>A <em>timeout</em> means no answer within 3 seconds: a corporate firewall blocking the endpoint, or a very poor connection.</li>
     </ul>
-  
+
+    <h2>What is a good ping for cloud services?</h2>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Round trip</th><th>Feels like</th><th>Suitable for</th></tr></thead>
+      <tbody>
+        <tr><td>&lt; 20 ms</td><td>Instant</td><td>Database connections from application servers, real-time multiplayer, trading. Only achievable in the same region or metro.</td></tr>
+        <tr><td>20–80 ms</td><td>Excellent</td><td>Interactive web apps, video calls, SSH sessions, remote desktops. The target for your primary user base.</td></tr>
+        <tr><td>80–150 ms</td><td>Good</td><td>Most websites and APIs; noticeable in chatty applications that make many sequential requests.</td></tr>
+        <tr><td>150–250 ms</td><td>Acceptable</td><td>Content sites and background sync. Typical for cross-continental links (e.g. South America ↔ Europe).</td></tr>
+        <tr><td>&gt; 250 ms</td><td>Sluggish</td><td>Batch jobs and downloads only. Add a CDN or a closer region for interactive traffic.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Remember that a page load involves many round trips — DNS, TCP, TLS, the HTML, then every API call — so 100 ms of latency can easily become a full second of waiting. That is why region choice matters more than raw bandwidth for perceived speed.</p>
+
+    <h2>How to choose the right AWS region</h2>
+    <p>Run this latency test from your development machine and from the locations where your users are. If you're serving users in Western Europe, <strong>EU Ireland (eu-west-1)</strong> or <strong>EU Frankfurt (eu-central-1)</strong> will typically give the best results. For users in Southeast Asia, <strong>Singapore (ap-southeast-1)</strong> is usually optimal. For users in Australia and New Zealand, <strong>Sydney (ap-southeast-2)</strong> is the best choice, and for Brazil and the Southern Cone, <strong>São Paulo (sa-east-1)</strong>.</p>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Region code</th><th>Location</th><th>Usually best for</th></tr></thead>
+      <tbody>
+        <tr><td>us-east-1</td><td>N. Virginia</td><td>US East Coast, Canada East, the Caribbean, northern South America. AWS's largest and cheapest region.</td></tr>
+        <tr><td>us-west-2</td><td>Oregon</td><td>US West Coast, Western Canada; a common second region for US redundancy.</td></tr>
+        <tr><td>sa-east-1</td><td>São Paulo</td><td>Brazil, Argentina, Chile, Uruguay, Paraguay. Note: 20–40% more expensive than US regions.</td></tr>
+        <tr><td>eu-west-1</td><td>Ireland</td><td>UK, Ireland, Iberia, Western Europe; the most complete EU region service-wise.</td></tr>
+        <tr><td>eu-central-1</td><td>Frankfurt</td><td>Germany, Central and Eastern Europe, data-residency requirements in the EU.</td></tr>
+        <tr><td>ap-northeast-1</td><td>Tokyo</td><td>Japan and Korea.</td></tr>
+        <tr><td>ap-southeast-1</td><td>Singapore</td><td>Southeast Asia and India (until Mumbai is closer for you).</td></tr>
+        <tr><td>ap-southeast-2</td><td>Sydney</td><td>Australia and New Zealand.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Latency is only one input: also weigh price (regions differ by up to 40%), service availability (new services launch in us-east-1 first), data-residency law and where your other systems already live.</p>
+
     <h2>How to reduce latency to cloud regions</h2>
     <p>To minimize latency between your application and cloud services: (1) choose the region geographically closest to your users, (2) use a CDN (Content Delivery Network) to cache static assets at edge locations, (3) implement connection pooling for database connections to avoid repeated handshakes, and (4) use HTTP/2 or HTTP/3 which multiplex requests over a single connection.</p>
     <p>For database connections specifically, consider placing your application server in the same region as your database — even a few milliseconds of latency per query multiplied by thousands of queries per request can significantly degrade response times.</p>
   </section>
 
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
-</main>
   <section class="tools-grid-section reveal">
     <div class="section-label">More Free Tools</div>
     <div class="tools-grid">
@@ -203,50 +183,40 @@
       <a href="/ipv6/" class="tool-grid-card"><div class="tgc-icon">🔢</div><div class="tgc-title">IPv6 Detector</div><div class="tgc-desc">Check your IPv6 address and connectivity</div><div class="tgc-arrow">→</div></a>
     </div>
   </section>
+
   <section class="faq-section reveal">
-    <h2 class="section-heading">Frequently Asked <em>Questions</em></h2>
-  <div class="faq-item">
-    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      <span class="faq-q-text">What is a good ping for cloud services?</span>
-      <span class="faq-chevron">▾</span>
+    <div class="section-label">FAQ</div>
+    <h2 class="section-heading">Latency test questions</h2>
+    <div itemscope itemtype="https://schema.org/FAQPage">
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Is this the same as a ping?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Almost. <code>ping</code> uses ICMP packets, which browsers cannot send; this test times small HTTP requests over an already-open connection, which adds a few milliseconds of overhead. Both measure the same network path, so the ranking of regions is the same — treat the absolute numbers as a slight overestimate.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How do I choose the best AWS region?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Choose the region closest to the majority of your users, not to you. Run this test from your development machine and from key user locations. us-east-1 is fastest for the US East Coast and much of Latin America, eu-west-1 for Western Europe, and ap-southeast-1 (Singapore) for Southeast Asia — then check price and service availability before committing.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What causes high latency to cloud regions?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Mostly physical distance — light in fibre covers about 200 km per millisecond, so a 10,000 km round trip can never be under 100 ms — plus routing detours, congested peering points between ISPs, Wi‑Fi interference and VPNs that send traffic through a far-away exit. Choosing the closest region and using a CDN are the two changes that help most.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What is the difference between latency and bandwidth?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Latency is the round-trip time (RTT) for a packet to travel to a server and back, measured in milliseconds. Bandwidth is the total data that can be transferred per second (Mbps/Gbps). High bandwidth with high latency still results in slow real-time interactions — a 1 Gbps link to a server 300 ms away feels slower for an API than a 20 Mbps link to one 10 ms away.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Which AWS region is fastest for Asia Pacific users?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">ap-northeast-1 (Tokyo) is best for Japan and Korea, ap-southeast-1 (Singapore) for Southeast Asia, and ap-southeast-2 (Sydney) for Australia and New Zealand. India is usually best served from ap-south-1 (Mumbai), which is not part of this test. Run the test from your location to get real-world measurements.</div></div>
+      </div>
     </div>
-    <div class="faq-a">Under 50ms is excellent, 50–100ms is good, 100–200ms is acceptable for most workloads, and over 200ms may cause noticeable delays for real-time applications. For database connections, aim for under 20ms to minimize query latency.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      <span class="faq-q-text">How do I choose the best AWS region?</span>
-      <span class="faq-chevron">▾</span>
-    </div>
-    <div class="faq-a">Choose the region closest to the majority of your users. Run this test from your development machine and from key user locations. US-East-1 is fastest for US East Coast, EU-West-1 for Western Europe, and AP-Southeast-1 (Singapore) for Southeast Asia.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      <span class="faq-q-text">What causes high latency to cloud regions?</span>
-      <span class="faq-chevron">▾</span>
-    </div>
-    <div class="faq-a">High latency is caused by physical distance (speed of light in fiber), network congestion, routing inefficiencies, and ISP peering agreements. Choosing the closest region and using a CDN can significantly minimize latency impact.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      <span class="faq-q-text">What is the difference between latency and bandwidth?</span>
-      <span class="faq-chevron">▾</span>
-    </div>
-    <div class="faq-a">Latency is the round-trip time (RTT) for a packet to travel to a server and back, measured in milliseconds. Bandwidth is the total data that can be transferred per second (Mbps/Gbps). High bandwidth with high latency still results in slow real-time interactions.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      <span class="faq-q-text">Which AWS region is fastest for Asia Pacific users?</span>
-      <span class="faq-chevron">▾</span>
-    </div>
-    <div class="faq-a">AP-Northeast-1 (Tokyo) is best for Japan and Korea, AP-Southeast-1 (Singapore) for Southeast Asia, and AP-Southeast-2 (Sydney) for Australia and New Zealand. Run this latency test from your location to get accurate real-world measurements.</div>
-  </div>
   </section>
+</main>
 <footer>
   <div class="footer-brand">IP<span>Whitelist</span>.dev</div>
   <div class="footer-links"><a href="/">My IP</a><a href="/port-checker/">Port Checker</a><a href="/dns-lookup/">DNS Lookup</a><a href="/user-agent/">User Agent</a><a href="/about/">About</a>
     <a href="/privacy/">Privacy Policy</a>
     <a href="/terms/">Terms of Service</a>
-    <a href="mailto:hello@ipwhitelist.dev">Contact</a></div>
+    <a href="/contact/">Contact</a></div>
   <div class="footer-copy">© 2026 IPWhitelist.dev — Free developer network tools</div>
 </footer>
 <div class="toast" id="toast"><span id="toast-msg">Copied!</span></div>

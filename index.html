@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <script>document.documentElement.classList.add('js')</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>What Is My IP Address? — IPWhitelist.dev</title>
   <meta name="description" content="Detect your public IP address instantly and generate ready-to-paste whitelist configs for AWS, MongoDB Atlas, GCP, iptables, UFW and nginx. Free." />
+  <meta name="author" content="Fernando Higa" />
   <link rel="canonical" href="https://ipwhitelist.dev/" />
   <meta property="og:title" content="What Is My IP Address? — IPWhitelist.dev" />
   <meta property="og:description" content="Detect your public IP address instantly and generate ready-to-paste whitelist configs for AWS, MongoDB Atlas, GCP, iptables, UFW and nginx. Free." />
@@ -56,13 +58,15 @@
   <link rel="dns-prefetch" href="https://ipapi.co" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;700&family=Geist:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="shared.css" />
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFLEV7NLEG"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    // Consent Mode v2: no ad/analytics cookies in the EEA/UK/CH until the consent banner (Google CMP) records a choice
+    gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']});
     gtag('js', new Date());
     gtag('config', 'G-QFLEV7NLEG');
   </script>
@@ -95,6 +99,13 @@
       "height": 512
     },
     "email": "hello@ipwhitelist.dev",
+    "founder": {
+      "@type": "Person",
+      "@id": "https://ipwhitelist.dev/about/#author",
+      "name": "Fernando Higa",
+      "url": "https://ipwhitelist.dev/about/",
+      "sameAs": ["https://github.com/fhiga1986"]
+    },
     "sameAs": [
       "https://github.com/fhiga1986/ipwhitelist"
     ]
@@ -122,7 +133,7 @@
   <div class="nav-right">
     <span class="badge-free">100% Free</span>
   </div>
-  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu">
+  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
@@ -183,20 +194,16 @@
             <div class="fp-score-badge clean" id="fpBadge">Checking…</div>
           </div>
           <div class="fp-checks" id="fpChecks">
-            <div class="fp-check"><div class="fp-check-icon ok">✓</div>Not a known proxy</div>
-            <div class="fp-check"><div class="fp-check-icon ok">✓</div>No VPN detected</div>
-            <div class="fp-check"><div class="fp-check-icon ok">✓</div>Not on blocklists</div>
-            <div class="fp-check"><div class="fp-check-icon ok">✓</div>Residential IP</div>
-            <div class="fp-check"><div class="fp-check-icon ok">✓</div>IPv4 public range</div>
-            <div class="fp-check"><div class="fp-check-icon ok">✓</div>Low abuse score</div>
+            <div class="fp-check"><div class="fp-check-icon na" id="fpc-public">–</div><span id="fpt-public">Public IPv4 range</span></div>
+            <div class="fp-check"><div class="fp-check-icon na" id="fpc-dc">–</div><span id="fpt-dc">Datacenter / cloud range</span></div>
+            <div class="fp-check"><div class="fp-check-icon na" id="fpc-proxy">–</div><span id="fpt-proxy">Proxy / VPN flag</span></div>
           </div>
+          <div class="fp-note">Based on public ASN data (ipapi.co) and the proxy flag from freeipapi.com — not a blocklist or abuse-score lookup.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- AD SLOT 1 -->
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
 
   <!-- SHARE CARD -->
   <div class="card-wrap reveal">
@@ -351,32 +358,48 @@
   
   </section>
 
-  <!-- AD SLOT 2 -->
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
 
   <!-- SEO CONTENT — visible text Google indexes -->
   <section class="seo-content reveal">
+    <div class="byline"><span>Written by <a href="/about/">Fernando Higa</a></span><span>Updated October 2026</span><span>6 min read</span></div>
+
     <h2>How to find your public IP address</h2>
     <p>Your public IP address is the unique identifier assigned by your Internet Service Provider (ISP) to your internet connection. Unlike your local or private IP address (typically in the 192.168.x.x or 10.x.x.x range), your public IP is visible to all servers and services you connect to on the internet.</p>
-    <p>IPWhitelist.dev detects your public IP instantly using two independent sources — <strong>ipify.org</strong> and <strong>ipapi.co</strong> — for maximum accuracy and reliability.</p>
+    <p>IPWhitelist.dev detects your public IP instantly using two independent sources — <strong>ipify.org</strong> and <strong>ipapi.co</strong> — for maximum accuracy and reliability. If you prefer the terminal, these commands return the same address:</p>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Environment</th><th>Command</th></tr></thead>
+      <tbody>
+        <tr><td>macOS / Linux</td><td><code>curl -4 https://api.ipify.org</code> (add <code>-6</code> for your IPv6 address)</td></tr>
+        <tr><td>Windows PowerShell</td><td><code>(Invoke-WebRequest -Uri "https://api.ipify.org").Content</code></td></tr>
+        <tr><td>Any OS, via DNS</td><td><code>dig +short myip.opendns.com @resolver1.opendns.com</code></td></tr>
+      </tbody>
+    </table></div>
 
     <h2>What is CIDR notation and why does it matter?</h2>
     <p>CIDR (Classless Inter-Domain Routing) notation expresses an IP address and its associated network mask. For a single IP address, the CIDR notation appends <code>/32</code>, meaning only that exact address is included. When whitelisting your IP in AWS Security Groups, MongoDB Atlas, or GCP Firewall rules, you must provide the CIDR format — for example, <code>203.0.113.42/32</code>.</p>
+    <p>The prefixes you will meet most often when writing allow lists:</p>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>CIDR</th><th>Addresses</th><th>Typical use</th></tr></thead>
+      <tbody>
+        <tr><td>/32</td><td>1</td><td>A single machine — your laptop, a CI runner, a bastion host. The right default for a personal whitelist.</td></tr>
+        <tr><td>/29</td><td>8</td><td>A small static block assigned by an ISP to a business connection.</td></tr>
+        <tr><td>/24</td><td>256</td><td>An office network or a VPN exit range. Only appropriate when the whole range belongs to you.</td></tr>
+        <tr><td>/16</td><td>65,536</td><td>Large corporate or cloud ranges. Rarely appropriate for an allow list.</td></tr>
+        <tr><td>0.0.0.0/0</td><td>all IPv4</td><td>Open to the entire internet — the opposite of a whitelist. Cloud consoles warn about it for a reason.</td></tr>
+      </tbody>
+    </table></div>
 
-    <h2>Free developer tools on IPWhitelist.dev</h2>
-      <ul>
-      <li><strong><a href="/">IP Whitelist Config Generator</a></strong> — Detect your IP and generate AWS, MongoDB, GCP configs</li>
-      <li><strong><a href="/port-checker/">Port Checker</a></strong> — Test if TCP ports are open on any host</li>
-      <li><strong><a href="/dns-lookup/">DNS Lookup</a></strong> — Query A, AAAA, MX, CNAME, TXT and NS records</li>
-      <li><strong><a href="/whois-lookup/">WHOIS Lookup</a></strong> — Find domain owner, registrar, and expiry date</li>
-      <li><strong><a href="/ssl-checker/">SSL Checker</a></strong> — Verify SSL certificate validity and expiry</li>
-      <li><strong><a href="/ip-location/">IP Location Map</a></strong> — Find any IP location on an interactive map</li>
-      <li><strong><a href="/headers/">HTTP Headers Checker</a></strong> — Inspect request and security headers</li>
-      <li><strong><a href="/latency-test/">Latency Test</a></strong> — Measure your RTT to major cloud regions</li>
-      <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
-      <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
-    </ul>
-      <h2>What is the difference between a public and private IP address?</h2>
+    <h2>Whitelisted your IP but still can't connect? Check these first</h2>
+    <ol>
+      <li><strong>You whitelisted a private IP.</strong> Addresses such as 192.168.1.20 or 10.0.0.5 never leave your local network. Use the public address shown at the top of this page.</li>
+      <li><strong>Your IP changed.</strong> Dynamic IPs rotate after a router restart or when you move from Wi‑Fi to mobile data. Reload this page and compare it with the rule you created.</li>
+      <li><strong>You are behind CGNAT or a VPN.</strong> Your traffic may leave through a different address than you expect — sometimes through several. The ISP / AS field above shows who owns your exit IP.</li>
+      <li><strong>Wrong port or protocol.</strong> A rule for TCP 443 does nothing for SSH on TCP 22 or PostgreSQL on 5432. Confirm the port with the <a href="/port-checker/">port checker</a>.</li>
+      <li><strong>The rule is in the wrong layer.</strong> On AWS the security group must be attached to the instance <em>and</em> the subnet's network ACL must allow the traffic. In MongoDB Atlas, access lists belong to the project, not to an individual cluster.</li>
+      <li><strong>IPv6 is being used first.</strong> On dual-stack networks some services are reached over IPv6, so an IPv4 rule is never consulted. Check the <a href="/ipv6/">IPv6 detector</a> and whitelist both addresses.</li>
+    </ol>
+
+    <h2>What is the difference between a public and private IP address?</h2>
     <p>Your <strong>public IP address</strong> is the address assigned by your ISP that identifies your network on the internet. It is what websites, servers, and cloud services like AWS Security Groups and MongoDB Atlas see when you connect. Your private IP address, by contrast, is used only within your local network (e.g. 192.168.1.x) and is not visible externally.</p>
     <p>When you add your IP to a cloud firewall or security group, you always need to use your <strong>public IP address</strong> — not your private one. This tool detects your public IP automatically so you can whitelist it in one click without any confusion.</p>
 
@@ -389,72 +412,37 @@
     <p>For developers who need a stable IP for cloud whitelisting, a VPN with a dedicated static IP (such as those offered by Mullvad or ProtonVPN) is the most practical solution — you whitelist that IP once and never need to update it again.</p>
   </section>
 
-  <!-- TOOLS GRID -->
-
-  <!-- AD SLOT 3 -->
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
-
   <!-- FAQ with Schema -->
   <section class="faq-section reveal">
     <div class="section-label">FAQ</div>
     <h2 class="section-heading">Common questions about IP addresses</h2>
     <div itemscope itemtype="https://schema.org/FAQPage">
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          <span class="faq-q-text" itemprop="name">What is my public IP address?</span>
-          <div class="faq-chevron">▾</div>
-        </div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-          <div itemprop="text">Your public IP is the address your ISP assigns to your internet connection — the one all servers on the internet see. Unlike your local IP (192.168.x.x), your public IP is globally unique. IPWhitelist.dev detects it in milliseconds with no setup required.</div>
-        </div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What is my public IP address?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Your public IP is the address your ISP assigns to your internet connection — the one all servers on the internet see. Unlike your local IP (192.168.x.x), your public IP is globally unique. IPWhitelist.dev detects it in milliseconds with no setup required.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          <span class="faq-q-text" itemprop="name">How do I whitelist my IP in AWS Security Groups?</span>
-          <div class="faq-chevron">▾</div>
-        </div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-          <div itemprop="text">Go to EC2 → Security Groups → select your group → Inbound Rules → Edit → Add Rule. Set Type to Custom TCP, enter your port, and paste your IP in CIDR format (e.g. 203.0.113.42/32) as the source. IPWhitelist.dev generates the exact AWS CLI command and Terraform config above — just copy and run.</div>
-        </div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How do I whitelist my IP in AWS Security Groups?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Go to EC2 → Security Groups → select your group → Inbound Rules → Edit → Add Rule. Set Type to Custom TCP, enter your port, and paste your IP in CIDR format (e.g. 203.0.113.42/32) as the source. IPWhitelist.dev generates the exact AWS CLI command and Terraform config above — just copy and run.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          <span class="faq-q-text" itemprop="name">How do I whitelist my IP in MongoDB Atlas?</span>
-          <div class="faq-chevron">▾</div>
-        </div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-          <div itemprop="text">In MongoDB Atlas, go to Network Access → Add IP Address, then paste your CIDR notation from IPWhitelist.dev. Alternatively, use the Atlas CLI command generated above. Your IP must be whitelisted before any client can connect to your Atlas cluster.</div>
-        </div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How do I whitelist my IP in MongoDB Atlas?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">In MongoDB Atlas, go to Network Access → Add IP Address, then paste your CIDR notation from IPWhitelist.dev. Alternatively, use the Atlas CLI command generated above. Your IP must be whitelisted before any client can connect to your Atlas cluster.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          <span class="faq-q-text" itemprop="name">Do you store or log my IP address?</span>
-          <div class="faq-chevron">▾</div>
-        </div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-          <div itemprop="text">No. IP detection is done via client-side calls to public APIs (ipify.org and ipapi.co). We never proxy or log these requests. Your IP address never touches our servers.</div>
-        </div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Should I whitelist /32 or a wider range?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Use /32 (a single address) unless you control the whole range. A wider prefix such as /24 lets 255 other addresses in — on a shared ISP or VPN range those belong to strangers. If your IP changes often, a dedicated static IP or a VPN with a fixed exit address is safer than widening the rule.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)">
-          <span class="faq-q-text" itemprop="name">Why does my IP change?</span>
-          <div class="faq-chevron">▾</div>
-        </div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-          <div itemprop="text">Most home and office ISPs assign dynamic IP addresses, meaning your public IP can change when your router reconnects, after a power cycle, or periodically based on your ISP's lease policy. If you have a dynamic IP and rely on whitelisting for database or server access, you'll need to update your whitelist rules each time it changes.</div>
-        </div>
-      </div>
-    
-      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What is a public IP address?</span><div class="faq-chevron">▾</div></div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">A public IP address is the unique address assigned to your network by your Internet Service Provider (ISP). It identifies your device on the internet and is what cloud services like AWS, MongoDB Atlas, and GCP use when you configure firewall rules or IP whitelists.</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Do you store or log my IP address?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">No. IP detection is done via client-side calls to public APIs (ipify.org, ipapi.co and freeipapi.com). We never proxy or log these requests — the site has no backend. Your IP address never touches our servers.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why does my IP address keep changing?</span><div class="faq-chevron">▾</div></div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Most ISPs assign dynamic IP addresses that can change when you restart your router or after a set period. This is why developers frequently need to update AWS Security Groups, MongoDB Atlas access lists, and firewall rules. This tool always shows your current IP so you can update your whitelist immediately.</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why does my IP address keep changing?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Most home and office ISPs assign dynamic IP addresses, meaning your public IP can change when your router reconnects, after a power cycle, or periodically based on your ISP's lease policy. If you rely on whitelisting for database or server access, you'll need to update your rules each time it changes — this page always shows your current address.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Does my IP address reveal my exact location?</span><div class="faq-chevron">▾</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Does my IP address reveal my exact location?</span><span class="faq-chevron">▾</span></button>
         <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">No. Your IP address reveals your approximate location — typically your city and ISP — but not your exact street address. The geolocation data shown here is based on where your ISP's infrastructure is located, which may differ from your physical location.</div></div>
       </div>
     </div>
@@ -471,7 +459,7 @@
     <a href="/about/">About</a>
     <a href="/privacy/">Privacy Policy</a>
     <a href="/terms/">Terms of Service</a>
-    <a href="mailto:hello@ipwhitelist.dev">Contact</a>
+    <a href="/contact/">Contact</a>
   </div>
   <div class="footer-copy">© 2026 IPWhitelist.dev — Free developer network tools</div>
 </footer>

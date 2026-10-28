@@ -6,6 +6,8 @@
 (function(){
   const cv=document.getElementById('bg-canvas');
   if(!cv) return;
+  // Skip the animation on small screens and for users who prefer reduced motion (saves CPU/battery, better INP on mobile)
+  if(innerWidth<700||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
   const ctx=cv.getContext('2d');
   let W,H,pts=[],aid;
   function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
@@ -44,7 +46,10 @@ function copyCode(id){
 }
 
 /* ─── FAQ ─── */
-function toggleFaq(el){el.parentElement.classList.toggle('open');}
+function toggleFaq(el){
+  const open=el.parentElement.classList.toggle('open');
+  el.setAttribute('aria-expanded',open?'true':'false');
+}
 
 /* ─── MODAL ─── */
 function openShareModal(){document.getElementById('shareModal').classList.add('open');}
@@ -83,14 +88,17 @@ async function detectIP(){
     let ip=null,meta={};
     if(r1.status==='fulfilled') ip=r1.value.ip;
     if(r2.status==='fulfilled'){const d=r2.value;if(!ip)ip=d.ip;meta={city:d.city,country:d.country_name,org:d.org||d.asn};}
-    if(!ip) return;
+    if(!ip) throw new Error('no source answered');
     const latency=Math.round(performance.now()-t0);
     window.detectedIP=ip;
     window.detectedMeta={...meta,latency};
     renderIP(ip,meta,latency);
   }catch(e){
     const el=document.getElementById('ipDisplay');
-    if(el){el.textContent='Detection failed';el.classList.remove('loading');}
+    if(el){el.textContent='Detection failed';el.classList.remove('loading');el.style.fontSize='1.4rem';}
+    const badge=document.getElementById('fpBadge');
+    if(badge){badge.textContent='Unavailable';badge.className='fp-score-badge warn';}
+    showToast('⚠ Could not reach ipify.org / ipapi.co — check your connection or an ad/privacy blocker');
   }
 }
 
@@ -121,15 +129,35 @@ function renderIP(ip,meta,latency){
   set('sip-date',new Date().toLocaleDateString());
 }
 
-function updateFingerprint(ip,meta){
+/* Only claims we can actually back with data: public/private range (computed locally),
+   datacenter range (ASN organisation name) and the proxy/VPN flag from freeipapi.com.
+   Anything we cannot verify is shown as "not checked" instead of a green tick. */
+const DC_ORG_RE=/amazon|aws|google|microsoft|azure|digitalocean|vultr|linode|akamai|ovh|hetzner|oracle|alibaba|tencent|cloudflare|fastly|contabo|scaleway|ionos|leaseweb|m247|datacamp|choopa|upcloud|kamatera|hostinger|godaddy|rackspace/i;
+function isPrivateIPv4(ip){
+  const p=ip.split('.').map(Number);
+  if(p.length!==4||p.some(n=>isNaN(n)))return false;
+  return p[0]===10||p[0]===127||p[0]===0||(p[0]===172&&p[1]>=16&&p[1]<=31)||(p[0]===192&&p[1]===168)||(p[0]===169&&p[1]===254)||(p[0]===100&&p[1]>=64&&p[1]<=127)||p[0]>=224;
+}
+function setFpCheck(key,state,text){
+  const icon=document.getElementById('fpc-'+key),label=document.getElementById('fpt-'+key);
+  if(!icon||!label)return;
+  icon.className='fp-check-icon '+state;
+  icon.textContent={ok:'✓',warn:'!',bad:'✕',na:'–'}[state];
+  label.textContent=text;
+}
+async function updateFingerprint(ip,meta){
   const badge=document.getElementById('fpBadge');if(!badge)return;
-  const isDC=meta.org&&/amazon|google|microsoft|digitalocean|vultr|linode|ovh|hetzner/i.test(meta.org);
-  if(isDC){
-    badge.textContent='⚠ Datacenter IP';badge.className='fp-score-badge warn';
-    const c=document.getElementById('fpChecks');if(!c)return;
-    const upd=(i,cls,icon,txt)=>{c.children[i].querySelector('.fp-check-icon').className='fp-check-icon '+cls;c.children[i].querySelector('.fp-check-icon').textContent=icon;c.children[i].childNodes[1].textContent=' '+txt;};
-    upd(0,'warn','!','Datacenter IP');upd(3,'warn','!','Cloud range');
-  }else{badge.textContent='✓ Clean IP';badge.className='fp-score-badge clean';}
+  const org=meta.org||'';
+  const pub=!isPrivateIPv4(ip);
+  setFpCheck('public',pub?'ok':'warn',pub?'Public IPv4 range':'Private / reserved range');
+  const dc=DC_ORG_RE.test(org);
+  setFpCheck('dc',dc?'warn':'ok',dc?'Datacenter / cloud range':'Not a known datacenter range');
+  let proxy=null;
+  try{const d=await fetch(`https://freeipapi.com/api/json/${ip}`).then(r=>r.json());if(typeof d.isProxy==='boolean')proxy=d.isProxy;}catch(e){}
+  setFpCheck('proxy',proxy===null?'na':proxy?'warn':'ok',proxy===null?'Proxy / VPN: not checked':proxy?'Flagged as proxy / VPN':'No proxy / VPN flag');
+  const review=dc||proxy||!pub;
+  badge.textContent=review?'⚠ Review':'✓ Clean';
+  badge.className='fp-score-badge '+(review?'warn':'clean');
 }
 
 function copyIP(){
@@ -165,39 +193,90 @@ function switchConfig(name){
 /* ─── PORT CHECKER ─── */
 const PORT_NAMES={21:'FTP',22:'SSH',23:'Telnet',25:'SMTP',53:'DNS',80:'HTTP',110:'POP3',143:'IMAP',443:'HTTPS',465:'SMTPS',587:'SMTP',993:'IMAPS',995:'POP3S',3000:'Dev server',3306:'MySQL',5432:'PostgreSQL',5672:'RabbitMQ',6379:'Redis',8080:'HTTP Alt',8443:'HTTPS Alt',27017:'MongoDB'};
 
+/* How the browser probe works (and why results are labelled the way they are):
+   - A web page can only open HTTPS connections, so each port is probed with fetch(https://host:port, no-cors).
+   - If the server completes a TLS handshake we get an opaque response  -> "Open".
+   - If the host replies but TLS fails (closed port = RST, or a non-HTTPS service) -> "Answered".
+   - If nothing comes back before the timeout -> "No response" (firewall drop or host down).
+   - A random high port is probed first as a baseline: hosts that silently drop unused ports
+     (cloud security groups) turn every "Answered" into strong evidence that a service is listening.
+   - Browsers refuse to connect to a fixed list of ports (SSH 22, SMTP 25, mail ports...), so those are
+     reported as not testable instead of being guessed. */
+const BROWSER_BLOCKED_PORTS=new Set([1,7,9,11,13,15,17,19,20,21,22,23,25,37,42,43,53,69,77,79,87,95,101,102,103,104,109,110,111,113,115,117,119,123,135,137,139,143,161,179,389,427,465,512,513,514,515,526,530,531,532,540,548,554,556,563,587,601,636,989,990,993,995,1719,1720,1723,2049,3659,4045,5060,5061,6000,6566,6665,6666,6667,6668,6669,6697,10080]);
+const PROBE_TIMEOUT_MS=6000;
+
+function probePort(host,port){
+  const ctl=new AbortController();
+  const tm=setTimeout(()=>ctl.abort(),PROBE_TIMEOUT_MS);
+  return fetch(`https://${host}:${port}/`,{mode:'no-cors',cache:'no-store',signal:ctl.signal})
+    .then(()=>'open',e=>e.name==='AbortError'?'silent':'answered')
+    .finally(()=>clearTimeout(tm));
+}
+
+async function resolveHost(host){
+  // Returns the first A record (or the literal IP); null when the name does not resolve.
+  if(/^\d{1,3}(\.\d{1,3}){3}$/.test(host))return host;
+  if(host.includes(':'))return host; // IPv6 literal
+  try{
+    const d=await fetch(`https://dns.google/resolve?name=${encodeURIComponent(host)}&type=A`).then(r=>r.json());
+    const a=(d.Answer||[]).find(r=>r.type===1);
+    return a?a.data:null;
+  }catch(e){return host;} // DNS API unreachable: don't block the check
+}
+
 async function runPortCheck(){
-  const host=document.getElementById('portHost').value.trim();
+  const host=document.getElementById('portHost').value.trim().replace(/^https?:\/\//,'').replace(/[/?#].*$/,'').toLowerCase();
   const portsRaw=document.getElementById('portNums').value.trim();
   if(!host||!portsRaw){showToast('⚠ Enter a host and at least one port');return;}
-  const ports=portsRaw.split(/[,\s]+/).map(p=>parseInt(p.trim())).filter(p=>p>0&&p<65536);
+  if(!/^[a-z0-9.\-:\[\]]+$/.test(host)){showToast('⚠ Enter a hostname or IP address only');return;}
+  const ports=[...new Set(portsRaw.split(/[,\s]+/).map(p=>parseInt(p,10)).filter(p=>p>0&&p<65536))].slice(0,20);
   if(!ports.length){showToast('⚠ Enter valid port numbers (1-65535)');return;}
   const res=document.getElementById('portResults');
   const btn=document.getElementById('portBtn');
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Checking…';
-  res.innerHTML='<div class="port-results" id="portRows"></div>';
-  const rows=document.getElementById('portRows');
-  ports.forEach(port=>{
-    rows.innerHTML+=`<div class="port-row"><span class="port-num">${port}</span><span class="port-name">${PORT_NAMES[port]||'Custom'}</span><span class="port-status checking" id="ps-${port}">Checking…</span></div>`;
+  res.innerHTML=`<div class="port-results" id="portRows">${ports.map(port=>`<div class="port-row"><span class="port-num">${port}</span><span class="port-name">${PORT_NAMES[port]||'Custom'}</span><span class="port-status checking" id="ps-${port}">Checking…</span></div>`).join('')}</div><div class="port-note" id="portNote"></div>`;
+  const note=document.getElementById('portNote');
+  const setResult=(port,cls,label)=>{const el=document.getElementById('ps-'+port);if(el){el.textContent=label;el.className='port-status '+cls;}};
+
+  const resolved=await resolveHost(host);
+  if(resolved===null){
+    ports.forEach(p=>setResult(p,'na','Host not found'));
+    note.textContent=`"${host}" has no A record — check the spelling.`;
+    btn.disabled=false;btn.textContent='Check Ports';return;
+  }
+  if(/^\d/.test(resolved)&&isPrivateIPv4(resolved)){
+    ports.forEach(p=>setResult(p,'na','Private address'));
+    note.innerHTML=`${escHtml(host)} resolves to the private address <code>${escHtml(resolved)}</code>, which is only reachable from inside that network. Run the check from a machine on the same network, or test the public IP of the router/load balancer instead.`;
+    btn.disabled=false;btn.textContent='Check Ports';return;
+  }
+
+  const blocked=ports.filter(p=>BROWSER_BLOCKED_PORTS.has(p));
+  const testable=ports.filter(p=>!BROWSER_BLOCKED_PORTS.has(p));
+  blocked.forEach(p=>setResult(p,'na','Not testable in a browser'));
+
+  const probeHost=host.includes(':')&&!host.startsWith('[')?`[${host}]`:host;
+  const basePort=49152+Math.floor(Math.random()*16000);
+  const [base,...results]=await Promise.all([probePort(probeHost,basePort),...testable.map(p=>probePort(probeHost,p))]);
+  const hostDrops=base==='silent';
+  results.forEach((r,i)=>{
+    const port=testable[i];
+    if(r==='open')setResult(port,'open','Open (HTTPS handshake OK)');
+    else if(r==='silent')setResult(port,'filtered','No response — filtered or down');
+    else if(hostDrops)setResult(port,'maybe','Open — service answered');
+    else setResult(port,'maybe','Answered — closed or non-HTTPS service');
   });
-  await Promise.all(ports.map(port=>checkPort(host,port)));
+
+  const cmd=`nc -zv ${host} ${testable[0]||ports[0]}`;
+  const lines=[];
+  if(testable.length){
+    lines.push(hostDrops
+      ?`<strong>${escHtml(host)}</strong> silently drops connections to unused ports (typical of cloud firewalls), so a port that <em>answered</em> almost certainly has a service listening.`
+      :`<strong>${escHtml(host)}</strong> actively refuses connections on unused ports, so "Answered" can mean either <em>closed</em> or <em>a service that doesn't speak HTTPS</em> (SSH, MySQL, plain HTTP…) — a browser can't tell those apart.`);
+  }
+  if(blocked.length)lines.push(`Ports ${blocked.join(', ')} are on the browser's restricted list and can't be probed from a web page.`);
+  lines.push(`Definitive check from a terminal: <code>${escHtml(cmd)}</code> &nbsp;·&nbsp; PowerShell: <code>Test-NetConnection ${escHtml(host)} -Port ${testable[0]||ports[0]}</code>`);
+  note.innerHTML=lines.join('<br/>');
   btn.disabled=false;btn.textContent='Check Ports';
-}
-
-function checkPort(host,port){
-  return new Promise(resolve=>{
-    const timeout=setTimeout(()=>{setPortResult(port,false);resolve();},3500);
-    try{
-      const ws=new WebSocket(`wss://${host}:${port}`);
-      ws.onopen=()=>{clearTimeout(timeout);ws.close();setPortResult(port,true);resolve();};
-      ws.onerror=()=>{clearTimeout(timeout);setPortResult(port,port===443||port===80||port===8080||port===8443);resolve();};
-    }catch(e){clearTimeout(timeout);setPortResult(port,false);resolve();}
-  });
-}
-
-function setPortResult(port,open){
-  const el=document.getElementById('ps-'+port);if(!el)return;
-  if(open){el.textContent='Open';el.className='port-status open';}
-  else{el.textContent='Closed / Filtered';el.className='port-status closed';}
 }
 
 /* ─── DNS LOOKUP ─── */
@@ -214,10 +293,11 @@ async function runDNS(){
     const r=await fetch(`https://dns.google/resolve?name=${encodeURIComponent(host)}&type=${type}`);
     const d=await r.json();
     if(!d.Answer||!d.Answer.length){
-      res.innerHTML=`<div class="result-top"><span class="result-lang">DNS · ${type} · ${host}</span></div><div class="result-pre" style="color:var(--txt-3)">No ${type} records found for ${host}</div>`;
+      const why=d.Status===3?`${escHtml(host)} does not exist (NXDOMAIN)`:`No ${type} records found for ${escHtml(host)} (the name exists, but has no record of this type)`;
+      res.innerHTML=`<div class="result-top"><span class="result-lang">DNS · ${type} · ${escHtml(host)}</span></div><div class="result-pre" style="color:var(--txt-3)">${why}</div>`;
     }else{
       const lines=d.Answer.map(a=>`TTL ${String(a.TTL+'s').padEnd(8)}  ${a.data}`).join('\n');
-      res.innerHTML=`<div class="result-top"><span class="result-lang">DNS · ${type} · ${host} — ${d.Answer.length} record(s)</span><button class="btn-icon sm" onclick="navigator.clipboard.writeText(document.getElementById('dnsOut').innerText);showToast('✓ Copied')">Copy</button></div><div class="result-pre" id="dnsOut">${escHtml(lines)}</div>`;
+      res.innerHTML=`<div class="result-top"><span class="result-lang">DNS · ${type} · ${escHtml(host)} — ${d.Answer.length} record(s)</span><button class="btn-icon sm" onclick="navigator.clipboard.writeText(document.getElementById('dnsOut').innerText);showToast('✓ Copied')">Copy</button></div><div class="result-pre" id="dnsOut">${escHtml(lines)}</div>`;
     }
   }catch(e){res.innerHTML=`<div class="result-pre" style="color:var(--rose)">DNS query failed. Check the domain and try again.</div>`;}
   btn.disabled=false;btn.textContent='Lookup';
@@ -227,6 +307,7 @@ async function runDNS(){
 const REGIONS=[
   {name:'US East',label:'N. Virginia',url:'https://dynamodb.us-east-1.amazonaws.com/'},
   {name:'US West',label:'Oregon',url:'https://dynamodb.us-west-2.amazonaws.com/'},
+  {name:'South America',label:'São Paulo',url:'https://dynamodb.sa-east-1.amazonaws.com/'},
   {name:'EU West',label:'Ireland',url:'https://dynamodb.eu-west-1.amazonaws.com/'},
   {name:'EU Central',label:'Frankfurt',url:'https://dynamodb.eu-central-1.amazonaws.com/'},
   {name:'AP',label:'Tokyo',url:'https://dynamodb.ap-northeast-1.amazonaws.com/'},
@@ -257,6 +338,8 @@ async function runLatency(){
 async function measureLatency(i){
   const url=REGIONS[i].url;
   const RUNS=3;let total=0,success=0;
+  // Warm-up request (not counted): pays DNS + TCP + TLS setup once so the measured runs reflect round-trip time
+  try{await fetch(url,{method:'HEAD',mode:'no-cors',cache:'no-store'});}catch(e){}
   for(let r=0;r<RUNS;r++){
     try{const s=performance.now();await fetch(url,{method:'HEAD',mode:'no-cors',cache:'no-store'});total+=performance.now()-s;success++;}
     catch(e){total+=5000;}
@@ -293,8 +376,25 @@ function renderUA(){
     {label:'Touch',value:('ontouchstart' in window)?'Supported':'No touch'},
   ];
   const g=document.getElementById('uaGrid');if(!g)return;
-  g.innerHTML=cells.map(c=>`<div class="ua-cell"><div class="ua-label">${c.label}</div><div class="ua-value${c.accent?' accent':''}">${c.value}</div></div>`).join('');
+  const cell=c=>`<div class="ua-cell"><div class="ua-label">${c.label}</div><div class="ua-value${c.accent?' accent':''}">${escHtml(c.value)}</div></div>`;
+  g.innerHTML=cells.map(cell).join('');
   const raw=document.getElementById('rawUA');if(raw)raw.textContent=ua;
+  // User-Agent Client Hints: the real values that modern Chromium browsers no longer put in the UA string
+  const uad=navigator.userAgentData;
+  if(!uad||!uad.getHighEntropyValues)return;
+  uad.getHighEntropyValues(['platformVersion','model','architecture','bitness','fullVersionList']).then(h=>{
+    const brand=(h.fullVersionList||uad.brands||[]).find(b=>!/Not.?A.?Brand/i.test(b.brand))||{};
+    let platform=uad.platform||'—';
+    if(platform==='Windows'&&h.platformVersion){const maj=parseInt(h.platformVersion,10);platform=maj>=13?'Windows 11':maj>0?'Windows 10':'Windows (8.1 or older)';}
+    else if(h.platformVersion)platform+=' '+h.platformVersion;
+    const hints=[
+      {label:'Client Hints · Browser',value:brand.brand?`${brand.brand} ${brand.version||''}`.trim():'—',accent:true},
+      {label:'Client Hints · Platform',value:platform,accent:true},
+      {label:'Client Hints · Device',value:[h.model,h.architecture,h.bitness?h.bitness+'-bit':''].filter(Boolean).join(' · ')||(uad.mobile?'Mobile':'Desktop')},
+      {label:'Client Hints · Mobile',value:uad.mobile?'Yes':'No'},
+    ];
+    g.insertAdjacentHTML('beforeend',hints.map(cell).join(''));
+  }).catch(()=>{});
 }
 
 function detectBrowser(ua){
@@ -327,8 +427,9 @@ function toggleMenu(){
   const btn = document.getElementById('hamburger-btn');
   const menu = document.getElementById('mobile-menu');
   if(!btn || !menu) return;
-  btn.classList.toggle('open');
-  menu.classList.toggle('open');
+  const open = btn.classList.toggle('open');
+  menu.classList.toggle('open', open);
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
 }
 document.addEventListener('click', function(e){
   const btn = document.getElementById('hamburger-btn');

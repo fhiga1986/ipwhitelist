@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <script>document.documentElement.classList.add('js')</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DNS Lookup — Query A, MX, CNAME, TXT Records</title>
   <meta name="description" content="Free DNS lookup tool. Query A, AAAA, MX, CNAME, TXT, NS and SOA records for any domain over DNS-over-HTTPS. Instant results, no signup." />
+  <meta name="author" content="Fernando Higa" />
   <link rel="canonical" href="https://ipwhitelist.dev/dns-lookup/" />
   <meta property="og:title" content="DNS Lookup — Query A, MX, CNAME, TXT Records" />
   <meta property="og:description" content="Free DNS lookup tool. Query A, AAAA, MX, CNAME, TXT, NS and SOA records for any domain over DNS-over-HTTPS. Instant results, no signup." />
@@ -26,67 +29,22 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../favicon-180.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="../favicon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../shared.css" />
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFLEV7NLEG"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    // Consent Mode v2: no ad/analytics cookies in the EEA/UK/CH until the consent banner (Google CMP) records a choice
+    gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']});
     gtag('js', new Date());
     gtag('config', 'G-QFLEV7NLEG');
   </script>
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5526031626146935"
      crossorigin="anonymous"></script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Why use DNS over HTTPS instead of my local resolver?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Your local resolver may have cached outdated records, or your ISP may intercept DNS queries. Google's DoH API queries authoritative nameservers directly, giving you the most current, accurate results — which matters when you've just updated a DNS record and want to verify propagation."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How long does DNS propagation take?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "DNS changes typically propagate globally within 15–60 minutes when TTL values are low. However, if your previous record had a high TTL (e.g. 86400 seconds = 24 hours), caches across the internet may hold the old value for up to that long. This tool bypasses caching and shows the current authoritative answer."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is TTL in DNS?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "TTL (Time To Live) is the number of seconds a DNS record can be cached by resolvers before they must re-query the authoritative nameserver. A lower TTL means faster propagation of changes but more DNS queries. Typical values range from 300 (5 minutes) to 86400 (24 hours)."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is DNS propagation?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "DNS propagation is the time for DNS record changes to spread worldwide — typically 1 to 48 hours depending on the TTL value. Lower your TTL to 300 seconds before making changes to speed up propagation."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the difference between an A record and a CNAME record?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "An A record maps a domain directly to an IPv4 address. A CNAME creates an alias pointing one domain to another. CNAMEs cannot be used on the root domain (@) — only on subdomains like www."
-        }
-      }
-    ]
-  }
-  </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -123,7 +81,7 @@
     <a href="/ipv6/" class="nav-link">IPv6</a>
   </div>
   <div class="nav-right"><span class="badge-free">100% Free</span></div>
-  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu">
+  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
@@ -150,7 +108,7 @@
     <div class="tool-card">
       <div class="tool-card-head">
         <div class="tool-card-title">DNS Record Lookup</div>
-        <div class="tool-card-desc">Enter a domain and select the record type. Results come directly from Google's authoritative DNS.</div>
+        <div class="tool-card-desc">Enter a domain and select the record type. Results come from a fresh recursive query via Google Public DNS, not from your local cache.</div>
       </div>
       <div class="tool-card-body">
         <div class="tool-input-row">
@@ -163,6 +121,7 @@
             <option value="TXT">TXT — Text records / SPF / DKIM</option>
             <option value="NS">NS — Name servers</option>
             <option value="SOA">SOA — Start of Authority</option>
+            <option value="CAA">CAA — Certificate authorities</option>
           </select>
           <button class="btn-run" onclick="runDNS()" id="dnsBtn">Lookup</button>
         </div>
@@ -179,37 +138,64 @@
     </div>
   </div>
 
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
 
   <section class="seo-content reveal">
+    <div class="byline"><span>Written by <a href="/about/">Fernando Higa</a></span><span>Updated October 2026</span><span>7 min read</span></div>
+
     <h2>What is a DNS lookup?</h2>
     <p>A DNS (Domain Name System) lookup translates a human-readable domain name like <code>github.com</code> into machine-readable records — most commonly an IP address. Every time you visit a website, your browser performs a DNS lookup behind the scenes. This tool lets you query DNS records directly, bypassing local caches for real-time results.</p>
+    <p>The query goes to Google Public DNS over HTTPS (<code>dns.google</code>), a recursive resolver that fetches the answer from the domain's authoritative name servers. That makes it ideal for checking a record you have just changed: your laptop's cache and your ISP's resolver may still hold the old value, while a fresh recursive query shows what the rest of the world is about to see.</p>
+
     <h2>DNS record types explained</h2>
-    <h2>More free developer tools</h2>
-      <ul>
-      <li><strong><a href="/">IP Whitelist Config Generator</a></strong> — Detect your IP and generate AWS, MongoDB, GCP configs</li>
-      <li><strong><a href="/port-checker/">Port Checker</a></strong> — Test if TCP ports are open on any host</li>
-      <li><strong><a href="/dns-lookup/">DNS Lookup</a></strong> — Query A, AAAA, MX, CNAME, TXT and NS records</li>
-      <li><strong><a href="/whois-lookup/">WHOIS Lookup</a></strong> — Find domain owner, registrar, and expiry date</li>
-      <li><strong><a href="/ssl-checker/">SSL Checker</a></strong> — Verify SSL certificate validity and expiry</li>
-      <li><strong><a href="/ip-location/">IP Location Map</a></strong> — Find any IP location on an interactive map</li>
-      <li><strong><a href="/headers/">HTTP Headers Checker</a></strong> — Inspect request and security headers</li>
-      <li><strong><a href="/latency-test/">Latency Test</a></strong> — Measure your RTT to major cloud regions</li>
-      <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
-      <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Type</th><th>Maps a name to…</th><th>Typical use</th></tr></thead>
+      <tbody>
+        <tr><td>A</td><td>An IPv4 address</td><td>Pointing <code>example.com</code> at a web server or load balancer (<code>93.184.216.34</code>).</td></tr>
+        <tr><td>AAAA</td><td>An IPv6 address</td><td>The IPv6 equivalent of A. Dual-stack sites publish both.</td></tr>
+        <tr><td>CNAME</td><td>Another hostname</td><td>Aliasing <code>www</code> or <code>app</code> to a hosting platform (<code>yourname.github.io</code>, <code>cname.vercel-dns.com</code>). Not allowed on the bare domain.</td></tr>
+        <tr><td>MX</td><td>Mail servers, with a priority</td><td>Routing inbound email. Lower priority numbers are tried first.</td></tr>
+        <tr><td>TXT</td><td>Free-form text</td><td>Domain verification (Google, AWS, Stripe) and email authentication: SPF, DKIM, DMARC.</td></tr>
+        <tr><td>NS</td><td>Authoritative name servers</td><td>Which DNS provider answers for the zone — Cloudflare, Route 53, your registrar.</td></tr>
+        <tr><td>SOA</td><td>Zone metadata</td><td>Primary name server, admin contact, serial number and refresh timers. The serial changes every time the zone is edited.</td></tr>
+        <tr><td>CAA</td><td>Permitted certificate authorities</td><td>Limits which CAs may issue TLS certificates for the domain (e.g. <code>0 issue "letsencrypt.org"</code>).</td></tr>
+        <tr><td>PTR</td><td>An IP back to a name</td><td>Reverse DNS. Mail servers without a matching PTR often land in spam.</td></tr>
+        <tr><td>SRV</td><td>Host + port for a service</td><td>SIP, XMPP, Minecraft and Microsoft 365 autodiscovery.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>How to read the results</h2>
+    <ul class="bullets">
+      <li><strong>TTL</strong> is how many seconds a resolver may cache the answer. A record with <code>TTL 300</code> can be changed and seen worldwide within about five minutes; <code>TTL 86400</code> may take a full day.</li>
+      <li><strong>MX records</strong> show <code>priority target</code>, for example <code>10 aspmx.l.google.com.</code>. If several records share a priority, mail is spread across them.</li>
+      <li><strong>TXT records</strong> are returned in quotes and may be split into 255-character chunks that the receiving server joins back together — long DKIM keys always look like this.</li>
+      <li><strong>CNAME chains</strong> are followed automatically: the answer may list the CNAME first and then the A records of the final target.</li>
+      <li><strong>No records found</strong> is a valid answer (NODATA): the name exists but has no record of that type. <strong>NXDOMAIN</strong> means the name does not exist at all.</li>
     </ul>
-  
+
     <h2>What is DNS propagation and how long does it take?</h2>
     <p>DNS propagation is the time it takes for changes to DNS records to spread across all DNS servers worldwide. When you update a DNS record — such as changing your A record to a new server IP — DNS resolvers around the world continue serving the old record until their cache expires based on the record's TTL (Time To Live) value.</p>
-    <p>Propagation typically takes between 1 and 48 hours. If you need faster propagation, lower your TTL to 300 seconds (5 minutes) at least 24 hours before making the change, then revert to a higher TTL after the change is confirmed live.</p>
+    <p>Propagation typically takes between a few minutes and 48 hours. If you need faster propagation, lower your TTL to 300 seconds (5 minutes) at least 24 hours before making the change, then revert to a higher TTL after the change is confirmed live. Changing name servers (NS) at the registrar is the slowest case, because the parent zone's TTL — often 48 hours for .com — is outside your control.</p>
 
-    <h2>Common DNS record types explained</h2>
-    <p>Understanding DNS record types is essential for managing domains and troubleshooting email delivery issues. The most common records are: <strong>A</strong> (maps domain to IPv4), <strong>AAAA</strong> (maps domain to IPv6), <strong>CNAME</strong> (creates a domain alias), <strong>MX</strong> (mail server routing), <strong>TXT</strong> (domain verification and email authentication), <strong>NS</strong> (nameserver delegation), and <strong>SOA</strong> (zone authority information).</p>
-    <p>For email deliverability, always verify your <strong>MX</strong>, <strong>SPF</strong> (TXT record), <strong>DKIM</strong> (TXT record), and <strong>DMARC</strong> (TXT record) are correctly configured. Missing or misconfigured email DNS records are the most common cause of email going to spam.</p>
+    <h2>Troubleshooting common DNS problems</h2>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Symptom</th><th>Likely cause</th><th>What to check</th></tr></thead>
+      <tbody>
+        <tr><td>Site works on www but not on the bare domain</td><td>No A/ALIAS record at the apex, or a CNAME placed at the apex</td><td>Query <code>A</code> for <code>example.com</code> and for <code>www.example.com</code>; use your provider's ALIAS/ANAME at the root.</td></tr>
+        <tr><td>Old IP still showing after a change</td><td>Cached record (high TTL) or edited the wrong zone</td><td>Compare this tool (fresh) with <code>nslookup</code> on your machine (cached); check the SOA serial increased.</td></tr>
+        <tr><td>Email bounces or goes to spam</td><td>Missing MX, SPF, DKIM or DMARC</td><td>Query <code>MX</code> and <code>TXT</code>; there must be exactly one SPF record and it must end in <code>-all</code> or <code>~all</code>.</td></tr>
+        <tr><td>Certificate issuance fails</td><td>A CAA record excludes your certificate authority</td><td>Query <code>CAA</code>; add your CA or remove the restriction.</td></tr>
+        <tr><td>Verification record "not found"</td><td>TXT added at the wrong name or with surrounding quotes</td><td>Query <code>TXT</code> for the exact host the provider asked for (often <code>_acme-challenge</code> or <code>_dmarc</code>).</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Email DNS: SPF, DKIM and DMARC in one minute</h2>
+    <p>For email deliverability, always verify your <strong>MX</strong>, <strong>SPF</strong> (TXT record), <strong>DKIM</strong> (TXT record) and <strong>DMARC</strong> (TXT record) are correctly configured. Missing or misconfigured email DNS records are the most common cause of email going to spam.</p>
+    <ul class="bullets">
+      <li><strong>SPF</strong> lives in a TXT record on the domain itself and lists who may send mail for it: <code>v=spf1 include:_spf.google.com -all</code>. Keep it under 10 DNS lookups.</li>
+      <li><strong>DKIM</strong> publishes a public key at <code>selector._domainkey.example.com</code> so receivers can verify the signature your mail server adds.</li>
+      <li><strong>DMARC</strong> lives at <code>_dmarc.example.com</code> and tells receivers what to do when SPF/DKIM fail: <code>v=DMARC1; p=quarantine; rua=mailto:dmarc@example.com</code>.</li>
+    </ul>
   </section>
-
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
-
 
   <section class="tools-grid-section reveal">
     <div class="section-label">More Free Tools</div>
@@ -229,24 +215,28 @@
   <section class="faq-section reveal">
     <div class="section-label">FAQ</div>
     <h2 class="section-heading">DNS lookup questions</h2>
-    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Why use DNS over HTTPS instead of my local resolver?</span><div class="faq-chevron">▾</div></div><div class="faq-a">Your local resolver may have cached outdated records, or your ISP may intercept DNS queries. Google's DoH API queries authoritative nameservers directly, giving you the most current, accurate results — which matters when you've just updated a DNS record and want to verify propagation.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How long does DNS propagation take?</span><div class="faq-chevron">▾</div></div><div class="faq-a">DNS changes typically propagate globally within 15–60 minutes when TTL values are low. However, if your previous record had a high TTL (e.g. 86400 seconds = 24 hours), caches across the internet may hold the old value for up to that long. This tool bypasses caching and shows the current authoritative answer.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">What is TTL in DNS?</span><div class="faq-chevron">▾</div></div><div class="faq-a">TTL (Time To Live) is the number of seconds a DNS record can be cached by resolvers before they must re-query the authoritative nameserver. A lower TTL means faster propagation of changes but more DNS queries. Typical values range from 300 (5 minutes) to 86400 (24 hours).</div></div>
-  
-  <div class="faq-item">
-    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      <span class="faq-q-text">What is DNS propagation?</span>
-      <span class="faq-chevron">▾</span>
+    <div itemscope itemtype="https://schema.org/FAQPage">
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why use DNS over HTTPS instead of my local resolver?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Your local resolver may have cached outdated records, or your ISP may intercept DNS queries. Google's DoH API queries authoritative nameservers directly, giving you the most current, accurate results — which matters when you've just updated a DNS record and want to verify propagation.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How long does DNS propagation take?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">DNS changes typically propagate globally within 15–60 minutes when TTL values are low. However, if your previous record had a high TTL (e.g. 86400 seconds = 24 hours), caches across the internet may hold the old value for up to that long. Name-server changes at the registrar can take up to 48 hours. This tool bypasses caching and shows the current authoritative answer.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What is TTL in DNS?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">TTL (Time To Live) is the number of seconds a DNS record can be cached by resolvers before they must re-query the authoritative nameserver. A lower TTL means faster propagation of changes but more DNS queries. Typical values range from 300 (5 minutes) to 86400 (24 hours).</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What is the difference between an A record and a CNAME record?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">An A record maps a domain directly to an IPv4 address. A CNAME creates an alias pointing one domain to another, and inherits whatever records the target has. CNAMEs cannot coexist with other records at the same name, which is why they are not allowed on the root domain (@) — use your DNS provider's ALIAS or ANAME record there instead.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How do I check whether my SPF record is valid?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Look up the TXT records of your bare domain. Exactly one of them must start with <code>v=spf1</code>, list every service that sends mail for you (<code>include:</code> entries or <code>ip4:</code> ranges) and end with <code>-all</code> (reject) or <code>~all</code> (soft fail). Two SPF records, or more than 10 nested lookups, make the record invalid and receivers ignore it.</div></div>
+      </div>
     </div>
-    <div class="faq-a">DNS propagation is the time for DNS record changes to spread worldwide — typically 1 to 48 hours depending on the TTL value. Lower your TTL to 300 seconds before making changes to speed up propagation.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      <span class="faq-q-text">What is the difference between an A record and a CNAME record?</span>
-      <span class="faq-chevron">▾</span>
-    </div>
-    <div class="faq-a">An A record maps a domain directly to an IPv4 address. A CNAME creates an alias pointing one domain to another. CNAMEs cannot be used on the root domain (@) — only on subdomains like www.</div>
-  </div>
   </section>
 </main>
 <footer>
@@ -254,7 +244,7 @@
   <div class="footer-links"><a href="/">My IP</a><a href="/port-checker/">Port Checker</a><a href="/latency-test/">Latency Test</a><a href="/user-agent/">User Agent</a><a href="/about/">About</a>
     <a href="/privacy/">Privacy Policy</a>
     <a href="/terms/">Terms of Service</a>
-    <a href="mailto:hello@ipwhitelist.dev">Contact</a></div>
+    <a href="/contact/">Contact</a></div>
   <div class="footer-copy">© 2026 IPWhitelist.dev — Free developer network tools</div>
 </footer>
 <div class="toast" id="toast"><span id="toast-msg">Copied!</span></div>

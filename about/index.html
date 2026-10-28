@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <script>document.documentElement.classList.add('js')</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About — IPWhitelist.dev Free Network Tools</title>
   <meta name="description" content="About IPWhitelist.dev — a free suite of 10 developer network tools for IP detection, cloud whitelist configs, port checking, DNS and more." />
+  <meta name="author" content="Fernando Higa" />
   <link rel="canonical" href="https://ipwhitelist.dev/about/" />
   <meta property="og:title" content="About — IPWhitelist.dev Free Network Tools" />
   <meta property="og:description" content="About IPWhitelist.dev — a free suite of 10 developer network tools for IP detection, cloud whitelist configs, port checking, DNS and more." />
@@ -25,13 +27,13 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../favicon-180.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;700&family=Geist:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../shared.css" />
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5526031626146935" crossorigin="anonymous"></script>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFLEV7NLEG"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QFLEV7NLEG');</script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']});gtag('js',new Date());gtag('config','G-QFLEV7NLEG');</script>
   <style>
     .about-wrap { max-width: 740px; margin: 0 auto; padding: 60px 20px 80px; position: relative; z-index: 1; }
     .about-hero { margin-bottom: 56px; }
@@ -57,7 +59,12 @@
     .principles li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: .87rem; color: var(--txt-2); line-height: 1.6; }
     .principles li:last-child { border-bottom: none; }
     .principles li span:first-child { color: var(--lime); font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
-    @media(max-width:700px) { .tools-list { grid-template-columns: 1fr; } .stack-grid { grid-template-columns: 1fr 1fr; } }
+    .author-card { display: flex; gap: 18px; align-items: flex-start; background: var(--ink-2); border: 1px solid var(--border-hi); border-radius: var(--r-lg); padding: 22px 24px; }
+    .author-avatar { width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 700; font-size: 1rem; color: var(--lime); background: var(--lime-dim); border: 1px solid var(--border-act); }
+    .author-name { font-family: var(--serif); font-size: 1.35rem; color: var(--txt); }
+    .author-role { font-family: var(--mono); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: var(--txt-3); margin: 4px 0 12px; }
+    .author-links { font-size: .8rem; }
+    @media(max-width:700px) { .tools-list { grid-template-columns: 1fr; } .stack-grid { grid-template-columns: 1fr 1fr; } .author-card { flex-direction: column; } }
   </style>
   <script type="application/ld+json">
   {
@@ -91,7 +98,24 @@
     "publisher": {
       "@id": "https://ipwhitelist.dev/#org"
     },
+    "mainEntity": {
+      "@id": "https://ipwhitelist.dev/about/#author"
+    },
     "inLanguage": "en"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": "https://ipwhitelist.dev/about/#author",
+    "name": "Fernando Higa",
+    "jobTitle": "Software engineer",
+    "url": "https://ipwhitelist.dev/about/",
+    "email": "hello@ipwhitelist.dev",
+    "sameAs": ["https://github.com/fhiga1986"],
+    "worksFor": { "@id": "https://ipwhitelist.dev/#org" },
+    "knowsAbout": ["Cloud infrastructure", "AWS", "Networking", "DNS", "Web performance"]
   }
   </script>
 </head>
@@ -116,6 +140,9 @@
   <div class="nav-right">
     <span class="badge-free">100% Free</span>
   </div>
+  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <div class="mobile-menu" id="mobile-menu">
@@ -135,14 +162,27 @@
 
   <div class="about-hero">
     <h1 class="about-title">About <em>IPWhitelist.dev</em></h1>
-    <p class="about-subtitle">A free suite of 10 developer network tools built to eliminate the repetitive friction of IP whitelisting, network diagnostics, and cloud configuration — available to every developer, everywhere, with no signup required.</p>
+    <p class="about-subtitle">A free suite of 10 developer network tools built to eliminate the repetitive friction of IP whitelisting, network diagnostics, and cloud configuration — available to every developer, everywhere, with no signup required. Built and maintained by one engineer, not a company.</p>
+  </div>
+
+  <div class="about-section" id="author">
+    <h2>Who Is Behind It</h2>
+    <div class="author-card">
+      <div class="author-avatar" aria-hidden="true">FH</div>
+      <div>
+        <div class="author-name">Fernando Higa</div>
+        <div class="author-role">Software engineer · Peru</div>
+        <p>I build and run backend and cloud infrastructure for a living, and I got tired of looking up my IP, formatting it as a CIDR and hunting through the AWS console every time my home connection changed. IPWhitelist.dev started as a page I made for myself in March 2026 and grew into the set of tools you see here. I write all the explanatory content on the site myself, test every tool against real servers, and fix what readers report.</p>
+        <p class="author-links"><a href="https://github.com/fhiga1986" target="_blank" rel="noopener me">GitHub: fhiga1986</a> · <a href="mailto:hello@ipwhitelist.dev">hello@ipwhitelist.dev</a> · <a href="/contact/">Contact page</a></p>
+      </div>
+    </div>
   </div>
 
   <div class="about-section">
-    <h2>Why We Built This</h2>
+    <h2>Why I Built This</h2>
     <p>Every developer who works with cloud infrastructure knows the pain: your IP changes, and now you have to look it up, format it as a CIDR, navigate to the AWS console or MongoDB Atlas, and paste it in the correct field — repeating the process for every service you use.</p>
     <p>IPWhitelist.dev was built to solve that specific problem. Open the site, your IP is already detected, and the exact CLI command for AWS, MongoDB, GCP, iptables, or UFW is ready to copy. One page, one click.</p>
-    <p>From that core tool, we expanded to 10 tools that cover the most common network tasks a developer needs — without needing to install anything, create an account, or pay for anything.</p>
+    <p>From that core tool, the site expanded to 10 tools that cover the most common network tasks a developer needs — without needing to install anything, create an account, or pay for anything.</p>
   </div>
 
   <div class="about-section">
@@ -206,10 +246,17 @@
     <ul class="principles">
       <li><span>🔒</span><span><strong>Privacy first:</strong> All tools run entirely in your browser. Your IP address and query data are never sent to our servers. We have no backend infrastructure — there is nothing to store your data on.</span></li>
       <li><span>⚡</span><span><strong>Zero friction:</strong> No registration, no email, no credit card. Open a tool and use it immediately. We believe developer tools should get out of your way.</span></li>
-      <li><span>🆓</span><span><strong>Free forever:</strong> All 10 tools are permanently free. The site is funded by Google AdSense advertising, which means you pay with a small amount of attention rather than money.</span></li>
+      <li><span>🆓</span><span><strong>Free forever:</strong> All 10 tools are permanently free. The site is funded by Google AdSense advertising, which means you pay with a small amount of attention rather than money. Advertisers have no influence on the tools, the results they show or the articles.</span></li>
+      <li><span>🧪</span><span><strong>Honest about limits:</strong> A browser cannot do everything a terminal can. Where a tool is limited — the port checker can't probe SSH, the SSL checker reads Certificate Transparency logs rather than the live server — the page says so and gives you the command-line alternative instead of pretending.</span></li>
       <li><span>🔧</span><span><strong>Genuinely useful:</strong> Every tool solves a real problem that real developers face regularly. We don't add tools for the sake of adding them — each one earns its place.</span></li>
       <li><span>📱</span><span><strong>Works everywhere:</strong> Desktop, tablet, mobile — the site is fully responsive. The mobile hamburger menu gives you access to all 10 tools on any screen size.</span></li>
     </ul>
+  </div>
+
+  <div class="about-section">
+    <h2>Accuracy, Sources and Corrections</h2>
+    <p>Live data comes from public services — ipify and ipapi.co for IP detection and geolocation, Google Public DNS for DNS queries, the RDAP servers of each registry for WHOIS, crt.sh for certificate data, httpbin.org as a header echo and AWS endpoints for latency. The explanatory articles are written from hands-on experience and checked against primary documentation (RFCs, AWS/GCP docs, CA/Browser Forum requirements). Each article shows its last update date.</p>
+    <p>Found a mistake or an outdated statement? Email <a href="mailto:hello@ipwhitelist.dev">hello@ipwhitelist.dev</a> or <a href="https://github.com/fhiga1986/ipwhitelist/issues" target="_blank" rel="noopener">open an issue on GitHub</a>. Corrections are usually published within a few days.</p>
   </div>
 
   <div class="about-section">
@@ -227,7 +274,7 @@
 
   <div class="about-section">
     <h2>Contact</h2>
-    <p>Have feedback, found a bug, or want to suggest a tool? We'd love to hear from you.</p>
+    <p>Have feedback, found a bug, or want to suggest a tool? I'd love to hear from you — see the <a href="/contact/">contact page</a> for what to include in a bug report.</p>
     <p>Email: <a href="mailto:hello@ipwhitelist.dev">hello@ipwhitelist.dev</a></p>
     <p>Source code: <a href="https://github.com/fhiga1986/ipwhitelist" target="_blank" rel="noopener">github.com/fhiga1986/ipwhitelist</a></p>
   </div>
@@ -244,7 +291,7 @@
     <a href="/about/">About</a>
     <a href="/privacy/">Privacy Policy</a>
     <a href="/terms/">Terms of Service</a>
-    <a href="mailto:hello@ipwhitelist.dev">Contact</a>
+    <a href="/contact/">Contact</a>
   </div>
   <div class="footer-copy">© 2026 IPWhitelist.dev — Free developer network tools</div>
 </footer>

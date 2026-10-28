@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <script>document.documentElement.classList.add('js')</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Port Checker — Free Online Open Port Test</title>
-  <meta name="description" content="Free online port checker. Test if any TCP port is open on any host or IP — SSH 22, HTTP 80, HTTPS 443, MySQL 3306 or custom ports. No download." />
+  <meta name="description" content="Free online port checker. Test whether a TCP port answers on any host or IP — HTTPS 443, HTTP 80, MySQL 3306, PostgreSQL 5432 or custom ports. No download." />
+  <meta name="author" content="Fernando Higa" />
   <link rel="canonical" href="https://ipwhitelist.dev/port-checker/" />
   <meta property="og:title" content="Port Checker — Free Online Open Port Test" />
-  <meta property="og:description" content="Free online port checker. Test if any TCP port is open on any host or IP — SSH 22, HTTP 80, HTTPS 443, MySQL 3306 or custom ports. No download." />
+  <meta property="og:description" content="Free online port checker. Test whether a TCP port answers on any host or IP — HTTPS 443, HTTP 80, MySQL 3306, PostgreSQL 5432 or custom ports. No download." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://ipwhitelist.dev/port-checker/" />
   <meta property="og:image" content="https://ipwhitelist.dev/og-image.png" />
@@ -17,7 +20,7 @@
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Port Checker — Free Online Open Port Test" />
-  <meta name="twitter:description" content="Free online port checker. Test if any TCP port is open on any host or IP — SSH 22, HTTP 80, HTTPS 443, MySQL 3306 or custom ports. No download." />
+  <meta name="twitter:description" content="Free online port checker. Test whether a TCP port answers on any host or IP — HTTPS 443, HTTP 80, MySQL 3306, PostgreSQL 5432 or custom ports. No download." />
   <meta name="twitter:image" content="https://ipwhitelist.dev/og-image.png" />
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Online Port Checker — IPWhitelist.dev","url":"https://ipwhitelist.dev/port-checker/","description":"Free tool to check if TCP ports are open on any host or IP address.","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
 
@@ -26,67 +29,22 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../favicon-180.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="../favicon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../shared.css" />
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFLEV7NLEG"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    // Consent Mode v2: no ad/analytics cookies in the EEA/UK/CH until the consent banner (Google CMP) records a choice
+    gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']});
     gtag('js', new Date());
     gtag('config', 'G-QFLEV7NLEG');
   </script>
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5526031626146935"
      crossorigin="anonymous"></script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How does this port checker work?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "This tool attempts TCP connections from your browser to the target host and port using WebSocket probing. A successful connection means the port is open. Results reflect what's reachable from your current network — results may differ if you're behind a corporate proxy or VPN."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What's the difference between closed and filtered?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A closed port actively refuses the connection (the server responds with a reset). A filtered port doesn't respond at all — typically because a firewall is silently dropping packets. Both appear as \"Closed / Filtered\" in this tool since the distinction requires raw socket access not available in browsers."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I open a port on my server?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "It depends on your setup. For AWS EC2, add an inbound rule to your Security Group. For Linux servers, use UFW (sudo ufw allow 443) or iptables. For GCP, create a Firewall Rule. Use our IP whitelist config generator to get the exact commands for your environment."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What is the difference between TCP and UDP ports?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "TCP ports establish a reliable connection before sending data, used by HTTP (80), HTTPS (443), SSH (22), MySQL (3306), PostgreSQL (5432), and MongoDB (27017). UDP ports send data without a handshake, used by DNS (53) and streaming protocols. This tool tests TCP ports."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How do I open a port on my Linux server?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Use UFW: sudo ufw allow PORT/tcp or iptables: sudo iptables -I INPUT -p tcp --dport PORT -j ACCEPT. On AWS, add an inbound rule to your Security Group. Always restrict access to your specific IP address instead of opening ports to 0.0.0.0/0."
-        }
-      }
-    ]
-  }
-  </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -123,7 +81,7 @@
     <a href="/ipv6/" class="nav-link">IPv6</a>
   </div>
   <div class="nav-right"><span class="badge-free">100% Free</span></div>
-  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu">
+  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
@@ -144,14 +102,14 @@
   <header class="hero">
     <div class="hero-kicker"><div class="hero-kicker-dot"></div>TCP Port Testing · No Download</div>
     <h1>Free Online <em>Port Checker</em></h1>
-    <p class="hero-sub">Free online port checker. Test if any TCP port is open on any host or IP address — SSH (22), HTTP (80), HTTPS (443), MySQL (3306), PostgreSQL (5432), MongoDB (27017) or any custom port.</p>
+    <p class="hero-sub">Free online port checker. Find out whether a TCP port on any host or IP address answers from your current network — HTTPS (443), HTTP (80, 8080), MySQL (3306), PostgreSQL (5432), MongoDB (27017), Redis (6379) or any custom port — and get the exact terminal command for a definitive check.</p>
   </header>
 
   <div class="card-wrap">
     <div class="tool-card">
       <div class="tool-card-head">
         <div class="tool-card-title">Port Checker</div>
-        <div class="tool-card-desc">Enter a hostname or IP and the ports you want to test (comma-separated). Results appear in real time.</div>
+        <div class="tool-card-desc">Enter a hostname or IP and the ports you want to test (comma-separated, up to 20). Each port is probed directly from your browser, so results reflect what is reachable from <em>your</em> network.</div>
       </div>
       <div class="tool-card-body">
         <div class="tool-input-row">
@@ -162,10 +120,10 @@
         <!-- Quick presets -->
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
           <button class="pill" onclick="setPreset('80,443,8080,8443')">🌐 Web</button>
-          <button class="pill" onclick="setPreset('22,21,23')">🔒 SSH/FTP</button>
           <button class="pill" onclick="setPreset('3306,5432,27017,6379')">🗄 Databases</button>
-          <button class="pill" onclick="setPreset('25,587,465,993,995')">📧 Mail</button>
-          <button class="pill" onclick="setPreset('80,443,22,3306,5432,27017,6379,8080')">⚡ All Common</button>
+          <button class="pill" onclick="setPreset('3000,5000,8000,8888')">🧪 Dev servers</button>
+          <button class="pill" onclick="setPreset('3389,5900,9090,10000')">🖥 Remote / admin</button>
+          <button class="pill" onclick="setPreset('80,443,3306,5432,27017,6379,8080,8443')">⚡ All Common</button>
         </div>
         <div class="result-area" id="portResults">
           <div class="result-placeholder">Enter a host and ports → click Check Ports</div>
@@ -174,42 +132,87 @@
     </div>
   </div>
 
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
+
+  <div class="tool-note">
+    <div class="tool-note-inner"><span>ℹ️</span><div><strong>What a browser can and cannot see.</strong> A web page may only open HTTPS connections, so this tool reports <em>Open</em> when a TLS handshake succeeds, <em>Answered</em> when the host replies but doesn't speak HTTPS (a closed port or a service such as MySQL), and <em>No response</em> when a firewall drops the packets. SSH (22), FTP (21), SMTP (25) and the mail ports are on the browser's restricted list and are marked as not testable. <a href="#how-it-works">How the probe works →</a></div></div>
+  </div>
 
   <section class="seo-content reveal">
+    <div class="byline"><span>Written by <a href="/about/">Fernando Higa</a></span><span>Updated October 2026</span><span>7 min read</span></div>
+
     <h2>What is a port checker?</h2>
     <p>A port checker tests whether a specific TCP port on a remote host is accepting connections. When a port is "open", it means there is a service listening on that port and it is reachable from your current network. When a port is "closed" or "filtered", either no service is running on that port or a firewall is blocking the connection.</p>
+    <p>Developers reach for a port checker in three situations: after deploying something new ("is my API actually reachable on 8080?"), while debugging a connection error ("is it the database or the security group?"), and when auditing exposure ("is my Redis instance visible from the internet?").</p>
 
     <h2>Common ports and their services</h2>
-    
+    <p>Ports 0–1023 are the "well-known" ports reserved by IANA for standard services; 1024–49151 are registered ports used by common software; the rest are ephemeral ports that clients pick at random. These are the ones developers test most often:</p>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Port</th><th>Service</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>21</td><td>FTP</td><td>Plaintext file transfer. Prefer SFTP, which runs over SSH on port 22.</td></tr>
+        <tr><td>22</td><td>SSH / SFTP</td><td>Remote shell and file transfer. Restrict it to your IP — bots scan it constantly.</td></tr>
+        <tr><td>25</td><td>SMTP</td><td>Server-to-server mail. Most ISPs and cloud providers block outbound 25 by default.</td></tr>
+        <tr><td>53</td><td>DNS</td><td>Name resolution — UDP for normal queries, TCP for large answers and zone transfers.</td></tr>
+        <tr><td>80</td><td>HTTP</td><td>Unencrypted web. On most sites it only redirects to 443.</td></tr>
+        <tr><td>443</td><td>HTTPS</td><td>Encrypted web, APIs and most WebSocket traffic. Almost never blocked by networks.</td></tr>
+        <tr><td>465 / 587</td><td>SMTPS / Submission</td><td>Authenticated mail sending from clients and applications.</td></tr>
+        <tr><td>993 / 995</td><td>IMAPS / POP3S</td><td>Encrypted mail retrieval (110 and 143 are the plaintext versions).</td></tr>
+        <tr><td>1433</td><td>Microsoft SQL Server</td><td>Should never be reachable from the public internet.</td></tr>
+        <tr><td>3000 / 5000 / 8000</td><td>Dev servers</td><td>Node.js, Rails, Flask, Django and Grafana defaults.</td></tr>
+        <tr><td>3306</td><td>MySQL / MariaDB</td><td>Binds to 127.0.0.1 by default, so it is closed from outside until you change <code>bind-address</code>.</td></tr>
+        <tr><td>3389</td><td>RDP</td><td>Windows Remote Desktop. A favourite ransomware entry point — whitelist or VPN only.</td></tr>
+        <tr><td>5432</td><td>PostgreSQL</td><td>Also needs <code>listen_addresses</code> and a <code>pg_hba.conf</code> entry for remote clients.</td></tr>
+        <tr><td>5672 / 15672</td><td>RabbitMQ</td><td>AMQP broker and its management UI.</td></tr>
+        <tr><td>6379</td><td>Redis</td><td>No authentication by default on older versions; keep it on a private network.</td></tr>
+        <tr><td>8080 / 8443</td><td>HTTP / HTTPS alternates</td><td>Proxies, Tomcat, Jenkins, Kubernetes dashboards.</td></tr>
+        <tr><td>9200</td><td>Elasticsearch / OpenSearch</td><td>Exposed clusters are a common data-leak source.</td></tr>
+        <tr><td>27017</td><td>MongoDB</td><td>Atlas clusters are protected by the project access list, not by a port.</td></tr>
+      </tbody>
+    </table></div>
 
-    <h2>Why would a port appear closed?</h2>
-  
-    <p>A port can appear closed for several reasons: no service is listening on that port, a firewall (like AWS Security Groups, UFW, or iptables) is blocking the connection, or the host is offline. If you expect a port to be open, use our <a href="/">IP Whitelist Config Generator</a> to add your IP to the relevant firewall rules.</p>
-      <ul>
-      <li><strong><a href="/">IP Whitelist Config Generator</a></strong> — Detect your IP and generate AWS, MongoDB, GCP configs</li>
-      <li><strong><a href="/port-checker/">Port Checker</a></strong> — Test if TCP ports are open on any host</li>
-      <li><strong><a href="/dns-lookup/">DNS Lookup</a></strong> — Query A, AAAA, MX, CNAME, TXT and NS records</li>
-      <li><strong><a href="/whois-lookup/">WHOIS Lookup</a></strong> — Find domain owner, registrar, and expiry date</li>
-      <li><strong><a href="/ssl-checker/">SSL Checker</a></strong> — Verify SSL certificate validity and expiry</li>
-      <li><strong><a href="/ip-location/">IP Location Map</a></strong> — Find any IP location on an interactive map</li>
-      <li><strong><a href="/headers/">HTTP Headers Checker</a></strong> — Inspect request and security headers</li>
-      <li><strong><a href="/latency-test/">Latency Test</a></strong> — Measure your RTT to major cloud regions</li>
-      <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
-      <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
-    </ul>
-  
+    <h2>Why would a port appear closed or unreachable?</h2>
+    <ol>
+      <li><strong>Nothing is listening.</strong> The service crashed, never started, or runs on a different port than you think. Check with <code>ss -tlnp</code> (Linux) or <code>netstat -ano</code> (Windows) on the server itself.</li>
+      <li><strong>The service only listens on localhost.</strong> MySQL, PostgreSQL and Redis bind to 127.0.0.1 out of the box. They answer on the server but refuse everyone else until you change the bind address.</li>
+      <li><strong>A host firewall drops the packets.</strong> UFW, iptables, firewalld or Windows Defender Firewall. Allow the port, or better, allow it only from your IP.</li>
+      <li><strong>A cloud firewall drops them first.</strong> AWS security groups and network ACLs, GCP VPC firewall rules and Azure NSGs sit in front of the instance. Security groups drop silently, which is why cloud hosts usually show <em>No response</em> instead of <em>Answered</em>.</li>
+      <li><strong>Your own network blocks the way out.</strong> Corporate proxies often allow only 80 and 443; many ISPs block 25, 135–139 and 445. The same port can look closed from the office and open from your phone.</li>
+      <li><strong>NAT without port forwarding.</strong> A home server behind a router needs a forwarding rule on the router — the public IP belongs to the router, not to the server.</li>
+    </ol>
+    <p>If the port should be open for you specifically, add your current public IP to the firewall rule — the <a href="/">IP whitelist config generator</a> produces the exact AWS, GCP, UFW and iptables commands with your address already filled in.</p>
+
+    <h2 id="how-it-works">How this browser-based port check works</h2>
+    <p>Browsers deliberately cannot open raw TCP sockets, so a web page cannot run a real port scan. Instead, this tool asks your browser to open an HTTPS connection to <code>host:port</code> and interprets what happens:</p>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Result</th><th>What happened</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr><td>Open</td><td>The TLS handshake completed</td><td>An HTTPS/TLS service is listening. Definitive.</td></tr>
+        <tr><td>Open — service answered</td><td>The host replied but TLS failed, and the same host silently drops unused ports</td><td>A non-HTTPS service (database, SSH, plain HTTP) is almost certainly listening.</td></tr>
+        <tr><td>Answered — closed or non-HTTPS</td><td>The host replied but TLS failed, and the host actively refuses unused ports</td><td>Either a closed port (connection refused) or a non-HTTPS service. A browser cannot tell these apart.</td></tr>
+        <tr><td>No response</td><td>Nothing came back within 6 seconds</td><td>A firewall is dropping packets, the host is offline, or the service waits for the client to speak first (plain HTTP on port 80 often behaves this way).</td></tr>
+        <tr><td>Not testable in a browser</td><td>The browser refused to connect</td><td>The port is on the browser's restricted list: 21, 22, 23, 25, 110, 143, 465, 587, 993, 995 and about sixty others.</td></tr>
+      </tbody>
+    </table></div>
+    <p>To separate "closed" from "non-HTTPS service", the tool first probes a random high port on the same host. If that baseline port gets no response, the host drops unused ports — so any port that <em>does</em> answer must have a service behind it. If the baseline is actively refused, the host sends resets for closed ports, and an answer on your target port is ambiguous; the tool says so and prints the terminal command that settles it.</p>
+    <p>Because the probe runs from your browser, the result reflects your network path. A corporate proxy or VPN can make an open port look filtered, and a port that is open to the world can still be closed to you if the server's firewall only allows specific addresses.</p>
+
     <h2>How to check if a port is open from the command line</h2>
-    <p>Without a port checker tool, you can test port connectivity directly from your terminal. On Linux and macOS, use <code>nc -zv hostname port</code> (netcat) or <code>telnet hostname port</code>. On Windows, use <code>Test-NetConnection -ComputerName hostname -Port port</code> in PowerShell.</p>
-    <p>For example, to check if port 443 is open on a server: <code>nc -zv example.com 443</code>. If the connection succeeds, the port is open. If it times out or refuses, the port is closed or blocked by a firewall.</p>
+    <p>Command-line tools talk TCP directly and are not limited to HTTPS, so they give a definitive answer for any port — including SSH and mail ports that a browser cannot touch.</p>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Tool</th><th>Command</th><th>How to read it</th></tr></thead>
+      <tbody>
+        <tr><td>netcat</td><td><code>nc -zv example.com 443</code></td><td>"succeeded" = open · "refused" = closed · hangs/timeout = filtered</td></tr>
+        <tr><td>Bash built-in</td><td><code>timeout 3 bash -c '&lt;/dev/tcp/example.com/443' &amp;&amp; echo open</code></td><td>Works on servers where netcat is not installed</td></tr>
+        <tr><td>PowerShell</td><td><code>Test-NetConnection example.com -Port 443</code></td><td><code>TcpTestSucceeded : True</code> means open</td></tr>
+        <tr><td>nmap</td><td><code>nmap -Pn -p 22,80,443 example.com</code></td><td>Reports open / closed / filtered per port — the reference tool</td></tr>
+      </tbody>
+    </table></div>
+    <p>Only scan hosts you own or have written permission to test. Unauthorised port scanning violates most providers' acceptable-use policies and may be illegal in your jurisdiction.</p>
 
     <h2>What is the difference between TCP and UDP ports?</h2>
     <p><strong>TCP ports</strong> (Transmission Control Protocol) require a three-way handshake before data is exchanged, making them reliable and ordered. Web servers (port 80, 443), SSH (port 22), and databases (MySQL port 3306, PostgreSQL port 5432, MongoDB port 27017) all use TCP.</p>
-    <p><strong>UDP ports</strong> (User Datagram Protocol) send data without establishing a connection first. This makes UDP faster but less reliable. DNS (port 53), NTP (port 123), and gaming protocols commonly use UDP. This port checker tests TCP ports only, as UDP port testing requires a different approach.</p>
+    <p><strong>UDP ports</strong> (User Datagram Protocol) send data without establishing a connection first. This makes UDP faster but less reliable. DNS (port 53), NTP (port 123), WireGuard (51820) and most game and voice protocols use UDP. This port checker tests TCP only — a UDP port gives no reply when it is open, so it can only be tested by a tool that speaks the specific protocol (for example <code>nmap -sU</code>).</p>
   </section>
-
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
-
 
   <section class="tools-grid-section reveal">
     <div class="section-label">More Free Tools</div>
@@ -229,24 +232,28 @@
   <section class="faq-section reveal">
     <div class="section-label">FAQ</div>
     <h2 class="section-heading">Port checker questions</h2>
-    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How does this port checker work?</span><div class="faq-chevron">▾</div></div><div class="faq-a">This tool attempts TCP connections from your browser to the target host and port using WebSocket probing. A successful connection means the port is open. Results reflect what's reachable from your current network — results may differ if you're behind a corporate proxy or VPN.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">What's the difference between closed and filtered?</span><div class="faq-chevron">▾</div></div><div class="faq-a">A closed port actively refuses the connection (the server responds with a reset). A filtered port doesn't respond at all — typically because a firewall is silently dropping packets. Both appear as "Closed / Filtered" in this tool since the distinction requires raw socket access not available in browsers.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How do I open a port on my server?</span><div class="faq-chevron">▾</div></div><div class="faq-a">It depends on your setup. For AWS EC2, add an inbound rule to your Security Group. For Linux servers, use UFW (<code>sudo ufw allow 443</code>) or iptables. For GCP, create a Firewall Rule. Use our <a href="/">IP whitelist config generator</a> to get the exact commands for your environment.</div></div>
-  
-  <div class="faq-item">
-    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      <span class="faq-q-text">What is the difference between TCP and UDP ports?</span>
-      <span class="faq-chevron">▾</span>
+    <div itemscope itemtype="https://schema.org/FAQPage">
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How does this port checker work?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Your browser opens an HTTPS connection to each host:port and the tool classifies the outcome: a completed TLS handshake means the port is open; a reply without TLS means the host answered (a closed port or a non-HTTPS service); no reply within 6 seconds means a firewall dropped the connection or the host is down. Results reflect what is reachable from your current network, so a corporate proxy or VPN can change them.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What's the difference between closed and filtered?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">A closed port actively refuses the connection — the server answers with a TCP reset. A filtered port never answers because a firewall silently drops the packets. In this tool a closed port shows as "Answered" and a filtered one as "No response"; nmap labels them "closed" and "filtered" respectively.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why can't it test SSH (port 22) or the mail ports?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Chrome, Firefox and Safari refuse to open connections to a fixed list of "unsafe" ports — among them 21, 22, 23, 25, 110, 143, 465, 587, 993 and 995 — to stop web pages from abusing other protocols. The refusal happens inside the browser before any packet is sent, so no web-based tool can test those ports. Use <code>nc -zv host 22</code> or <code>Test-NetConnection host -Port 22</code> from a terminal instead.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How do I open a port on my server?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Open it at every layer between the internet and the process: the cloud firewall (an AWS Security Group inbound rule, a GCP firewall rule, an Azure NSG rule), the host firewall (<code>sudo ufw allow from YOUR_IP to any port 5432</code> or the equivalent iptables rule) and the service itself (bind to 0.0.0.0 instead of 127.0.0.1). Always restrict the rule to your own IP in CIDR form rather than 0.0.0.0/0 — the <a href="/">whitelist generator</a> writes those rules for you.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Is it legal to check ports on a server?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Testing your own servers, or systems you have explicit permission to test, is fine and is exactly what this tool is for. Scanning other people's infrastructure without permission breaches most providers' acceptable-use policies and can be a criminal offence under computer-misuse laws in many countries, even when nothing is broken into.</div></div>
+      </div>
     </div>
-    <div class="faq-a">TCP ports establish a reliable connection before sending data, used by HTTP (80), HTTPS (443), SSH (22), MySQL (3306), PostgreSQL (5432), and MongoDB (27017). UDP ports send data without a handshake, used by DNS (53) and streaming protocols. This tool tests TCP ports.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      <span class="faq-q-text">How do I open a port on my Linux server?</span>
-      <span class="faq-chevron">▾</span>
-    </div>
-    <div class="faq-a">Use UFW: <code>sudo ufw allow PORT/tcp</code> or iptables: <code>sudo iptables -I INPUT -p tcp --dport PORT -j ACCEPT</code>. On AWS, add an inbound rule to your Security Group. Always restrict access to your specific IP address instead of opening ports to 0.0.0.0/0.</div>
-  </div>
   </section>
 </main>
 <footer>
@@ -254,7 +261,7 @@
   <div class="footer-links"><a href="/">My IP</a><a href="/dns-lookup/">DNS Lookup</a><a href="/latency-test/">Latency Test</a><a href="/user-agent/">User Agent</a><a href="/about/">About</a>
     <a href="/privacy/">Privacy Policy</a>
     <a href="/terms/">Terms of Service</a>
-    <a href="mailto:hello@ipwhitelist.dev">Contact</a></div>
+    <a href="/contact/">Contact</a></div>
   <div class="footer-copy">© 2026 IPWhitelist.dev — Free developer network tools</div>
 </footer>
 <div class="toast" id="toast"><span id="toast-msg">Copied!</span></div>

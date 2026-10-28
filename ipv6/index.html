@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <script>document.documentElement.classList.add('js')</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IPv6 Detector — What Is My IPv6 Address?</title>
   <meta name="description" content="Check your IPv6 address and connectivity instantly. See your full and compressed IPv6, test IPv6 support and generate whitelist configs. Free." />
+  <meta name="author" content="Fernando Higa" />
   <link rel="canonical" href="https://ipwhitelist.dev/ipv6/" />
   <meta property="og:title" content="IPv6 Detector — What Is My IPv6 Address?" />
   <meta property="og:description" content="Check your IPv6 address and connectivity instantly. See your full and compressed IPv6, test IPv6 support and generate whitelist configs. Free." />
@@ -39,6 +42,8 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    // Consent Mode v2: no ad/analytics cookies in the EEA/UK/CH until the consent banner (Google CMP) records a choice
+    gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']});
     gtag('js', new Date());
     gtag('config', 'G-QFLEV7NLEG');
   </script>
@@ -47,7 +52,8 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../favicon-180.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="../favicon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../shared.css" />
   <style>
     .ipv6-value{font-family:var(--mono);font-size:clamp(1rem,3vw,1.6rem);font-weight:700;color:var(--lime);letter-spacing:-.02em;text-shadow:0 0 30px rgba(78,255,192,.28);word-break:break-all;line-height:1.3;}
@@ -91,7 +97,7 @@
     <a href="/ipv6/" class="nav-link active">IPv6</a>
   </div>
   <div class="nav-right"><span class="badge-free">100% Free</span></div>
-  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu">
+  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
@@ -181,40 +187,60 @@
     </div>
   </div>
 
-  <!-- AD SLOT 1 -->
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
 
   <section class="seo-content reveal">
+    <div class="byline"><span>Written by <a href="/about/">Fernando Higa</a></span><span>Updated October 2026</span><span>7 min read</span></div>
+
     <h2>What is an IPv6 address?</h2>
     <p>IPv6 (Internet Protocol version 6) is the latest version of the Internet Protocol. While IPv4 addresses look like <code>192.168.1.1</code>, IPv6 addresses are 128-bit numbers written in hexadecimal — for example <code>2001:db8:85a3::8a2e:370:7334</code>. IPv6 was developed to solve IPv4 address exhaustion, providing approximately 340 undecillion unique addresses.</p>
+    <p>An address is written as eight groups of four hex digits. Leading zeros in a group can be dropped and one run of all-zero groups can be collapsed to <code>::</code>, which is why the same address can appear in a long and a short form.</p>
+
+    <h2>Reading your IPv6 address: address types</h2>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Prefix</th><th>Type</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>2000::/3 (starts with 2 or 3)</td><td>Global unicast</td><td>A public, internet-routable address — the one this page detects and the one you whitelist.</td></tr>
+        <tr><td>fe80::/10</td><td>Link-local</td><td>Automatically assigned on every interface; only valid on the local link. Never reaches the internet.</td></tr>
+        <tr><td>fc00::/7 (fc… or fd…)</td><td>Unique local (ULA)</td><td>The IPv6 counterpart of private 10.x / 192.168.x ranges.</td></tr>
+        <tr><td>::1</td><td>Loopback</td><td>The machine itself, like 127.0.0.1.</td></tr>
+        <tr><td>::ffff:0:0/96</td><td>IPv4-mapped</td><td>An IPv4 address carried inside IPv6 software, e.g. <code>::ffff:203.0.113.5</code>.</td></tr>
+        <tr><td>64:ff9b::/96</td><td>NAT64</td><td>Used by IPv6-only mobile networks to reach IPv4 servers.</td></tr>
+        <tr><td>2001:db8::/32</td><td>Documentation</td><td>Reserved for examples and never routed.</td></tr>
+      </tbody>
+    </table></div>
 
     <h2>Do I need IPv6?</h2>
-    <p>Most internet traffic still uses IPv4, but IPv6 adoption is growing rapidly. Major cloud providers (AWS, GCP, Azure) and content delivery networks support IPv6. If you're deploying infrastructure, configuring firewalls, or whitelisting IPs, you may need to handle both IPv4 and IPv6 addresses to ensure full connectivity.</p>
+    <p>Most internet traffic still uses IPv4, but IPv6 adoption is growing rapidly — Google measures well over 45% of its users connecting over IPv6, and most mobile carriers in the US, India and Brazil are IPv6-first. Major cloud providers (AWS, GCP, Azure) and content delivery networks support IPv6. If you're deploying infrastructure, configuring firewalls, or whitelisting IPs, you may need to handle both IPv4 and IPv6 addresses to ensure full connectivity.</p>
+    <p>There is also a cost angle: since February 2024 AWS charges for every public IPv4 address (about USD 3.60 per month each), so new deployments increasingly expose services over IPv6 and keep IPv4 behind a shared gateway.</p>
 
     <h2>How to whitelist an IPv6 address</h2>
-    <p>This page auto-generates all these configs with your detected IPv6 address. For IPv4 configs, use the <a href="/">main IP Whitelist tool</a>.</p>
-      <ul>
-      <li><strong><a href="/">IP Whitelist Config Generator</a></strong> — Detect your IP and generate AWS, MongoDB, GCP configs</li>
-      <li><strong><a href="/port-checker/">Port Checker</a></strong> — Test if TCP ports are open on any host</li>
-      <li><strong><a href="/dns-lookup/">DNS Lookup</a></strong> — Query A, AAAA, MX, CNAME, TXT and NS records</li>
-      <li><strong><a href="/whois-lookup/">WHOIS Lookup</a></strong> — Find domain owner, registrar, and expiry date</li>
-      <li><strong><a href="/ssl-checker/">SSL Checker</a></strong> — Verify SSL certificate validity and expiry</li>
-      <li><strong><a href="/ip-location/">IP Location Map</a></strong> — Find any IP location on an interactive map</li>
-      <li><strong><a href="/headers/">HTTP Headers Checker</a></strong> — Inspect request and security headers</li>
-      <li><strong><a href="/latency-test/">Latency Test</a></strong> — Measure your RTT to major cloud regions</li>
-      <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
-      <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
+    <p>The commands at the top of this page are generated with your detected address. The pattern is the same as for IPv4, with two differences: the single-host prefix is <code>/128</code> instead of <code>/32</code>, and many systems keep a separate rule set for IPv6.</p>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Where</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td>AWS Security Group</td><td><code>aws ec2 authorize-security-group-ingress --group-id sg-… --ip-permissions IpProtocol=tcp,FromPort=22,ToPort=22,Ipv6Ranges='[{CidrIpv6=YOUR_IPV6/128}]'</code> — in the console, choose <em>Source: Custom</em> and paste the /128.</td></tr>
+        <tr><td>GCP firewall</td><td><code>gcloud compute firewall-rules create allow-dev-v6 --allow=tcp:22 --source-ranges=YOUR_IPV6/128</code> (the VPC subnet must have IPv6 enabled).</td></tr>
+        <tr><td>UFW</td><td><code>sudo ufw allow from YOUR_IPV6/128 to any port 22</code> — UFW writes IPv6 rules automatically when <code>IPV6=yes</code> in <code>/etc/default/ufw</code>.</td></tr>
+        <tr><td>iptables</td><td>Use <code>ip6tables</code> (or <code>nft</code> with the <code>ip6</code> family): IPv4 rules in <code>iptables</code> do not apply to IPv6 traffic at all.</td></tr>
+        <tr><td>nginx</td><td><code>allow YOUR_IPV6;</code> inside the <code>location</code> block, followed by <code>deny all;</code>.</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Which prefix length should you whitelist?</h3>
+    <ul class="bullets">
+      <li><strong>/128</strong> — exactly one address. Correct for servers and for machines with a stable address, but see the note on privacy addresses below.</li>
+      <li><strong>/64</strong> — one subnet, i.e. every device on your home or office LAN. This is what most people actually want for a laptop, because the host part of the address changes.</li>
+      <li><strong>/56 or /48</strong> — the whole block your ISP delegated to you (several subnets). Only use it if you trust every network in the block.</li>
     </ul>
-  
+    <p><strong>Why a /128 rule for your laptop may stop working tomorrow:</strong> desktop and mobile operating systems use <em>privacy extensions</em> (RFC 8981) that generate a new temporary address every day or so and prefer it for outgoing connections. The /64 prefix stays the same until your ISP renumbers you, so whitelisting the /64 is both more durable and still limited to your own network. For IPv4 you do not have this problem because NAT gives the whole network one address.</p>
+
     <h2>How to enable IPv6 on your network or server</h2>
-    <p>Most modern ISPs support IPv6, but it may need to be enabled on your router. Check your router's WAN settings for an IPv6 option — common modes are DHCPv6, SLAAC, or 6to4 tunneling. Once enabled at the router level, connected devices should receive IPv6 addresses automatically.</p>
-    <p>On Linux servers, enable IPv6 by ensuring <code>net.ipv6.conf.all.disable_ipv6 = 0</code> in <code>/etc/sysctl.conf</code>. For cloud servers (AWS, GCP, Azure), IPv6 must be enabled at the VPC/subnet level before your instance can receive an IPv6 address. Use this tool to verify your IPv6 connectivity after configuration.</p>
+    <p>Most modern ISPs support IPv6, but it may need to be enabled on your router. Check your router's WAN settings for an IPv6 option — common modes are DHCPv6 with prefix delegation, SLAAC, or (on older ISPs) 6rd tunnelling. Once enabled at the router level, connected devices should receive IPv6 addresses automatically. If this page shows "No IPv6 connectivity" after that, your ISP probably does not offer it yet; a tunnel broker such as Hurricane Electric can provide it for testing.</p>
+    <p>On Linux servers, enable IPv6 by ensuring <code>net.ipv6.conf.all.disable_ipv6 = 0</code> in <code>/etc/sysctl.conf</code>. For cloud servers (AWS, GCP, Azure), IPv6 must be enabled at the VPC/subnet level before your instance can receive an IPv6 address, and the security group needs an explicit IPv6 rule. Use this tool to verify your IPv6 connectivity after configuration.</p>
 
     <h2>IPv4 vs IPv6 — key differences explained</h2>
     <p>IPv4 uses 32-bit addresses (e.g., 192.168.1.1) providing ~4.3 billion unique addresses — a number that has been exhausted globally. IPv6 uses 128-bit addresses (e.g., 2001:db8::1) providing 340 undecillion addresses, effectively eliminating address scarcity.</p>
-    <p>IPv6 also introduces improvements over IPv4: no NAT required (every device gets a globally routable address), built-in IPSec support, more efficient routing, and stateless address autoconfiguration (SLAAC). Most cloud providers now offer native IPv6 support for new deployments.</p>
+    <p>IPv6 also introduces improvements over IPv4: no NAT required (every device gets a globally routable address), built-in IPsec support, more efficient routing, and stateless address autoconfiguration (SLAAC). The flip side of "no NAT" is that every device is directly addressable, so a firewall with a default-deny inbound policy — which home routers apply by default — is essential.</p>
   </section>
-
 
   <section class="tools-grid-section reveal">
     <div class="section-label">More Free Tools</div>
@@ -231,24 +257,25 @@
     </div>
   </section>
 
-  <!-- AD SLOT 2 -->
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
-
   <section class="faq-section reveal">
     <div class="section-label">FAQ</div>
     <h2 class="section-heading">IPv6 questions</h2>
     <div itemscope itemtype="https://schema.org/FAQPage">
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why don't I have an IPv6 address?</span><div class="faq-chevron">▾</div></div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Your ISP may not support IPv6 yet, or it may be disabled on your router or operating system. IPv6 adoption varies significantly by country and ISP. Some corporate networks also disable IPv6 by default. You can still use the internet normally with IPv4 only — IPv6 is not required for most activities.</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why don't I have an IPv6 address?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Your ISP may not support IPv6 yet, or it may be disabled on your router or operating system. IPv6 adoption varies significantly by country and ISP. Some corporate networks and VPNs also disable IPv6 by default. You can still use the internet normally with IPv4 only — IPv6 is not required for most activities.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What does /128 mean in IPv6?</span><div class="faq-chevron">▾</div></div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">In IPv6, /128 is the CIDR notation for a single host address — equivalent to /32 in IPv4. It means only that exact IPv6 address is included in the rule. When whitelisting your IPv6 address in a firewall, always use /128 to whitelist only your specific address, not an entire subnet.</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What does /128 mean in IPv6?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">In IPv6, /128 is the CIDR notation for a single host address — equivalent to /32 in IPv4. It means only that exact IPv6 address is included in the rule. Use /128 for servers with a fixed address; for a laptop whose address rotates, whitelisting your /64 network prefix is usually more practical.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Is IPv6 more secure than IPv4?</span><div class="faq-chevron">▾</div></div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">IPv6 was designed with security in mind and mandates IPsec support, which provides authentication and encryption at the network layer. However, the massive address space means traditional network scanning is impractical. In practice, security depends more on your firewall and application configuration than the IP version itself.</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why does my IPv6 address keep changing?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Windows, macOS, iOS, Android and most Linux desktops enable IPv6 privacy extensions, which create a new temporary address roughly every 24 hours so that websites cannot track a device by its address. The first 64 bits (your network prefix) normally stay the same; only the host part changes. Servers usually disable this behaviour so their address is stable.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Is IPv6 more secure than IPv4?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">IPv6 was designed with security in mind and mandates IPsec support, and its huge address space makes blind network scanning impractical. On the other hand, every device gets a public address, so you depend on the firewall rather than on NAT to block unsolicited inbound traffic. In practice security depends more on your firewall and application configuration than on the IP version itself.</div></div>
       </div>
     </div>
   </section>
@@ -262,7 +289,7 @@
     <a href="/ssl-checker/">SSL Checker</a><a href="/about/">About</a>
     <a href="/privacy/">Privacy Policy</a>
     <a href="/terms/">Terms of Service</a>
-    <a href="mailto:hello@ipwhitelist.dev">Contact</a>
+    <a href="/contact/">Contact</a>
   </div>
   <div class="footer-copy">© 2026 IPWhitelist.dev — Free developer network tools</div>
 </footer>

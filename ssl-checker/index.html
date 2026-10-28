@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <script>document.documentElement.classList.add('js')</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SSL Checker — Certificate & Expiry Date Tool</title>
   <meta name="description" content="Free SSL checker. Verify SSL certificate validity, expiry date, issuer and HTTPS setup for any domain in seconds. No signup required." />
+  <meta name="author" content="Fernando Higa" />
   <link rel="canonical" href="https://ipwhitelist.dev/ssl-checker/" />
   <meta property="og:title" content="SSL Checker — Certificate & Expiry Date Tool" />
   <meta property="og:description" content="Free SSL checker. Verify SSL certificate validity, expiry date, issuer and HTTPS setup for any domain in seconds. No signup required." />
@@ -39,6 +42,8 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    // Consent Mode v2: no ad/analytics cookies in the EEA/UK/CH until the consent banner (Google CMP) records a choice
+    gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']});
     gtag('js', new Date());
     gtag('config', 'G-QFLEV7NLEG');
   </script>
@@ -47,7 +52,8 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../favicon-180.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="../favicon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../shared.css" />
   <script type="application/ld+json">
   {
@@ -85,7 +91,7 @@
     <a href="/ipv6/" class="nav-link">IPv6</a>
   </div>
   <div class="nav-right"><span class="badge-free">100% Free</span></div>
-  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu">
+  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
@@ -113,7 +119,7 @@
     <div class="tool-card">
       <div class="tool-card-head">
         <div class="tool-card-title">SSL Certificate Checker</div>
-        <div class="tool-card-desc">Enter any domain to check its SSL certificate status, validity period, and issuer information.</div>
+        <div class="tool-card-desc">Enter any domain to see its newest publicly logged certificate: validity period, days remaining, issuer and covered names. Data comes from Certificate Transparency logs — <a href="#what-it-checks" style="color:var(--lime);text-decoration:none;">what is and isn't checked</a>.</div>
       </div>
       <div class="tool-card-body">
         <div class="tool-input-row">
@@ -123,7 +129,7 @@
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;">
           <button class="pill" onclick="setSSLExample('github.com')">github.com</button>
           <button class="pill" onclick="setSSLExample('cloudflare.com')">cloudflare.com</button>
-          <button class="pill" onclick="setSSLExample('expired.badssl.com')">expired cert test</button>
+          <button class="pill" onclick="setSSLExample('letsencrypt.org')">letsencrypt.org</button>
         </div>
         <div class="result-area" id="sslResults">
           <div class="result-placeholder">Enter a domain → click Check SSL</div>
@@ -132,42 +138,57 @@
     </div>
   </div>
 
-  <!-- AD SLOT 1 -->
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
 
   <section class="seo-content reveal">
+    <div class="byline"><span>Written by <a href="/about/">Fernando Higa</a></span><span>Updated October 2026</span><span>7 min read</span></div>
+
     <h2>What is an SSL checker?</h2>
     <p>An SSL (Secure Sockets Layer) certificate — more accurately called a TLS certificate today — is a digital certificate that authenticates a website's identity and enables encrypted connections. When a website has a valid SSL certificate, browsers show a padlock icon and use HTTPS instead of HTTP. Without it, browsers display a "Not Secure" warning that drives users away.</p>
+    <p>An SSL checker reads the certificate associated with a domain and tells you who issued it, which names it covers and — most importantly — when it expires.</p>
+
+    <h2 id="what-it-checks">What this SSL checker verifies (and what it doesn't)</h2>
+    <p>This tool runs entirely in your browser, and browsers do not let a web page read the certificate of another site. So instead of connecting to the server, it queries <strong>Certificate Transparency (CT) logs</strong> through crt.sh: every publicly trusted certificate issued since 2018 must be published there, which makes the logs a reliable record of what was issued for a name.</p>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Checked</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>✓ Latest certificate</td><td>The most recently issued certificate that includes the exact name you entered.</td></tr>
+        <tr><td>✓ Validity window</td><td>Not-before / not-after dates and the number of days left, with warnings under 30 and 14 days.</td></tr>
+        <tr><td>✓ Issuer</td><td>The certificate authority (Let's Encrypt, DigiCert, Sectigo, Google Trust Services, ZeroSSL…).</td></tr>
+        <tr><td>✓ Covered names</td><td>Common name and the Subject Alternative Names (SANs) — the list that actually decides which hostnames the certificate is valid for.</td></tr>
+        <tr><td>✗ What the server sends right now</td><td>A server can be misconfigured to serve an older certificate, the wrong one, or an incomplete chain. Only a live TLS handshake reveals that.</td></tr>
+        <tr><td>✗ Protocols and ciphers</td><td>TLS 1.0/1.1 still enabled, weak cipher suites, missing OCSP stapling — use SSL Labs or <code>testssl.sh</code> for a full audit.</td></tr>
+        <tr><td>✗ Private or internal CAs</td><td>Certificates from a corporate CA are never logged, so internal hostnames return no result.</td></tr>
+      </tbody>
+    </table></div>
+    <p>In practice the newest logged certificate is the one being served for well-run sites with automated renewal. If this tool says "valid" but your browser shows a warning, the server is the problem, not the certificate — see the terminal commands below.</p>
 
     <h2>Why check SSL certificate expiry?</h2>
-    <p>SSL certificates expire — typically after 90 days (Let's Encrypt) or 1-2 years (commercial CAs). An expired certificate causes browsers to block access to your site with a full-page warning, immediately destroying user trust. Developers and site owners should monitor certificate expiry proactively. This tool tells you exactly how many days remain before expiry.</p>
+    <p>SSL certificates expire — typically after 90 days (Let's Encrypt) or up to 398 days (commercial CAs). An expired certificate causes browsers to block access to your site with a full-page warning, immediately destroying user trust. Developers and site owners should monitor certificate expiry proactively. This tool tells you exactly how many days remain before expiry.</p>
 
-    <h2>What does this SSL checker verify?</h2>
-    
+    <h2>Certificate lifetimes are getting shorter</h2>
+    <p>The CA/Browser Forum — the body where browsers and certificate authorities agree on rules — voted in 2025 to cut the maximum validity of public TLS certificates in steps: <strong>200 days from 15 March 2026</strong>, <strong>100 days from 15 March 2027</strong> and <strong>47 days from 15 March 2029</strong>. Let's Encrypt already issues 90-day certificates and offers 6-day ones.</p>
+    <p>The practical consequence is that manual renewal is no longer viable. Every certificate should be renewed automatically — Certbot or acme.sh on your own servers, or the built-in automation of GitHub Pages, Cloudflare, Vercel, Netlify and the major cloud load balancers — and monitored independently so a broken renewal job is caught before users are.</p>
 
-    <h2>More free developer tools</h2>
-      <ul>
-      <li><strong><a href="/">IP Whitelist Config Generator</a></strong> — Detect your IP and generate AWS, MongoDB, GCP configs</li>
-      <li><strong><a href="/port-checker/">Port Checker</a></strong> — Test if TCP ports are open on any host</li>
-      <li><strong><a href="/dns-lookup/">DNS Lookup</a></strong> — Query A, AAAA, MX, CNAME, TXT and NS records</li>
-      <li><strong><a href="/whois-lookup/">WHOIS Lookup</a></strong> — Find domain owner, registrar, and expiry date</li>
-      <li><strong><a href="/ssl-checker/">SSL Checker</a></strong> — Verify SSL certificate validity and expiry</li>
-      <li><strong><a href="/ip-location/">IP Location Map</a></strong> — Find any IP location on an interactive map</li>
-      <li><strong><a href="/headers/">HTTP Headers Checker</a></strong> — Inspect request and security headers</li>
-      <li><strong><a href="/latency-test/">Latency Test</a></strong> — Measure your RTT to major cloud regions</li>
-      <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
-      <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
-    </ul>
-  
+    <h2>How to check a certificate from the terminal</h2>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Goal</th><th>Command</th></tr></thead>
+      <tbody>
+        <tr><td>Dates, issuer and subject of the live certificate</td><td><code>openssl s_client -connect example.com:443 -servername example.com &lt;/dev/null 2&gt;/dev/null | openssl x509 -noout -dates -issuer -subject</code></td></tr>
+        <tr><td>Full chain the server sends</td><td><code>openssl s_client -connect example.com:443 -servername example.com -showcerts &lt;/dev/null</code></td></tr>
+        <tr><td>Quick look with curl</td><td><code>curl -vI https://example.com 2&gt;&amp;1 | grep -iE 'expire|issuer|subject'</code></td></tr>
+        <tr><td>Windows PowerShell</td><td><code>(Invoke-WebRequest https://example.com).BaseResponse</code> — or open the padlock in Edge/Chrome → "Connection is secure" → "Certificate is valid".</td></tr>
+      </tbody>
+    </table></div>
+    <p>Always pass <code>-servername</code> (SNI): servers that host several sites on one IP choose the certificate based on it, and without it you will see the default certificate instead of the one for your domain.</p>
+
     <h2>What happens when an SSL certificate expires?</h2>
-    <p>When an SSL certificate expires, browsers display a security warning — "Your connection is not private" (Chrome) or "Warning: Potential Security Risk Ahead" (Firefox) — and users must manually override to proceed. This dramatically reduces trust and traffic. Search engines may also demote sites with expired certificates.</p>
+    <p>When an SSL certificate expires, browsers display a security warning — "Your connection is not private" (Chrome) or "Warning: Potential Security Risk Ahead" (Firefox) — and users must manually override to proceed. API clients and mobile apps usually fail outright, and search engines may demote the site while the warning persists.</p>
     <p>Set a calendar reminder at least 30 days before your certificate expires. Most certificate authorities send expiry reminder emails, but these are easily missed. Let's Encrypt certificates expire every 90 days and should be configured to auto-renew using Certbot or your hosting provider's built-in renewal tools.</p>
 
     <h2>What is the difference between DV, OV, and EV SSL certificates?</h2>
     <p><strong>DV (Domain Validated)</strong> certificates verify only that you control the domain. They are issued in minutes, free via Let's Encrypt, and sufficient for most websites. <strong>OV (Organization Validated)</strong> certificates verify the organization behind the domain, requiring manual vetting — used by businesses that want to show legitimacy. <strong>EV (Extended Validation)</strong> certificates require the most rigorous vetting and previously showed a green address bar, though modern browsers have removed this visual distinction.</p>
     <p>For most developer tools, personal projects, and small businesses, a free Let's Encrypt DV certificate is the correct choice. EV certificates cost hundreds of dollars annually and provide minimal visible benefit to end users today.</p>
   </section>
-
 
   <section class="tools-grid-section reveal">
     <div class="section-label">More Free Tools</div>
@@ -184,24 +205,29 @@
     </div>
   </section>
 
-  <!-- AD SLOT 2 -->
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
-
   <section class="faq-section reveal">
     <div class="section-label">FAQ</div>
     <h2 class="section-heading">SSL certificate questions</h2>
     <div itemscope itemtype="https://schema.org/FAQPage">
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How do I fix an expired SSL certificate?</span><div class="faq-chevron">▾</div></div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">If you use Let's Encrypt (via Certbot, GitHub Pages, Netlify, or Vercel), renewal is automatic — check if your renewal process is running. For commercial certificates, contact your certificate authority or hosting provider to renew. GitHub Pages automatically renews SSL for custom domains — if it's expired there, remove and re-add your custom domain in repository settings.</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How do I fix an expired SSL certificate?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">If you use Let's Encrypt (via Certbot, GitHub Pages, Netlify, or Vercel), renewal is automatic — check if your renewal process is running (<code>sudo certbot renew --dry-run</code>). For commercial certificates, contact your certificate authority or hosting provider to renew. GitHub Pages automatically renews SSL for custom domains — if it's expired there, remove and re-add your custom domain in repository settings.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What is the difference between SSL and TLS?</span><div class="faq-chevron">▾</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why does this tool show a different certificate than my browser?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">The tool reads Certificate Transparency logs, which record every certificate that was issued; your browser shows the certificate the server actually sends. They differ when a renewal was issued but never installed, when the server picks a different certificate per hostname (SNI), or when a wildcard certificate covers the name. If the live site shows a warning, fix the server configuration — the log entry is just evidence that a valid certificate exists.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What is the difference between SSL and TLS?</span><span class="faq-chevron">▾</span></button>
         <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">SSL (Secure Sockets Layer) is the older protocol, now deprecated. TLS (Transport Layer Security) is its modern replacement. Despite this, the industry still commonly uses "SSL" to refer to what is technically TLS. When you see "SSL certificate", it almost always means a TLS certificate. Current websites use TLS 1.2 or TLS 1.3.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Is a free SSL certificate (Let's Encrypt) as secure as a paid one?</span><div class="faq-chevron">▾</div></div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Yes, for encryption purposes. Let's Encrypt certificates provide the same level of encryption as paid certificates. The main difference is that paid certificates (like EV certificates) include additional identity verification and show the organization name in the browser bar. For most websites, Let's Encrypt is perfectly sufficient.</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Is a free SSL certificate (Let's Encrypt) as secure as a paid one?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Yes, for encryption purposes. Let's Encrypt certificates provide the same level of encryption as paid certificates. The main difference is that paid certificates (like OV and EV certificates) include additional identity verification of the organization. For most websites, Let's Encrypt is perfectly sufficient.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What is Certificate Transparency?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Certificate Transparency is a system of public, append-only logs where certificate authorities must publish every certificate they issue. Chrome and Safari reject certificates that are not logged. The logs let domain owners detect certificates they never requested — a sign of a compromised CA or a hijacked domain — and they are the data source behind this checker.</div></div>
       </div>
     </div>
   </section>
@@ -215,7 +241,7 @@
     <a href="/ipv6/">IPv6</a><a href="/about/">About</a>
     <a href="/privacy/">Privacy Policy</a>
     <a href="/terms/">Terms of Service</a>
-    <a href="mailto:hello@ipwhitelist.dev">Contact</a>
+    <a href="/contact/">Contact</a>
   </div>
   <div class="footer-copy">© 2026 IPWhitelist.dev — Free developer network tools</div>
 </footer>
@@ -224,74 +250,78 @@
 <script>
 async function runSSL(){
   const raw = document.getElementById('sslInput').value.trim();
-  const domain = raw.replace(/^https?:\/\//,'').split('/')[0].toLowerCase();
+  const domain = raw.replace(/^https?:\/\//,'').split('/')[0].split(':')[0].toLowerCase();
   if(!domain){showToast('⚠ Enter a domain name');return;}
+  if(!/^[a-z0-9.\-*]+$/.test(domain)){showToast('⚠ Enter a hostname only, e.g. example.com');return;}
   const btn = document.getElementById('sslBtn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>';
   const res = document.getElementById('sslResults');
-  res.innerHTML = '<div class="result-placeholder">Checking SSL certificate…</div>';
+  res.innerHTML = '<div class="result-placeholder">Searching Certificate Transparency logs… (crt.sh can take 10–20 s)</div>';
+  const ctl = new AbortController();
+  const tm = setTimeout(()=>ctl.abort(), 25000);
   try {
-    // Use SSL Labs API (free, no key needed for single checks)
-    const apiUrl = `https://api.ssllabs.com/api/v3/analyze?host=${encodeURIComponent(domain)}&startNew=on&all=done`;
-    
-    // Since SSL Labs is async, we use a simpler approach via fetch to the domain
-    // and parse security headers + certificate info via a CORS proxy
-    // Best client-side approach: use crt.sh for cert info
-    const crtUrl = `https://crt.sh/?q=${encodeURIComponent(domain)}&output=json`;
-    const r = await fetch(crtUrl);
+    // Browsers cannot read another site's live certificate, so we use the public Certificate Transparency
+    // logs (crt.sh): every publicly trusted certificate must be logged there when it is issued.
+    const r = await fetch(`https://crt.sh/?q=${encodeURIComponent(domain)}&output=json`, {signal: ctl.signal});
     const certs = await r.json();
-    
-    if(!certs || !certs.length){
-      throw new Error('No certificates found');
-    }
+    if(!Array.isArray(certs) || !certs.length) throw new Error('No certificates found');
 
-    // Get most recent cert
-    const cert = certs[0];
+    // Newest certificate issued for this name (crt.sh returns precertificate + leaf entries in arbitrary order)
+    const cert = certs.reduce((best,c)=> new Date(c.not_before) > new Date(best.not_before) ? c : best, certs[0]);
     const notAfter = new Date(cert.not_after);
     const notBefore = new Date(cert.not_before);
     const now = new Date();
     const daysLeft = Math.ceil((notAfter - now) / (1000*60*60*24));
     const isValid = notAfter > now && notBefore <= now;
 
-    let statusColor = isValid ? 'var(--lime)' : 'var(--rose)';
-    let statusText = isValid ? '✓ Valid' : '✗ Expired';
-    let statusBg = isValid ? 'rgba(78,255,192,.12)' : 'rgba(255,92,122,.1)';
-    let statusBorder = isValid ? 'rgba(78,255,192,.3)' : 'rgba(255,92,122,.3)';
+    const statusColor = isValid ? 'var(--lime)' : 'var(--rose)';
+    const statusText = isValid ? '✓ Valid' : '✗ Expired';
+    const statusBg = isValid ? 'rgba(78,255,192,.12)' : 'rgba(255,92,122,.1)';
+    const statusBorder = isValid ? 'rgba(78,255,192,.3)' : 'rgba(255,92,122,.3)';
 
     let expiryWarning = '';
     if(isValid && daysLeft < 14){
       expiryWarning = `<div style="background:rgba(255,92,122,.1);border:1px solid rgba(255,92,122,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.72rem;color:var(--rose);">⚠ CRITICAL: Expires in ${daysLeft} days — renew immediately</div>`;
     } else if(isValid && daysLeft < 30){
       expiryWarning = `<div style="background:rgba(255,181,71,.08);border:1px solid rgba(255,181,71,.25);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.72rem;color:var(--amber);">⚠ Expires in ${daysLeft} days — renew soon</div>`;
+    } else if(!isValid){
+      expiryWarning = `<div style="background:rgba(255,92,122,.1);border:1px solid rgba(255,92,122,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:var(--mono);font-size:.72rem;color:var(--rose);">The newest certificate logged for this name has expired — if the site still loads with a padlock, it is serving a certificate for a different name (e.g. a wildcard).</div>`;
     }
 
     const issuer = cert.issuer_name || '—';
     const cn = cert.common_name || domain;
-    const sans = cert.name_value ? cert.name_value.split('\n').slice(0,4).join(', ') : '—';
+    const sans = cert.name_value ? [...new Set(cert.name_value.split('\n'))] : [];
+    const fmt = d => d.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
 
     res.innerHTML = `
       <div class="result-top">
-        <span class="result-lang">SSL · ${domain}</span>
+        <span class="result-lang">SSL · ${escHtml(domain)} · newest logged certificate</span>
         <button class="btn-icon sm" onclick="copySSL()">Copy</button>
       </div>
       <div style="padding:18px;">
         ${expiryWarning}
         <div style="display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.78rem;font-weight:700;padding:8px 16px;border-radius:20px;background:${statusBg};border:1px solid ${statusBorder};color:${statusColor};margin-bottom:16px;">${statusText}</div>
         <div class="ua-grid" style="margin-bottom:0;">
-          <div class="ua-cell"><div class="ua-label">Domain</div><div class="ua-value accent">${domain}</div></div>
+          <div class="ua-cell"><div class="ua-label">Domain</div><div class="ua-value accent">${escHtml(domain)}</div></div>
           <div class="ua-cell"><div class="ua-label">Status</div><div class="ua-value" style="color:${statusColor};">${statusText}</div></div>
           <div class="ua-cell"><div class="ua-label">Days Remaining</div><div class="ua-value" style="color:${daysLeft<30?'var(--rose)':daysLeft<60?'var(--amber)':'var(--lime)'};">${isValid?daysLeft+' days':'Expired'}</div></div>
-          <div class="ua-cell"><div class="ua-label">Valid From</div><div class="ua-value">${notBefore.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}</div></div>
-          <div class="ua-cell"><div class="ua-label">Valid Until</div><div class="ua-value">${notAfter.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}</div></div>
-          <div class="ua-cell"><div class="ua-label">Common Name</div><div class="ua-value" style="font-size:.68rem;">${cn}</div></div>
-          <div class="ua-cell" style="grid-column:span 2"><div class="ua-label">Issuer</div><div class="ua-value" style="font-size:.68rem;line-height:1.5;">${issuer}</div></div>
+          <div class="ua-cell"><div class="ua-label">Valid From</div><div class="ua-value">${fmt(notBefore)}</div></div>
+          <div class="ua-cell"><div class="ua-label">Valid Until</div><div class="ua-value">${fmt(notAfter)}</div></div>
+          <div class="ua-cell"><div class="ua-label">Common Name</div><div class="ua-value" style="font-size:.68rem;">${escHtml(cn)}</div></div>
+          <div class="ua-cell" style="grid-column:span 2"><div class="ua-label">Issuer</div><div class="ua-value" style="font-size:.68rem;line-height:1.5;">${escHtml(issuer)}</div></div>
+          <div class="ua-cell" style="grid-column:span 2"><div class="ua-label">Covered names (SANs) · ${sans.length}</div><div class="ua-value" style="font-size:.68rem;line-height:1.6;">${escHtml(sans.slice(0,8).join(', '))}${sans.length>8?` … +${sans.length-8} more`:''}</div></div>
         </div>
+        <div style="margin-top:14px;font-family:var(--mono);font-size:.6rem;line-height:1.6;color:var(--txt-3);">Source: Certificate Transparency logs via crt.sh. This is the newest certificate <em>issued</em> for the name, not a live handshake with the server — <a href="#what-it-checks" style="color:var(--txt-2);">what that means</a>.</div>
       </div>`;
-    window._sslText = `SSL Check: ${domain}\nStatus: ${statusText}\nDays remaining: ${daysLeft}\nValid from: ${notBefore.toDateString()}\nExpires: ${notAfter.toDateString()}\nIssuer: ${issuer}`;
+    window._sslText = `SSL Check: ${domain}\nStatus: ${statusText}\nDays remaining: ${daysLeft}\nValid from: ${notBefore.toDateString()}\nExpires: ${notAfter.toDateString()}\nIssuer: ${issuer}\nSANs: ${sans.join(', ')}`;
   } catch(e) {
-    res.innerHTML = `<div class="result-pre" style="color:var(--rose)">Could not retrieve SSL data for "${domain}".<br/><br/>Possible reasons:<br/>• Domain has no SSL certificate<br/>• Domain does not exist<br/>• Rate limit reached — try again in a moment</div>`;
+    const why = e.name === 'AbortError'
+      ? 'crt.sh did not answer within 25 seconds — it is a free, volunteer-run service and is sometimes overloaded. Try again in a minute.'
+      : 'Possible reasons:<br/>• No publicly trusted certificate has ever been issued for this exact name<br/>• The domain does not exist<br/>• crt.sh is temporarily unavailable — try again in a moment';
+    res.innerHTML = `<div class="result-pre" style="color:var(--rose)">Could not retrieve certificate data for "${escHtml(domain)}".<br/><br/>${why}<br/><br/><span style="color:var(--txt-2)">Live check from a terminal:</span> <span style="color:var(--lime)">openssl s_client -connect ${escHtml(domain)}:443 -servername ${escHtml(domain)} &lt;/dev/null 2&gt;/dev/null | openssl x509 -noout -dates -issuer</span></div>`;
   }
+  clearTimeout(tm);
   btn.disabled = false;
   btn.textContent = 'Check SSL';
 }

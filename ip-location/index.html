@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <script>document.documentElement.classList.add('js')</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IP Location Lookup — Find Any IP on a Map</title>
   <meta name="description" content="Free IP location lookup. Find where any IP address is located — city, country, ISP, coordinates and timezone on an interactive map." />
+  <meta name="author" content="Fernando Higa" />
   <link rel="canonical" href="https://ipwhitelist.dev/ip-location/" />
   <meta property="og:title" content="IP Location Lookup — Find Any IP on a Map" />
   <meta property="og:description" content="Free IP location lookup. Find where any IP address is located — city, country, ISP, coordinates and timezone on an interactive map." />
@@ -38,6 +41,8 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    // Consent Mode v2: no ad/analytics cookies in the EEA/UK/CH until the consent banner (Google CMP) records a choice
+    gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']});
     gtag('js', new Date());
     gtag('config', 'G-QFLEV7NLEG');
   </script>
@@ -48,7 +53,8 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../favicon-180.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="../favicon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../shared.css" />
   <style>
     #map {
@@ -119,7 +125,7 @@
     <a href="/ipv6/" class="nav-link">IPv6</a>
   </div>
   <div class="nav-right"><span class="badge-free">100% Free</span></div>
-  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu">
+  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
@@ -175,42 +181,50 @@
     <div id="map"></div>
   </div>
 
-  <!-- AD SLOT 1 -->
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
 
   <section class="seo-content reveal">
+    <div class="byline"><span>Written by <a href="/about/">Fernando Higa</a></span><span>Updated October 2026</span><span>6 min read</span></div>
+
     <h2>What is an IP location lookup?</h2>
     <p>IP geolocation is the process of determining the real-world geographic location of an IP address. Every public IP address is assigned to a specific organization (ISP, company, or cloud provider) in a specific region. By cross-referencing IP allocation databases, geolocation services can pinpoint an IP address to a city, region, and country with reasonable accuracy.</p>
 
     <h2>How accurate is IP address location?</h2>
-    <p>IP geolocation is typically accurate to the country level (99%+ accuracy) and city level (50-80% accuracy). It is not precise enough to identify a street address. The location shown is usually the location of your ISP's nearest point of presence, not your exact physical location. If you use a VPN, the location shown will be the VPN server's location, not yours.</p>
+    <p>IP geolocation is typically accurate to the country level (99%+ accuracy) and city level (50–80% accuracy). It is not precise enough to identify a street address. The location shown is usually the location of your ISP's nearest point of presence, not your exact physical location. If you use a VPN, the location shown will be the VPN server's location, not yours.</p>
+    <p>Accuracy also varies by connection type: fixed broadband is usually placed in the right metropolitan area; mobile networks are often placed at the carrier's gateway, which can be hundreds of kilometres away; and cloud IPs are placed at the data-centre region, not where the person using the server sits.</p>
 
     <h2>What can I use an IP location lookup for?</h2>
-    
-
-    <h2>More free developer tools</h2>
-      <ul>
-      <li><strong><a href="/">IP Whitelist Config Generator</a></strong> — Detect your IP and generate AWS, MongoDB, GCP configs</li>
-      <li><strong><a href="/port-checker/">Port Checker</a></strong> — Test if TCP ports are open on any host</li>
-      <li><strong><a href="/dns-lookup/">DNS Lookup</a></strong> — Query A, AAAA, MX, CNAME, TXT and NS records</li>
-      <li><strong><a href="/whois-lookup/">WHOIS Lookup</a></strong> — Find domain owner, registrar, and expiry date</li>
-      <li><strong><a href="/ssl-checker/">SSL Checker</a></strong> — Verify SSL certificate validity and expiry</li>
-      <li><strong><a href="/ip-location/">IP Location Map</a></strong> — Find any IP location on an interactive map</li>
-      <li><strong><a href="/headers/">HTTP Headers Checker</a></strong> — Inspect request and security headers</li>
-      <li><strong><a href="/latency-test/">Latency Test</a></strong> — Measure your RTT to major cloud regions</li>
-      <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
-      <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
+    <ul class="bullets">
+      <li><strong>Debugging CDN and edge routing.</strong> Confirm which region a user is being served from, or why a visitor from Madrid hits your Frankfurt origin.</li>
+      <li><strong>Verifying a VPN or proxy.</strong> Leave the field blank: if the map shows the VPN's exit city rather than yours, the tunnel is working.</li>
+      <li><strong>Reviewing suspicious logins and sign-ups.</strong> An account created from a residential ISP in one country and used an hour later from a data centre on another continent deserves a second look.</li>
+      <li><strong>Reading server logs.</strong> Turn the top offending IPs in your access log into countries and networks before deciding what to block.</li>
+      <li><strong>Choosing a cloud region.</strong> Locate your users' IPs, then measure them with the <a href="/latency-test/">latency test</a> to pick the region that serves them fastest.</li>
+      <li><strong>Compliance and localisation.</strong> Best-effort country detection for tax rules, consent banners and default language — always with a manual override for the user.</li>
     </ul>
-  
+
+    <h2>Private and reserved ranges that cannot be located</h2>
+    <p>If a lookup returns an error, the address may belong to a range that is never routed on the public internet and therefore has no location:</p>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Range</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>10.0.0.0/8 · 172.16.0.0/12 · 192.168.0.0/16</td><td>Private networks (RFC 1918) — home and office LANs, cloud VPCs, Docker bridges.</td></tr>
+        <tr><td>100.64.0.0/10</td><td>Carrier-grade NAT. Many mobile and fibre ISPs give customers one of these instead of a public IP.</td></tr>
+        <tr><td>127.0.0.0/8</td><td>Loopback — the machine itself (<code>localhost</code>).</td></tr>
+        <tr><td>169.254.0.0/16</td><td>Link-local, self-assigned when DHCP fails. Also the cloud metadata address 169.254.169.254.</td></tr>
+        <tr><td>192.0.2.0/24 · 198.51.100.0/24 · 203.0.113.0/24</td><td>Documentation ranges (RFC 5737) — used in examples, never on real networks.</td></tr>
+        <tr><td>224.0.0.0/4 · 240.0.0.0/4</td><td>Multicast and reserved space.</td></tr>
+        <tr><td>fc00::/7 · fe80::/10</td><td>IPv6 unique-local and link-local addresses — the IPv6 equivalents of private and self-assigned ranges.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>How IP geolocation works</h2>
+    <p>IP geolocation databases map IP address ranges to geographic locations by combining several sources: the allocation records published by the regional internet registries (ARIN, RIPE NCC, APNIC, LACNIC, AFRINIC), <strong>geofeeds</strong> that ISPs publish to state where each block is used (RFC 8805), routing data, latency measurements from many vantage points, and corrections submitted by network operators and users.</p>
+    <p>For developers building geo-restriction or content localization features, IP geolocation provides a best-effort approximation. Always provide a fallback for users whose location cannot be accurately determined, and never rely solely on IP geolocation for security-critical decisions.</p>
+
     <h2>What is an ASN and how does it relate to IP location?</h2>
     <p>An ASN (Autonomous System Number) identifies a network or group of networks under a single organization's control, typically an ISP, university, or large company. When you look up an IP location, the ASN tells you which organization owns that IP block — for example, AS15169 is Google, AS16509 is Amazon AWS, and AS13335 is Cloudflare.</p>
     <p>ASN information is useful for identifying cloud provider IP ranges, detecting data center vs residential IPs, and understanding the routing path of network traffic. Developers use ASN data to block or allow entire cloud provider IP ranges in firewall rules.</p>
-
-    <h2>How to detect a visitor's country from their IP address</h2>
-    <p>IP geolocation databases map IP address ranges to geographic locations based on registration data from regional internet registries (ARIN, RIPE, APNIC) and network routing data. Accuracy is highest at the country level (95%+) and decreases at city level (50-70% depending on the database).</p>
-    <p>For developers building geo-restriction or content localization features, IP geolocation provides a best-effort approximation. Always provide a fallback for users whose location cannot be accurately determined, and never rely solely on IP geolocation for security-critical decisions.</p>
   </section>
-
 
   <section class="tools-grid-section reveal">
     <div class="section-label">More Free Tools</div>
@@ -227,24 +241,25 @@
     </div>
   </section>
 
-  <!-- AD SLOT 2 -->
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
-
   <section class="faq-section reveal">
     <div class="section-label">FAQ</div>
     <h2 class="section-heading">IP location questions</h2>
     <div itemscope itemtype="https://schema.org/FAQPage">
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why does my IP location show the wrong city?</span><div class="faq-chevron">▾</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why does my IP location show the wrong city?</span><span class="faq-chevron">▾</span></button>
         <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">IP geolocation shows the location of your ISP's infrastructure, not your physical location. Your ISP may route traffic through a hub in a different city. Additionally, if you use a VPN, the location shown is the VPN server's location. City-level accuracy varies between 50-80% depending on the geolocation database used.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Can I look up any IP address location?</span><div class="faq-chevron">▾</div></div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Yes — enter any public IPv4 address in the lookup field above. Private IP addresses (192.168.x.x, 10.x.x.x, 172.16.x.x) cannot be geolocated as they are local network addresses not routable on the public internet.</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Can I look up any IP address location?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Yes — enter any public IPv4 or IPv6 address in the lookup field above. Private IP addresses (192.168.x.x, 10.x.x.x, 172.16.x.x) and carrier-grade NAT addresses (100.64.x.x) cannot be geolocated as they are local network addresses not routable on the public internet.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Is this IP lookup tool free?</span><div class="faq-chevron">▾</div></div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Yes, completely free with no signup required. All lookups are done via client-side calls to public APIs. We don't store or log any IP addresses you look up.</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Can someone find my home address from my IP?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Not from public geolocation data — it stops at the city or neighbourhood level and is often off by tens of kilometres. Only your ISP can link an IP address and timestamp to a subscriber, and it releases that information to authorities through a legal process, not to the public.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Is this IP lookup tool free?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Yes, completely free with no signup required. All lookups are done via client-side calls to the public ipapi.co API and the map tiles come from OpenStreetMap. We don't store or log any IP addresses you look up.</div></div>
       </div>
     </div>
   </section>
@@ -259,7 +274,7 @@
     <a href="/headers/">Headers</a><a href="/about/">About</a>
     <a href="/privacy/">Privacy Policy</a>
     <a href="/terms/">Terms of Service</a>
-    <a href="mailto:hello@ipwhitelist.dev">Contact</a>
+    <a href="/contact/">Contact</a>
   </div>
   <div class="footer-copy">© 2026 IPWhitelist.dev — Free developer network tools</div>
 </footer>
@@ -310,6 +325,7 @@ async function runIPLookup(){
         d = await r.json();
       }
     } else {
+      if(!/^[0-9a-f.:]+$/i.test(input)) throw new Error('Enter an IPv4 or IPv6 address');
       const r = await fetch(`https://ipapi.co/${encodeURIComponent(input)}/json/`);
       d = await r.json();
     }
@@ -328,10 +344,10 @@ async function runIPLookup(){
     if(d.latitude && d.longitude){
       initMap(d.latitude, d.longitude);
       const city = [d.city, d.region, d.country_name].filter(Boolean).join(', ');
-      marker.bindPopup(`<strong>${d.ip}</strong><br/>${city}<br/>${d.org||''}`).openPopup();
+      marker.bindPopup(`<strong>${escHtml(d.ip)}</strong><br/>${escHtml(city)}<br/>${escHtml(d.org||'')}`).openPopup();
     }
   } catch(e) {
-    showToast('⚠ Could not locate that IP — check the address and try again');
+    showToast('⚠ Could not locate that IP — check the address (private and reserved ranges have no location)');
   }
   btn.disabled = false;
   btn.textContent = 'Locate IP';

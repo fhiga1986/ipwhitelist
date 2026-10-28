@@ -12,6 +12,7 @@ Allow: /latency-test/
 Allow: /user-agent/
 Allow: /ipv6/
 Allow: /about/
+Allow: /contact/
 Allow: /privacy/
 Allow: /terms/
 

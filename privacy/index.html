@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <script>document.documentElement.classList.add('js')</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Privacy Policy — IPWhitelist.dev</title>
   <meta name="description" content="Privacy Policy for IPWhitelist.dev. We do not collect, store or sell personal data. All network tools run client-side in your browser." />
+  <meta name="author" content="Fernando Higa" />
   <link rel="canonical" href="https://ipwhitelist.dev/privacy/" />
   <meta property="og:title" content="Privacy Policy — IPWhitelist.dev" />
   <meta property="og:description" content="Privacy Policy for IPWhitelist.dev. We do not collect, store or sell personal data. All network tools run client-side in your browser." />
@@ -25,13 +27,13 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../favicon-180.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;700&family=Geist:wght@400;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../shared.css" />
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5526031626146935" crossorigin="anonymous"></script>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFLEV7NLEG"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QFLEV7NLEG');</script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']});gtag('js',new Date());gtag('config','G-QFLEV7NLEG');</script>
   <style>
     .legal-wrap { max-width: 740px; margin: 0 auto; padding: 60px 20px 80px; position: relative; z-index: 1; }
     .legal-title { font-family: var(--serif); font-size: clamp(1.8rem,4vw,3rem); font-weight: 400; margin-bottom: 8px; }
@@ -105,6 +107,9 @@
   <div class="nav-right">
     <span class="badge-free">100% Free</span>
   </div>
+  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- MOBILE MENU -->
@@ -123,15 +128,15 @@
 
 <div class="legal-wrap">
   <h1 class="legal-title">Privacy <em>Policy</em></h1>
-  <div class="legal-date">Last updated: April 2026 &nbsp;·&nbsp; Effective: March 2026</div>
+  <div class="legal-date">Last updated: October 28, 2026 &nbsp;·&nbsp; Effective: March 2026</div>
 
   <div class="highlight-box">
-    <p><strong>Short version:</strong> IPWhitelist.dev does not collect, store, or sell your personal data. All network tools run entirely in your browser. Your IP address is detected client-side and never sent to our servers — because we have no servers.</p>
+    <p><strong>Short version:</strong> IPWhitelist.dev does not collect, store, or sell your personal data. All network tools run entirely in your browser. Your IP address is detected client-side and never sent to our servers — because we have no servers. The only third parties that process data about your visit are Google (analytics and advertising) and the public APIs each tool calls, listed below.</p>
   </div>
 
   <div class="legal-section">
     <h2>1. Who We Are</h2>
-    <p>IPWhitelist.dev ("we", "our", "the site") is a free developer tool suite available at <a href="https://ipwhitelist.dev">https://ipwhitelist.dev</a>. The site is operated as a static web application hosted on GitHub Pages with no backend infrastructure.</p>
+    <p>IPWhitelist.dev ("we", "our", "the site") is a free developer tool suite available at <a href="https://ipwhitelist.dev">https://ipwhitelist.dev</a>, operated by Fernando Higa (see <a href="/about/#author">About</a>). The site is a static web application hosted on GitHub Pages with no backend infrastructure.</p>
     <p>For privacy inquiries, contact us at: <a href="mailto:hello@ipwhitelist.dev">hello@ipwhitelist.dev</a></p>
   </div>
 
@@ -151,7 +156,7 @@
   <div class="legal-section">
     <h2>3. How Our Tools Work (Client-Side Architecture)</h2>
     <p>All 10 tools on IPWhitelist.dev run entirely in your browser using JavaScript. When you use our IP detection tool, your browser makes direct API calls to third-party services (ipify.org, ipapi.co) — your IP address is returned to your browser and displayed. We never intercept or log this data.</p>
-    <p>The same applies to all other tools: DNS lookups query Google's DoH API directly from your browser, WHOIS data comes from rdap.org, SSL certificate data from crt.sh, and latency tests ping AWS endpoints directly. None of this data passes through our servers.</p>
+    <p>The same applies to all other tools: DNS lookups query Google's DoH API directly from your browser, WHOIS data comes from rdap.org, SSL certificate data from crt.sh, the HTTP headers tool sends one request to the echo service httpbin.org, the IP fingerprint asks freeipapi.com whether your address is a known proxy, and latency tests contact AWS endpoints directly. The port checker opens connections from your browser to the host you type in. None of this data passes through our servers.</p>
   </div>
 
   <div class="legal-section">
@@ -159,38 +164,51 @@
     <p>We use the following third-party services. Each has its own privacy policy:</p>
     <ul>
       <li><strong>Google Analytics 4</strong> — collects anonymized usage statistics (pages visited, session duration, country). <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></li>
-      <li><strong>Google AdSense</strong> — displays advertisements and may set cookies for ad personalization. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></li>
+      <li><strong>Google AdSense</strong> — displays advertisements and may set cookies for ad personalization (see section 5). <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></li>
       <li><strong>ipify.org</strong> — used to detect your public IP address. <a href="https://www.ipify.org" target="_blank" rel="noopener">ipify.org</a></li>
       <li><strong>ipapi.co</strong> — used for IP geolocation (city, country, ISP). <a href="https://ipapi.co/privacy/" target="_blank" rel="noopener">ipapi.co Privacy Policy</a></li>
+      <li><strong>freeipapi.com</strong> — used for the proxy/VPN flag in the IP fingerprint. <a href="https://freeipapi.com" target="_blank" rel="noopener">freeipapi.com</a></li>
+      <li><strong>Google Public DNS, rdap.org, crt.sh, httpbin.org, OpenStreetMap, AWS</strong> — queried directly by your browser when you use the DNS, WHOIS, SSL, headers, IP map and latency tools respectively. Each receives only the query needed to answer (and, as with any web request, your IP address).</li>
       <li><strong>GitHub Pages</strong> — hosts the static files of this website. <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank" rel="noopener">GitHub Privacy Statement</a></li>
     </ul>
   </div>
 
   <div class="legal-section">
-    <h2>5. Cookies</h2>
+    <h2>5. Cookies and Advertising</h2>
     <p>IPWhitelist.dev itself does not set cookies. However, third-party services we use (Google Analytics, Google AdSense) may set cookies on your device for analytics and advertising purposes.</p>
-    <p>You can control cookie preferences through your browser settings or opt out of Google Analytics using the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a>. You can manage Google ad personalization at <a href="https://adssettings.google.com" target="_blank" rel="noopener">adssettings.google.com</a>.</p>
+    <ul>
+      <li>Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to this website or other websites.</li>
+      <li>Google's use of advertising cookies enables it and its partners to serve ads to you based on your visit to this site and/or other sites on the internet.</li>
+      <li>You may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ads Settings</a>, or opt out of a third-party vendor's use of cookies for personalized advertising at <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener">www.aboutads.info/choices</a>.</li>
+      <li>We have not disabled third-party ad serving, so other ad-technology vendors certified by Google may also place and read cookies on your browser or use web beacons to collect information when ads are served. Google publishes the list of these vendors on its <a href="https://support.google.com/admanager/answer/9012903" target="_blank" rel="noopener">ad technology providers page</a>.</li>
+    </ul>
+    <p>You can also control cookies through your browser settings or opt out of Google Analytics with the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics Opt-out Browser Add-on</a>.</p>
   </div>
 
   <div class="legal-section">
-    <h2>6. GDPR — Rights of EU Users</h2>
+    <h2>6. Consent in the EEA, UK and Switzerland</h2>
+    <p>If you visit from the European Economic Area, the United Kingdom or Switzerland, a consent banner provided by Google's certified consent management platform asks for your choice before any advertising or analytics cookies are set. You can change or withdraw your choice at any time by reloading the site and reopening the banner, or through your browser's cookie settings. Where you decline, Google serves only non-personalized ads, which still use cookies for frequency capping and fraud prevention as described in <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">How Google uses information from sites that use its services</a>.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>7. GDPR and Other Privacy Rights</h2>
     <p>If you are located in the European Economic Area (EEA), you have rights under the General Data Protection Regulation (GDPR) including the right to access, rectify, and erase personal data. Since we do not collect personal data, there is generally nothing to access or erase.</p>
-    <p>For data processed by Google Analytics and AdSense, you may exercise your rights directly with Google. For any privacy inquiries, contact us at <a href="mailto:hello@ipwhitelist.dev">hello@ipwhitelist.dev</a>.</p>
+    <p>For data processed by Google Analytics and AdSense, you may exercise your rights directly with Google. Residents of California and other US states with privacy laws have comparable rights to know, delete and opt out of the sale or sharing of personal information; we do not sell personal information, and the opt-out links in section 5 cover personalized advertising. For any privacy inquiries, contact us at <a href="mailto:hello@ipwhitelist.dev">hello@ipwhitelist.dev</a>.</p>
   </div>
 
   <div class="legal-section">
-    <h2>7. Children's Privacy</h2>
+    <h2>8. Children's Privacy</h2>
     <p>IPWhitelist.dev is a technical developer tool intended for adults. We do not knowingly collect any information from children under 13. If you believe a child has provided personal information, contact us at <a href="mailto:hello@ipwhitelist.dev">hello@ipwhitelist.dev</a>.</p>
   </div>
 
   <div class="legal-section">
-    <h2>8. Changes to This Policy</h2>
+    <h2>9. Changes to This Policy</h2>
     <p>We may update this Privacy Policy from time to time. The "last updated" date at the top of this page will reflect any changes. Continued use of the site after updates constitutes acceptance of the revised policy.</p>
   </div>
 
   <div class="legal-section">
-    <h2>9. Contact</h2>
-    <p>For privacy-related questions or concerns, contact us at: <a href="mailto:hello@ipwhitelist.dev">hello@ipwhitelist.dev</a></p>
+    <h2>10. Contact</h2>
+    <p>For privacy-related questions or concerns, contact us at <a href="mailto:hello@ipwhitelist.dev">hello@ipwhitelist.dev</a> or through the <a href="/contact/">contact page</a>.</p>
   </div>
 </div>
 
@@ -204,7 +222,7 @@
     <a href="/about/">About</a>
     <a href="/privacy/">Privacy Policy</a>
     <a href="/terms/">Terms of Service</a>
-    <a href="mailto:hello@ipwhitelist.dev">Contact</a>
+    <a href="/contact/">Contact</a>
   </div>
   <div class="footer-copy">© 2026 IPWhitelist.dev — Free developer network tools</div>
 </footer>

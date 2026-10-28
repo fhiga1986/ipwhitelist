@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <script>document.documentElement.classList.add('js')</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HTTP Headers Checker — Inspect & Grade Headers</title>
   <meta name="description" content="Free HTTP headers checker. Inspect request and response headers, analyze security headers and CORS configuration for any URL instantly." />
+  <meta name="author" content="Fernando Higa" />
   <link rel="canonical" href="https://ipwhitelist.dev/headers/" />
   <meta property="og:title" content="HTTP Headers Checker — Inspect & Grade Headers" />
   <meta property="og:description" content="Free HTTP headers checker. Inspect request and response headers, analyze security headers and CORS configuration for any URL instantly." />
@@ -38,6 +41,8 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    // Consent Mode v2: no ad/analytics cookies in the EEA/UK/CH until the consent banner (Google CMP) records a choice
+    gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']});
     gtag('js', new Date());
     gtag('config', 'G-QFLEV7NLEG');
   </script>
@@ -46,7 +51,8 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../favicon-180.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="../favicon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../shared.css" />
   <style>
     .header-row {
@@ -122,7 +128,7 @@
     <a href="/ipv6/" class="nav-link">IPv6</a>
   </div>
   <div class="nav-right"><span class="badge-free">100% Free</span></div>
-  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu">
+  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
@@ -150,7 +156,7 @@
     <div class="tool-card">
       <div class="tool-card-head">
         <div class="tool-card-title">HTTP Headers Inspector</div>
-        <div class="tool-card-desc">Your request headers are shown automatically. To check response headers from a URL, enter it below.</div>
+        <div class="tool-card-desc">Your request headers are captured automatically by an echo server. To read the response headers of a URL it must allow cross-origin requests (CORS) — <a href="#limits" style="color:var(--lime);text-decoration:none;">what a browser can and cannot see</a>.</div>
       </div>
       <div class="tool-card-body">
         <!-- Tab selector -->
@@ -197,40 +203,54 @@
     </div>
   </div>
 
-  <!-- AD SLOT 1 -->
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
 
   <section class="seo-content reveal">
+    <div class="byline"><span>Written by <a href="/about/">Fernando Higa</a></span><span>Updated October 2026</span><span>7 min read</span></div>
+
     <h2>What are HTTP headers?</h2>
     <p>HTTP headers are key-value pairs sent between clients (browsers) and servers with every HTTP request and response. Request headers tell the server about the client — its browser, accepted languages, cookies, and authentication tokens. Response headers tell the browser how to handle the content — caching rules, content type, security policies, and CORS settings.</p>
+    <p>Headers are invisible to users but decide a surprising amount of behaviour: whether a page may be embedded in an iframe, how long a CDN keeps a file, which origins may call an API, and whether the browser will ever load the site over plain HTTP again.</p>
 
     <h2>Why do security headers matter?</h2>
-    <p>Security headers protect your web application from common attacks. Missing or misconfigured security headers are one of the most common web vulnerabilities. Key headers include:</p>
-    
+    <p>Security headers protect your web application from common attacks. Missing or misconfigured security headers are one of the most common findings in penetration tests, and the cheapest to fix — most are a single line of server configuration. The headers checked by the <em>Security Analysis</em> tab, with a safe starting value for each:</p>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Header</th><th>Protects against</th><th>Recommended starting value</th></tr></thead>
+      <tbody>
+        <tr><td>Strict-Transport-Security</td><td>SSL stripping and accidental HTTP loads</td><td><code>max-age=31536000; includeSubDomains</code> (add <code>preload</code> once everything works over HTTPS)</td></tr>
+        <tr><td>Content-Security-Policy</td><td>Cross-site scripting (XSS), injected scripts and styles</td><td>Start with <code>default-src 'self'</code> in <em>report-only</em> mode, then allow what the reports show you need.</td></tr>
+        <tr><td>X-Frame-Options</td><td>Clickjacking (your site embedded in an invisible iframe)</td><td><code>DENY</code> or <code>SAMEORIGIN</code>; the modern equivalent is CSP <code>frame-ancestors</code>.</td></tr>
+        <tr><td>X-Content-Type-Options</td><td>MIME-type sniffing turning uploads into executable scripts</td><td><code>nosniff</code></td></tr>
+        <tr><td>Referrer-Policy</td><td>Leaking full URLs (with tokens or IDs) to third parties</td><td><code>strict-origin-when-cross-origin</code></td></tr>
+        <tr><td>Permissions-Policy</td><td>Unwanted use of camera, microphone, geolocation, payment APIs</td><td><code>camera=(), microphone=(), geolocation=()</code></td></tr>
+        <tr><td>Cross-Origin-Opener-Policy</td><td>Cross-window attacks such as Spectre-style leaks and tab-nabbing</td><td><code>same-origin</code></td></tr>
+        <tr><td>Cross-Origin-Resource-Policy</td><td>Other sites hot-linking or reading your resources</td><td><code>same-site</code> (or <code>cross-origin</code> for public assets)</td></tr>
+      </tbody>
+    </table></div>
 
-    <h2>More free developer tools</h2>
-      <ul>
-      <li><strong><a href="/">IP Whitelist Config Generator</a></strong> — Detect your IP and generate AWS, MongoDB, GCP configs</li>
-      <li><strong><a href="/port-checker/">Port Checker</a></strong> — Test if TCP ports are open on any host</li>
-      <li><strong><a href="/dns-lookup/">DNS Lookup</a></strong> — Query A, AAAA, MX, CNAME, TXT and NS records</li>
-      <li><strong><a href="/whois-lookup/">WHOIS Lookup</a></strong> — Find domain owner, registrar, and expiry date</li>
-      <li><strong><a href="/ssl-checker/">SSL Checker</a></strong> — Verify SSL certificate validity and expiry</li>
-      <li><strong><a href="/ip-location/">IP Location Map</a></strong> — Find any IP location on an interactive map</li>
-      <li><strong><a href="/headers/">HTTP Headers Checker</a></strong> — Inspect request and security headers</li>
-      <li><strong><a href="/latency-test/">Latency Test</a></strong> — Measure your RTT to major cloud regions</li>
-      <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
-      <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
+    <h2 id="limits">What this tool can and cannot see from a browser</h2>
+    <ul class="bullets">
+      <li><strong>Your request headers</strong> are captured by sending a request from your browser to a public echo service (httpbin.org) and displaying what arrived. They are real, but they come from a cross-origin <code>fetch()</code>: a normal page navigation additionally sends <code>Cookie</code>, <code>Accept: text/html…</code> and <code>Sec-Fetch-Mode: navigate</code>.</li>
+      <li><strong>Response headers of another site</strong> are only readable when that site allows cross-origin requests (CORS). Without an <code>Access-Control-Allow-Origin</code> header the browser hides the response entirely, and even with it, only a safelisted subset is exposed unless the server adds <code>Access-Control-Expose-Headers</code>.</li>
+      <li><strong>Set-Cookie</strong> and <strong>Authorization</strong> are never exposed to JavaScript, by design.</li>
+      <li><strong>For the full picture</strong> use your browser's DevTools (F12 → Network → click the request → Headers), <code>curl -I https://example.com</code>, or a server-side scanner such as securityheaders.com or Mozilla Observatory.</li>
     </ul>
-  
-    <h2>HTTP security headers checklist</h2>
-    <p>Every production web application should implement these security headers: <strong>Content-Security-Policy (CSP)</strong> — prevents XSS by specifying allowed content sources. <strong>Strict-Transport-Security (HSTS)</strong> — forces HTTPS connections. <strong>X-Frame-Options</strong> — prevents clickjacking. <strong>X-Content-Type-Options: nosniff</strong> — prevents MIME sniffing attacks. <strong>Referrer-Policy</strong> — controls referrer information sent with requests.</p>
-    <p>Missing or misconfigured security headers are consistently among the top web vulnerabilities. Use this HTTP headers checker to verify your security header configuration and identify gaps before attackers do.</p>
+
+    <h2>Common header problems and what they look like</h2>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Console or browser message</th><th>Header involved</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr><td>"blocked by CORS policy: No 'Access-Control-Allow-Origin' header"</td><td>Access-Control-Allow-Origin</td><td>Have the API return the calling origin (not <code>*</code> if cookies are involved) and answer <code>OPTIONS</code> preflights.</td></tr>
+        <tr><td>"Refused to display … in a frame"</td><td>X-Frame-Options / CSP frame-ancestors</td><td>Intentional on most sites; allow specific parent origins with <code>frame-ancestors https://partner.example</code> if embedding is required.</td></tr>
+        <tr><td>"Refused to load the script … violates Content Security Policy"</td><td>Content-Security-Policy</td><td>Add the script's origin to <code>script-src</code>, or move inline code to a file; avoid <code>'unsafe-inline'</code>.</td></tr>
+        <tr><td>Site keeps redirecting to HTTPS after you disabled it</td><td>Strict-Transport-Security</td><td>Browsers remember HSTS for <code>max-age</code> seconds; clear it in <code>chrome://net-internals/#hsts</code> and lower the value before testing.</td></tr>
+        <tr><td>Old file served after a deploy</td><td>Cache-Control / ETag</td><td>Fingerprint asset filenames and send <code>Cache-Control: no-cache</code> for HTML, long <code>max-age, immutable</code> for hashed assets.</td></tr>
+      </tbody>
+    </table></div>
 
     <h2>What is CORS and how do CORS headers work?</h2>
     <p>CORS (Cross-Origin Resource Sharing) headers control which external domains can make requests to your API or web service from a browser. The key headers are: <strong>Access-Control-Allow-Origin</strong> (which domains can access the resource), <strong>Access-Control-Allow-Methods</strong> (which HTTP methods are allowed), and <strong>Access-Control-Allow-Headers</strong> (which request headers are permitted).</p>
-    <p>CORS errors are one of the most common issues when building frontend applications that connect to APIs. This tool shows the exact CORS headers returned by any URL, helping you diagnose cross-origin issues without needing to write test code.</p>
+    <p>CORS errors are one of the most common issues when building frontend applications that connect to APIs. The <em>Response Headers</em> tab shows the exact CORS headers returned by any URL that permits cross-origin reads, helping you diagnose cross-origin issues without needing to write test code.</p>
   </section>
-
 
   <section class="tools-grid-section reveal">
     <div class="section-label">More Free Tools</div>
@@ -247,23 +267,24 @@
     </div>
   </section>
 
-  <!-- AD SLOT 2 -->
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
-
   <section class="faq-section reveal">
     <div class="section-label">FAQ</div>
     <h2 class="section-heading">HTTP headers questions</h2>
     <div itemscope itemtype="https://schema.org/FAQPage">
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What is the most important security header to add?</span><div class="faq-chevron">▾</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What is the most important security header to add?</span><span class="faq-chevron">▾</span></button>
         <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Strict-Transport-Security (HSTS) is arguably the most critical — it forces all connections to use HTTPS and prevents SSL stripping attacks. For most sites, adding "Strict-Transport-Security: max-age=31536000; includeSubDomains" provides immediate security improvement. Content-Security-Policy is more complex to configure but provides the most comprehensive XSS protection.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why can't I see all response headers?</span><div class="faq-chevron">▾</div></div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Browser security (CORS) restricts which response headers JavaScript can access. Some headers like Set-Cookie and Authorization are never exposed to JavaScript for security reasons. To see all headers for a URL, use browser DevTools (F12 → Network tab) or a command-line tool like curl.</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why can't I see all response headers?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Browser security (CORS) restricts which response headers JavaScript can access. A site has to opt in with Access-Control-Allow-Origin, and even then only a few safelisted headers are visible unless it also sends Access-Control-Expose-Headers. Some headers like Set-Cookie and Authorization are never exposed to JavaScript. To see all headers for a URL, use browser DevTools (F12 → Network tab) or a command-line tool like curl.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What is CORS and why does it matter?</span><div class="faq-chevron">▾</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What is the difference between request and response headers?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Request headers travel from your browser to the server and describe the client and what it wants: User-Agent, Accept-Language, Cookie, Authorization. Response headers travel back and describe the answer and how to treat it: Content-Type, Cache-Control, Set-Cookie and the security headers above. Some names, such as Content-Type and Content-Length, appear in both directions.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What is CORS and why does it matter?</span><span class="faq-chevron">▾</span></button>
         <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">CORS (Cross-Origin Resource Sharing) is a browser security mechanism that controls which origins can make requests to your API. The Access-Control-Allow-Origin header tells browsers which domains are allowed to read your responses. Misconfigured CORS (like using wildcard * on authenticated endpoints) can expose sensitive data to malicious sites.</div></div>
       </div>
     </div>
@@ -279,7 +300,7 @@
     <a href="/ipv6/">IPv6</a><a href="/about/">About</a>
     <a href="/privacy/">Privacy Policy</a>
     <a href="/terms/">Terms of Service</a>
-    <a href="mailto:hello@ipwhitelist.dev">Contact</a>
+    <a href="/contact/">Contact</a>
   </div>
   <div class="footer-copy">© 2026 IPWhitelist.dev — Free developer network tools</div>
 </footer>
@@ -295,37 +316,52 @@ function showTab(name){
 }
 
 /* ─── REQUEST HEADERS ─── */
-function renderRequestHeaders(){
-  const headers = {
-    'User-Agent': navigator.userAgent,
-    'Accept-Language': navigator.language || '—',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Connection': 'keep-alive',
-    'Cache-Control': 'no-cache',
-    'Sec-Fetch-Mode': 'navigate',
-    'Sec-Fetch-Site': 'none',
-    'Sec-Fetch-User': '?1',
-    'DNT': navigator.doNotTrack === '1' ? '1' : 'not set',
-    'Cookie': document.cookie ? `${document.cookie.split(';').length} cookie(s) present` : 'none',
-    'Viewport-Width': window.innerWidth + 'px',
-    'Screen-Resolution': `${screen.width}×${screen.height}`,
-  };
+/* Real headers: the browser sends a request to a public echo service and we display what the server received.
+   Headers added by the echo service itself (Host, X-Amzn-Trace-Id…) are dropped. */
+const ECHO_SERVICES = [
+  { name: 'httpbin.org', url: 'https://httpbin.org/headers' },
+  { name: 'httpbingo.org', url: 'https://httpbingo.org/headers' },
+];
+const ECHO_NOISE = /^(host|x-amzn-trace-id|x-forwarded-.*|via|cf-.*|x-real-ip)$/i;
 
+async function renderRequestHeaders(){
   const res = document.getElementById('requestHeadersResult');
+  let headers = null, source = '';
+  for(const svc of ECHO_SERVICES){
+    try {
+      const ctl = new AbortController(); const tm = setTimeout(()=>ctl.abort(), 8000);
+      const d = await fetch(svc.url, {cache:'no-store', signal: ctl.signal}).then(r=>r.json());
+      clearTimeout(tm);
+      headers = {};
+      Object.entries(d.headers || {}).forEach(([k,v]) => { if(!ECHO_NOISE.test(k)) headers[k] = Array.isArray(v) ? v.join(', ') : String(v); });
+      source = svc.name;
+      break;
+    } catch(e) { headers = null; }
+  }
+  let note;
+  if(headers && Object.keys(headers).length){
+    note = `Captured by ${source} from a cross-origin fetch() made by your browser. A regular page navigation also sends <code>Cookie</code>, <code>Accept: text/html…</code> and <code>Sec-Fetch-Mode: navigate</code>.`;
+  } else {
+    // Echo services unreachable (offline, blocked by an extension): fall back to what the browser exposes locally
+    headers = {
+      'User-Agent': navigator.userAgent,
+      'Accept-Language': (navigator.languages || [navigator.language]).join(', '),
+    };
+    note = `The echo service could not be reached, so only the values your browser exposes to JavaScript are shown. Reload to try again.`;
+  }
+  const rows = Object.entries(headers).sort(([a],[b]) => a.localeCompare(b));
   res.innerHTML = `
     <div class="result-top">
-      <span class="result-lang">Request Headers — sent by your browser</span>
+      <span class="result-lang">Request Headers — as received by the server</span>
       <button class="btn-icon sm" onclick="copyAllHeaders()">Copy All</button>
     </div>
-    <div class="section-divider">Standard Request Headers</div>
-    ${Object.entries(headers).map(([k,v])=>`
+    ${rows.map(([k,v])=>`
       <div class="header-row">
         <div class="header-name">${escHtml(k)}</div>
-        <div class="header-value">${escHtml(String(v))}</div>
-      </div>`).join('')}`;
-
-  window._requestHeadersText = Object.entries(headers).map(([k,v])=>`${k}: ${v}`).join('\n');
+        <div class="header-value">${escHtml(v)}</div>
+      </div>`).join('')}
+    <div class="section-divider" style="border-bottom:none;text-transform:none;letter-spacing:0;font-size:.62rem;line-height:1.6;">${note}</div>`;
+  window._requestHeadersText = rows.map(([k,v])=>`${k}: ${v}`).join('\n');
 }
 
 function copyAllHeaders(){
@@ -360,9 +396,9 @@ async function runResponseHeaders(){
     window._responseText = Object.entries(headers).map(([k,v])=>`${k}: ${v}`).join('\n');
   } catch(e) {
     res.innerHTML = `<div class="result-pre" style="color:var(--txt-2)">
-      Could not fetch response headers.<br/><br/>
-      This usually means the server doesn't allow cross-origin HEAD requests (CORS restriction).<br/>
-      To inspect all response headers, use:<br/>
+      Could not read the response headers of this URL from a browser.<br/><br/>
+      The server does not allow cross-origin requests (no <span style="color:var(--lime)">Access-Control-Allow-Origin</span> header), so the browser hides the response — this is normal for most websites and is not an error on their side.<br/><br/>
+      To inspect all response headers, use DevTools (F12 → Network) or:<br/>
       <span style="color:var(--lime)">curl -I ${escHtml(url)}</span>
     </div>`;
   }
@@ -413,7 +449,7 @@ async function runSecurityCheck(){
       <div class="section-divider">Security Headers</div>
       ${rows}`;
   } catch(e) {
-    res.innerHTML = `<div class="result-pre" style="color:var(--txt-2)">CORS restriction — server doesn't allow cross-origin requests.<br/>Try: <span style="color:var(--lime)">curl -I ${escHtml(url)}</span></div>`;
+    res.innerHTML = `<div class="result-pre" style="color:var(--txt-2)">This site does not allow cross-origin requests, so its headers cannot be analysed from a browser (normal for most sites).<br/><br/>Run the analysis from a terminal instead:<br/><span style="color:var(--lime)">curl -sI ${escHtml(url)} | grep -iE 'strict-transport|content-security|x-frame|x-content-type|referrer-policy|permissions-policy'</span><br/><br/>or use a server-side scanner such as securityheaders.com.</div>`;
   }
   btn.disabled = false; btn.textContent = 'Analyze Security';
 }

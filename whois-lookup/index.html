@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <script>document.documentElement.classList.add('js')</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WHOIS Lookup — Find Domain Owner & Expiry</title>
   <meta name="description" content="Free WHOIS lookup. Find domain owner, registrar, registration and expiry dates and nameservers for any domain. Live RDAP data, no signup." />
+  <meta name="author" content="Fernando Higa" />
   <link rel="canonical" href="https://ipwhitelist.dev/whois-lookup/" />
   <meta property="og:title" content="WHOIS Lookup — Find Domain Owner & Expiry" />
   <meta property="og:description" content="Free WHOIS lookup. Find domain owner, registrar, registration and expiry dates and nameservers for any domain. Live RDAP data, no signup." />
@@ -39,6 +42,8 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    // Consent Mode v2: no ad/analytics cookies in the EEA/UK/CH until the consent banner (Google CMP) records a choice
+    gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']});
     gtag('js', new Date());
     gtag('config', 'G-QFLEV7NLEG');
   </script>
@@ -47,7 +52,8 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../favicon-180.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="../favicon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../shared.css" />
   <script type="application/ld+json">
   {
@@ -85,7 +91,7 @@
     <a href="/ipv6/" class="nav-link">IPv6</a>
   </div>
   <div class="nav-right"><span class="badge-free">100% Free</span></div>
-  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu">
+  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
@@ -133,42 +139,57 @@
     </div>
   </div>
 
-  <!-- AD SLOT 1 -->
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
 
   <section class="seo-content reveal">
+    <div class="byline"><span>Written by <a href="/about/">Fernando Higa</a></span><span>Updated October 2026</span><span>6 min read</span></div>
+
     <h2>What is a WHOIS lookup?</h2>
     <p>WHOIS is a public database that stores registration information for every domain name on the internet. When someone registers a domain, their contact information, registration date, expiry date, and nameservers are recorded in the WHOIS database. This information is publicly accessible to anyone who wants to look it up.</p>
+    <p>Technically there is no single database: each registry (Verisign for .com, PIR for .org, Google Registry for .dev…) publishes its own records, and this tool asks the right one for you through RDAP, the modern successor of the WHOIS protocol.</p>
 
-    <h2>What information does a free WHOIS lookup show?</h2>
-    
+    <h2>What information does a WHOIS lookup show?</h2>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Field</th><th>Meaning</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr><td>Registrar</td><td>The company the domain was bought through (GoDaddy, Namecheap, Cloudflare, Hostinger…)</td><td>Where to go for transfers, abuse reports and expired-domain recovery.</td></tr>
+        <tr><td>Registrant</td><td>The legal owner, or the privacy service standing in for them</td><td>Verifying who you are dealing with before a purchase or partnership.</td></tr>
+        <tr><td>Registered</td><td>Date the domain was first created</td><td>Domain age is a trust signal for buyers, lenders and spam filters.</td></tr>
+        <tr><td>Expires</td><td>End of the current registration period</td><td>Missed renewals are the number-one way companies lose their domain.</td></tr>
+        <tr><td>Last updated</td><td>Most recent change to the registration record</td><td>A very recent update on an old domain can indicate a transfer or a hijack.</td></tr>
+        <tr><td>Status</td><td>EPP status codes such as <code>clientTransferProhibited</code></td><td>Tells you whether the domain is locked, pending deletion or on hold (see below).</td></tr>
+        <tr><td>Nameservers</td><td>The DNS servers authoritative for the domain</td><td>Reveals the DNS provider and confirms a migration took effect.</td></tr>
+        <tr><td>DNSSEC</td><td>Whether the zone is cryptographically signed</td><td>Signed zones protect against DNS spoofing; most domains are still unsigned.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2>Understanding domain status codes</h2>
+    <p>The <strong>Status</strong> line uses EPP codes defined by ICANN. Codes starting with <em>client</em> were set by the registrar (usually at the owner's request); codes starting with <em>server</em> were set by the registry and take precedence.</p>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Status</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td>ok / active</td><td>No restrictions. Healthy, but also unlocked — most registrars recommend enabling the transfer lock.</td></tr>
+        <tr><td>clientTransferProhibited</td><td>Transfer lock is on: the domain cannot be moved to another registrar without unlocking it first. Normal and recommended.</td></tr>
+        <tr><td>clientDeleteProhibited / clientUpdateProhibited</td><td>Deletion or contact changes are blocked at the registrar level — a standard protection bundle.</td></tr>
+        <tr><td>clientHold / serverHold</td><td>The domain is suspended and removed from DNS: unverified contact email, legal dispute or abuse. The site and email stop working.</td></tr>
+        <tr><td>autoRenewPeriod</td><td>The domain expired and was auto-renewed by the registry; the registrar has up to 45 days to confirm or cancel the renewal.</td></tr>
+        <tr><td>redemptionPeriod</td><td>The domain was deleted after expiry. The former owner can still restore it for about 30 days, usually for a fee of USD 80–200.</td></tr>
+        <tr><td>pendingDelete</td><td>Restoration is no longer possible; the domain will be released to the public in about 5 days.</td></tr>
+        <tr><td>pendingTransfer</td><td>A transfer to another registrar is in progress (normally completes within 5 days).</td></tr>
+      </tbody>
+    </table></div>
 
     <h2>Why use a WHOIS lookup tool?</h2>
     <p>Developers use WHOIS to verify domain ownership before whitelisting, check if a domain is about to expire, investigate suspicious traffic sources, or confirm nameserver configuration during DNS migrations. Combined with our <a href="/dns-lookup/">DNS Lookup tool</a>, WHOIS gives you a complete picture of any domain's configuration.</p>
+    <p>Other everyday uses: checking whether a domain you want is really taken and when it expires, confirming that a phishing look-alike was registered last week rather than years ago, and finding the registrar's abuse contact to report a malicious site.</p>
 
-    <h2>More free developer tools</h2>
-      <ul>
-      <li><strong><a href="/">IP Whitelist Config Generator</a></strong> — Detect your IP and generate AWS, MongoDB, GCP configs</li>
-      <li><strong><a href="/port-checker/">Port Checker</a></strong> — Test if TCP ports are open on any host</li>
-      <li><strong><a href="/dns-lookup/">DNS Lookup</a></strong> — Query A, AAAA, MX, CNAME, TXT and NS records</li>
-      <li><strong><a href="/whois-lookup/">WHOIS Lookup</a></strong> — Find domain owner, registrar, and expiry date</li>
-      <li><strong><a href="/ssl-checker/">SSL Checker</a></strong> — Verify SSL certificate validity and expiry</li>
-      <li><strong><a href="/ip-location/">IP Location Map</a></strong> — Find any IP location on an interactive map</li>
-      <li><strong><a href="/headers/">HTTP Headers Checker</a></strong> — Inspect request and security headers</li>
-      <li><strong><a href="/latency-test/">Latency Test</a></strong> — Measure your RTT to major cloud regions</li>
-      <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
-      <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
-    </ul>
-  
     <h2>What is RDAP and how is it different from WHOIS?</h2>
     <p>RDAP (Registration Data Access Protocol) is the modern replacement for the traditional WHOIS protocol. While WHOIS returns plain text in inconsistent formats depending on the registrar, RDAP returns structured JSON data that is easier to parse programmatically. RDAP also supports authentication, allowing registrars to provide different levels of detail based on the requester.</p>
-    <p>This tool uses the RDAP protocol to retrieve domain registration data, which means results are more consistent and reliable than traditional WHOIS lookups that vary by registrar.</p>
+    <p>This tool uses the RDAP protocol to retrieve domain registration data, which means results are more consistent and reliable than traditional WHOIS lookups that vary by registrar. ICANN made RDAP mandatory for all generic TLDs (.com, .net, .org, .dev, .io, .app and every "new" TLD) and retired the WHOIS port-43 requirement in January 2025. Many country-code TLDs (for example .de, .es, .pe and .jp) still run their own WHOIS services without RDAP, so lookups for those domains may fail here — use the registry's own website instead.</p>
 
     <h2>How to protect your WHOIS information</h2>
     <p>By default, domain registration information (name, email, phone, address) is publicly visible in WHOIS records. To protect your privacy, enable <strong>WHOIS privacy protection</strong> (also called domain privacy or ID Shield) through your registrar — most registrars offer this for free or a small fee.</p>
-    <p>With privacy protection enabled, your personal contact details are replaced with the registrar's proxy information in public WHOIS records. Note that registrars are still required to provide accurate information to ICANN upon legitimate request.</p>
+    <p>With privacy protection enabled, your personal contact details are replaced with the registrar's proxy information in public WHOIS records. Since GDPR took effect in 2018, most registrars redact personal data for everyone by default, which is why the Registrant field often shows "REDACTED FOR PRIVACY" or the name of a privacy service. Registrars are still required to hold accurate information and to disclose it to law enforcement and courts upon legitimate request.</p>
   </section>
-
 
   <section class="tools-grid-section reveal">
     <div class="section-label">More Free Tools</div>
@@ -185,24 +206,29 @@
     </div>
   </section>
 
-  <!-- AD SLOT 2 -->
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
-
   <section class="faq-section reveal">
     <div class="section-label">FAQ</div>
     <h2 class="section-heading">WHOIS lookup questions</h2>
     <div itemscope itemtype="https://schema.org/FAQPage">
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why does WHOIS show privacy protection instead of owner details?</span><div class="faq-chevron">▾</div></div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Many domain registrars offer WHOIS privacy protection (also called domain privacy or WHOIS guard). When enabled, the registrar's contact details replace the owner's personal information in the public WHOIS database. This is common practice to protect domain owners from spam and unwanted contact.</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why does WHOIS show privacy protection instead of owner details?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Many domain registrars offer WHOIS privacy protection (also called domain privacy or WHOIS guard). When enabled, the registrar's contact details replace the owner's personal information in the public WHOIS database. Since GDPR, most registrars also redact personal data by default. This is common practice to protect domain owners from spam and unwanted contact.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How do I find out who owns a domain?</span><div class="faq-chevron">▾</div></div>
-        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Enter the domain in the WHOIS lookup tool above. If the owner hasn't enabled privacy protection, you'll see their name, email, and organization. If privacy is enabled, you'll see the registrar's proxy information instead. You can try contacting the registrar directly for ownership disputes.</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How do I find out who owns a domain?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Enter the domain in the WHOIS lookup tool above. If the owner hasn't enabled privacy protection, you'll see their name and organization. If privacy is enabled, you'll see the registrar's proxy information instead; most privacy services forward messages to the real owner, and registrars disclose the data to courts and law enforcement for ownership disputes.</div></div>
       </div>
       <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
-        <div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How accurate is WHOIS data?</span><div class="faq-chevron">▾</div></div>
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">How accurate is WHOIS data?</span><span class="faq-chevron">▾</span></button>
         <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">WHOIS data is provided directly by domain registrars and is generally accurate for technical details like nameservers, registration dates, and expiry dates. Contact information may be outdated if the domain owner didn't update it, or hidden behind privacy protection services.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why does the lookup fail for my country-code domain?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">This tool uses RDAP, which every generic TLD supports but only some country-code registries have adopted. If the registry for a ccTLD such as .de, .es or .pe has no RDAP service, there is nothing for the tool to query and it reports an error. Look the domain up on the registry's own website (DENIC, Red.es, NIC.pe) in that case.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What happens when a domain expires?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">For most generic TLDs the owner gets a grace period of up to 45 days to renew at the normal price, then about 30 days of redemption where restoring costs a penalty fee, and finally a 5-day pendingDelete window before the name is released to anyone. The Status field above shows which stage a domain is in.</div></div>
       </div>
     </div>
   </section>
@@ -216,7 +242,7 @@
     <a href="/ipv6/">IPv6</a><a href="/about/">About</a>
     <a href="/privacy/">Privacy Policy</a>
     <a href="/terms/">Terms of Service</a>
-    <a href="mailto:hello@ipwhitelist.dev">Contact</a>
+    <a href="/contact/">Contact</a>
   </div>
   <div class="footer-copy">© 2026 IPWhitelist.dev — Free developer network tools</div>
 </footer>
@@ -262,13 +288,14 @@ async function runWhois(){
       return new Date(ev.eventDate).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
     };
 
-    const ns = d.nameservers ? d.nameservers.map(n=>n.ldhName||n.unicodeName).join('<br/>') : '—';
-    const registrar = getName(d.entities, ['registrar']);
-    const registrant = getName(d.entities, ['registrant']);
+    const ns = d.nameservers ? d.nameservers.map(n=>escHtml(n.ldhName||n.unicodeName||'')).join('<br/>') : '—';
+    const registrar = escHtml(getName(d.entities, ['registrar']));
+    const registrant = escHtml(getName(d.entities, ['registrant']));
     const registered = getDate(d.events, 'registration');
     const expiry = getDate(d.events, 'expiration');
     const updated = getDate(d.events, 'last changed');
-    const status = d.status ? d.status.join(', ') : '—';
+    const status = d.status ? escHtml(d.status.join(', ')) : '—';
+    const dnssec = d.secureDNS && d.secureDNS.delegationSigned ? 'Signed' : 'Unsigned';
 
     // Check expiry warning
     let expiryWarning = '';
@@ -283,13 +310,13 @@ async function runWhois(){
 
     res.innerHTML = `
       <div class="result-top">
-        <span class="result-lang">WHOIS · ${domain}</span>
+        <span class="result-lang">WHOIS · ${escHtml(domain)}</span>
         <button class="btn-icon sm" onclick="copyWhois()">Copy</button>
       </div>
       <div style="padding:18px;" id="whoisData">
         ${expiryWarning}
         <div class="ua-grid" style="margin-bottom:0;">
-          <div class="ua-cell"><div class="ua-label">Domain</div><div class="ua-value accent">${domain}</div></div>
+          <div class="ua-cell"><div class="ua-label">Domain</div><div class="ua-value accent">${escHtml(domain)}</div></div>
           <div class="ua-cell"><div class="ua-label">Registrar</div><div class="ua-value">${registrar}</div></div>
           <div class="ua-cell"><div class="ua-label">Registrant</div><div class="ua-value">${registrant}</div></div>
           <div class="ua-cell"><div class="ua-label">Status</div><div class="ua-value" style="font-size:.65rem;">${status}</div></div>
@@ -297,11 +324,12 @@ async function runWhois(){
           <div class="ua-cell"><div class="ua-label">Expires</div><div class="ua-value">${expiry}</div></div>
           <div class="ua-cell"><div class="ua-label">Last Updated</div><div class="ua-value">${updated}</div></div>
           <div class="ua-cell"><div class="ua-label">Nameservers</div><div class="ua-value" style="font-size:.68rem;line-height:1.6;">${ns}</div></div>
+          <div class="ua-cell"><div class="ua-label">DNSSEC</div><div class="ua-value">${dnssec}</div></div>
         </div>
       </div>`;
-    window._whoisText = `WHOIS: ${domain}\nRegistrar: ${registrar}\nRegistrant: ${registrant}\nRegistered: ${registered}\nExpires: ${expiry}\nNameservers: ${d.nameservers?d.nameservers.map(n=>n.ldhName).join(', '):'—'}`;
+    window._whoisText = `WHOIS: ${domain}\nRegistrar: ${getName(d.entities, ['registrar'])}\nRegistrant: ${getName(d.entities, ['registrant'])}\nRegistered: ${registered}\nExpires: ${expiry}\nStatus: ${d.status?d.status.join(', '):'—'}\nDNSSEC: ${dnssec}\nNameservers: ${d.nameservers?d.nameservers.map(n=>n.ldhName).join(', '):'—'}`;
   } catch(e) {
-    res.innerHTML = `<div class="result-pre" style="color:var(--rose)">Could not retrieve WHOIS data for "${domain}".<br/><br/>This may be because:<br/>• The domain does not exist<br/>• The TLD uses a non-standard WHOIS format<br/>• The registry has rate-limited the request<br/><br/>Try again in a few seconds.</div>`;
+    res.innerHTML = `<div class="result-pre" style="color:var(--rose)">Could not retrieve WHOIS data for "${escHtml(domain)}".<br/><br/>This may be because:<br/>• The domain does not exist<br/>• The registry for this TLD has no RDAP service yet (common for country-code domains such as .de, .es, .pe)<br/>• The registry has rate-limited the request<br/><br/>Try again in a few seconds, or use the registry's own WHOIS page.</div>`;
   }
   btn.disabled = false;
   btn.textContent = 'Lookup';

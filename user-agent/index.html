@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <script>document.documentElement.classList.add('js')</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>User Agent Checker — What Is My User Agent?</title>
   <meta name="description" content="Free user agent checker. See your user agent string, browser, OS, screen resolution and timezone exactly as web servers see you. No signup." />
+  <meta name="author" content="Fernando Higa" />
   <link rel="canonical" href="https://ipwhitelist.dev/user-agent/" />
   <meta property="og:title" content="User Agent Checker — What Is My User Agent?" />
   <meta property="og:description" content="Free user agent checker. See your user agent string, browser, OS, screen resolution and timezone exactly as web servers see you. No signup." />
@@ -26,67 +29,22 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../favicon-180.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="../favicon-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;700&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../shared.css" />
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFLEV7NLEG"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    // Consent Mode v2: no ad/analytics cookies in the EEA/UK/CH until the consent banner (Google CMP) records a choice
+    gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH']});
     gtag('js', new Date());
     gtag('config', 'G-QFLEV7NLEG');
   </script>
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5526031626146935"
      crossorigin="anonymous"></script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "Can I change or spoof my user agent?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. In Chrome DevTools, go to the Network conditions panel and you can set a custom user agent string. This is useful for testing how websites behave on mobile devices or different browsers without physically switching devices. Many browser extensions also offer user agent switching."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Why does my user agent say \"Mozilla\" even on Chrome?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "This is a historical quirk of the web. In the early browser wars, servers would only serve advanced content to \"Mozilla\" browsers. To ensure compatibility, all browsers began including \"Mozilla\" in their user agent — and the tradition continues to this day even though it's now meaningless for identification purposes."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is my user agent data stored?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. All detection is done entirely in your browser using the navigator JavaScript API. No data is sent to our servers. Your user agent string never leaves your device."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I change my user agent string?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. In Chrome DevTools (F12) → More tools → Network conditions, you can override your user agent to test how websites behave for different browsers or devices. Browser extensions like User-Agent Switcher also allow permanent overrides."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What information does a user agent string contain?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A user agent string contains your browser name and version, operating system, rendering engine (Gecko, WebKit, Blink), and device type. Example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36"
-        }
-      }
-    ]
-  }
-  </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -123,7 +81,7 @@
     <a href="/ipv6/" class="nav-link">IPv6</a>
   </div>
   <div class="nav-right"><span class="badge-free">100% Free</span></div>
-  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu">
+  <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
@@ -150,7 +108,7 @@
     <div class="tool-card">
       <div class="tool-card-head">
         <div class="tool-card-title">Browser & System Info</div>
-        <div class="tool-card-desc">Detected automatically from your current browser session. No data is stored or transmitted.</div>
+        <div class="tool-card-desc">Detected automatically from your current browser session, including User-Agent Client Hints where your browser supports them. No data is stored or transmitted.</div>
       </div>
       <div class="tool-card-body">
         <div class="ua-grid" id="uaGrid"></div>
@@ -165,38 +123,48 @@
     </div>
   </div>
 
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
 
   <section class="seo-content reveal">
+    <div class="byline"><span>Written by <a href="/about/">Fernando Higa</a></span><span>Updated October 2026</span><span>6 min read</span></div>
+
     <h2>What is a user agent checker?</h2>
     <p>A user agent is a string that your browser sends with every HTTP request, identifying itself to web servers. It includes information about your browser name and version, operating system, and rendering engine. Web servers use this to serve appropriate content, while developers use it for analytics, compatibility testing, and debugging.</p>
-    <h2>How to check your user agent string</h2>
-    <p>A typical Chrome user agent on Windows looks like: <code>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36</code>. Despite looking like it says "Mozilla" and "Safari", this is Chrome — the format is a historical artifact of browser compatibility.</p>
+    <p>A user agent checker simply shows you that string — and, as this page does, decodes it into browser, engine and OS, and adds the newer <strong>Client Hints</strong> values that modern browsers send instead of detailed user agent strings.</p>
+
+    <h2>Anatomy of a user agent string</h2>
+    <p>A typical Chrome user agent on Windows looks like: <code>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36</code>. Every token is a historical artifact of browser compatibility:</p>
+    <div class="table-wrap"><table class="seo-table">
+      <thead><tr><th>Token</th><th>What it really means</th></tr></thead>
+      <tbody>
+        <tr><td>Mozilla/5.0</td><td>Nothing. Every browser claims to be Mozilla so that 1990s servers would send it the "advanced" version of a page.</td></tr>
+        <tr><td>(Windows NT 10.0; Win64; x64)</td><td>Platform. Since 2023 Chrome freezes this to <em>Windows NT 10.0</em> even on Windows 11, and Android phones report <em>Android 10; K</em> regardless of model.</td></tr>
+        <tr><td>AppleWebKit/537.36 (KHTML, like Gecko)</td><td>Engine lineage: Chrome's Blink engine forked from WebKit, which descends from KDE's KHTML, and all of them wanted pages built for Firefox (Gecko).</td></tr>
+        <tr><td>Chrome/130.0.0.0</td><td>The actual browser and its major version. Minor and build numbers are zeroed by user agent reduction.</td></tr>
+        <tr><td>Safari/537.36</td><td>Compatibility token so that sites sniffing for Safari keep working. Edge adds <em>Edg/130</em>, Opera adds <em>OPR/</em>, Brave sends an unmodified Chrome string.</td></tr>
+      </tbody>
+    </table></div>
+
     <h2>Why would I need my user agent?</h2>
-      <ul>
-      <li><strong><a href="/">IP Whitelist Config Generator</a></strong> — Detect your IP and generate AWS, MongoDB, GCP configs</li>
-      <li><strong><a href="/port-checker/">Port Checker</a></strong> — Test if TCP ports are open on any host</li>
-      <li><strong><a href="/dns-lookup/">DNS Lookup</a></strong> — Query A, AAAA, MX, CNAME, TXT and NS records</li>
-      <li><strong><a href="/whois-lookup/">WHOIS Lookup</a></strong> — Find domain owner, registrar, and expiry date</li>
-      <li><strong><a href="/ssl-checker/">SSL Checker</a></strong> — Verify SSL certificate validity and expiry</li>
-      <li><strong><a href="/ip-location/">IP Location Map</a></strong> — Find any IP location on an interactive map</li>
-      <li><strong><a href="/headers/">HTTP Headers Checker</a></strong> — Inspect request and security headers</li>
-      <li><strong><a href="/latency-test/">Latency Test</a></strong> — Measure your RTT to major cloud regions</li>
-      <li><strong><a href="/user-agent/">User Agent Parser</a></strong> — Full browser and OS fingerprint breakdown</li>
-      <li><strong><a href="/ipv6/">IPv6 Detector</a></strong> — Check your IPv6 address and connectivity</li>
+    <ul class="bullets">
+      <li><strong>Bug reports.</strong> "It doesn't work" becomes actionable when you paste the exact browser, version and OS — copy the raw string above into the ticket.</li>
+      <li><strong>Compatibility testing.</strong> Confirm that a device really runs the browser version your product supports, or that a user agent override in DevTools took effect.</li>
+      <li><strong>Analytics sanity checks.</strong> Verify how your own browser appears in Google Analytics or your server logs before filtering bots or segmenting by device.</li>
+      <li><strong>API clients and scrapers.</strong> Many APIs reject requests with an empty or default library user agent; sending a descriptive one (<code>MyApp/1.2 (+https://example.com)</code>) is good manners and often required.</li>
+      <li><strong>Privacy awareness.</strong> The user agent plus screen size, timezone and language form a fingerprint that can identify you across sites without cookies — this page shows the same values a tracker would collect.</li>
     </ul>
-  
+
+    <h2>User agent reduction and Client Hints</h2>
+    <p>Because user agent strings leaked so much detail, Chromium-based browsers (Chrome, Edge, Opera, Brave, Samsung Internet) <strong>reduced</strong> them in 2023: the OS version, device model and browser minor version are now fixed placeholders. Firefox and Safari apply similar freezing. If this page says "Windows 10/11" or "Android 10", that is why — the string no longer contains the real value.</p>
+    <p>The replacement is <strong>User-Agent Client Hints</strong>: low-entropy values (brand, major version, platform, mobile) are sent with every request as <code>Sec-CH-UA</code> headers, and high-entropy values (full version, platform version, model, architecture) are only available on request through <code>navigator.userAgentData.getHighEntropyValues()</code>, which is what the <em>Client Hints</em> cells above use when your browser supports it. Firefox and Safari do not implement Client Hints, so those cells stay empty there.</p>
+
     <h2>Common user agent strings by browser</h2>
-    <p>Every major browser sends a distinct user agent string. <strong>Chrome on Windows</strong> typically includes "Chrome/VERSION" and "Safari/537.36" for compatibility. <strong>Firefox</strong> uses "Gecko/20100101 Firefox/VERSION". <strong>Safari on macOS</strong> uses "Safari/VERSION" without a Chrome token. <strong>Mobile browsers</strong> include "Mobile" in the string.</p>
-    <p>Web servers and APIs often use user agent parsing to serve different content to mobile vs desktop users, block bots, and apply browser-specific workarounds. If you are building a web scraper or API client, set a descriptive user agent string to identify your application.</p>
+    <p>Every major browser sends a distinct user agent string. <strong>Chrome on Windows</strong> typically includes "Chrome/VERSION" and "Safari/537.36" for compatibility. <strong>Firefox</strong> uses "Gecko/20100101 Firefox/VERSION". <strong>Safari on macOS</strong> uses "Safari/VERSION" without a Chrome token. <strong>Mobile browsers</strong> include "Mobile" in the string, and iPad Safari reports itself as a Mac unless you request the mobile site.</p>
+    <p>Web servers and APIs often use user agent parsing to serve different content to mobile vs desktop users, block bots, and apply browser-specific workarounds. For feature decisions, prefer feature detection (<code>if ('serviceWorker' in navigator)</code>) over user agent sniffing — strings lie, are frozen, and are trivially spoofed.</p>
 
     <h2>How to change your user agent for testing</h2>
-    <p>In Chrome: open DevTools (F12) → three-dot menu → More tools → Network conditions → uncheck "Use browser default" under User agent → select or type a custom string. This lets you test how your website renders for different browsers and devices without changing your actual browser.</p>
-    <p>In Firefox: type <code>about:config</code> in the address bar → search for <code>general.useragent.override</code> → create a new string value with your desired user agent.</p>
+    <p>In Chrome: open DevTools (F12) → three-dot menu → More tools → Network conditions → uncheck "Use browser default" under User agent → select or type a custom string. This lets you test how your website renders for different browsers and devices without changing your actual browser. Reload this page afterwards and the raw string above will show your override.</p>
+    <p>In Firefox: type <code>about:config</code> in the address bar → search for <code>general.useragent.override</code> → create a new string value with your desired user agent. In Safari: enable the Develop menu in Settings → Advanced, then Develop → User Agent.</p>
   </section>
-
-  <div class="ad-slot"><div class="ad-label">Advertisement</div><div class="ad-inner"></div></div>
-
 
   <section class="tools-grid-section reveal">
     <div class="section-label">More Free Tools</div>
@@ -216,24 +184,28 @@
   <section class="faq-section reveal">
     <div class="section-label">FAQ</div>
     <h2 class="section-heading">User agent questions</h2>
-    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Can I change or spoof my user agent?</span><div class="faq-chevron">▾</div></div><div class="faq-a">Yes. In Chrome DevTools, go to the Network conditions panel and you can set a custom user agent string. This is useful for testing how websites behave on mobile devices or different browsers without physically switching devices. Many browser extensions also offer user agent switching.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Why does my user agent say "Mozilla" even on Chrome?</span><div class="faq-chevron">▾</div></div><div class="faq-a">This is a historical quirk of the web. In the early browser wars, servers would only serve advanced content to "Mozilla" browsers. To ensure compatibility, all browsers began including "Mozilla" in their user agent — and the tradition continues to this day even though it's now meaningless for identification purposes.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Is my user agent data stored?</span><div class="faq-chevron">▾</div></div><div class="faq-a">No. All detection is done entirely in your browser using the <code>navigator</code> JavaScript API. No data is sent to our servers. Your user agent string never leaves your device.</div></div>
-  
-  <div class="faq-item">
-    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      <span class="faq-q-text">Can I change my user agent string?</span>
-      <span class="faq-chevron">▾</span>
+    <div itemscope itemtype="https://schema.org/FAQPage">
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Can I change or spoof my user agent?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Yes. In Chrome DevTools (F12 → More tools → Network conditions) you can set a custom user agent string for the current tab, which is useful for testing how websites behave on mobile devices or other browsers. Browser extensions such as User-Agent Switcher allow permanent overrides. Note that Client Hints may still reveal your real browser unless the extension overrides them too.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why does my user agent say "Mozilla" even on Chrome?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">This is a historical quirk of the web. In the early browser wars, servers would only serve advanced content to "Mozilla" browsers. To ensure compatibility, all browsers began including "Mozilla" in their user agent — and the tradition continues to this day even though it's now meaningless for identification purposes.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Why does it show Windows 10 when I'm on Windows 11 (or Android 10 on a new phone)?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">Because of user agent reduction: since 2023 Chromium browsers send a frozen platform token — "Windows NT 10.0" for every Windows version and "Android 10; K" for every Android device — to reduce fingerprinting. The real OS version is only available through Client Hints, which this page requests and displays when the browser supports them.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">Is my user agent data stored?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">No. All detection is done entirely in your browser using the <code>navigator</code> JavaScript API. No data is sent to our servers — the site has none. Your user agent string never leaves your device.</div></div>
+      </div>
+      <div class="faq-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <button type="button" class="faq-q" aria-expanded="false" onclick="toggleFaq(this)"><span class="faq-q-text" itemprop="name">What information does a user agent string contain?</span><span class="faq-chevron">▾</span></button>
+        <div class="faq-a" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer"><div itemprop="text">A user agent string contains your browser name and major version, operating system family, rendering engine (Gecko, WebKit, Blink), and whether the device is mobile. Example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36. Detailed OS versions and device models have been removed from modern strings.</div></div>
+      </div>
     </div>
-    <div class="faq-a">Yes. In Chrome DevTools (F12) → More tools → Network conditions, you can override your user agent to test how websites behave for different browsers or devices. Browser extensions like User-Agent Switcher also allow permanent overrides.</div>
-  </div>
-  <div class="faq-item">
-    <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-      <span class="faq-q-text">What information does a user agent string contain?</span>
-      <span class="faq-chevron">▾</span>
-    </div>
-    <div class="faq-a">A user agent string contains your browser name and version, operating system, rendering engine (Gecko, WebKit, Blink), and device type. Example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36</div>
-  </div>
   </section>
 </main>
 <footer>
@@ -241,7 +213,7 @@
   <div class="footer-links"><a href="/">My IP</a><a href="/port-checker/">Port Checker</a><a href="/dns-lookup/">DNS Lookup</a><a href="/latency-test/">Latency Test</a><a href="/about/">About</a>
     <a href="/privacy/">Privacy Policy</a>
     <a href="/terms/">Terms of Service</a>
-    <a href="mailto:hello@ipwhitelist.dev">Contact</a></div>
+    <a href="/contact/">Contact</a></div>
   <div class="footer-copy">© 2026 IPWhitelist.dev — Free developer network tools</div>
 </footer>
 <div class="toast" id="toast"><span id="toast-msg">Copied!</span></div>
